@@ -2,6 +2,7 @@ package com.glroland.sudoku.game;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -20,7 +21,22 @@ public class SolverTest {
 	@Test
 	public void testSolveGame1() {
 		GameGrid grid = Solver.createSolution(SampleGrids.GAME1);
-		assertNotNull(grid.toString(), grid);
+		assertNotNull("Null grid returned from solver", grid);
+		assertTrue("Grid has not been solved: " + grid, grid.isSolved());
+		assertTrue("Grid solution does not match expected solution: " + grid, SampleGrids.GAME1_SOLUTION.isDerivative(grid));
+		System.out.println("Generated Solution to GAME1: \n" + grid);
+	}
+
+	@Test
+	public void testSolveGameNotSolvable() {
+		try
+		{
+			GameGrid grid = Solver.createSolution(SampleGrids.BAD_UNSOLVABLE);
+			fail("Unsolvable puzzle should have threw an exception");
+		}
+		catch(RuntimeException e)
+		{
+		}
 	}
 
 	@Test

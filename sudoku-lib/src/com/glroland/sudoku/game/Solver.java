@@ -36,34 +36,146 @@ public class Solver {
 		return playGrid;
 	}
 	
+	private static ArrayList<List<Integer>> buildValidValuesGridForPuzzle(GameGrid grid)
+	{
+		// build the "grid"
+		ArrayList<List<Integer>> moveGrid = new ArrayList<List<Integer>>();
+		for (int y=0; y<grid.getHeight(); y++)
+		{
+			for (int x=0; x<grid.getWidth(); x++)
+			{
+				moveGrid.add(getValidValuesForSquare(grid, x, y));
+			}
+		}
+		
+		return moveGrid;
+	}
+	
 	public static List<GameMove> getNextMovesForPuzzle(GameGrid grid)
 	{
 		// validate input grid first
 		if (grid == null)
 			throw new IllegalArgumentException("Input grid passed to solver is null!");
 		if (!grid.isValidBoard())
-			throw new IllegalArgumentException("Input game board is not valid - hence no solution is possible");
+			throw new IllegalArgumentException("Input game board is not valid - hence no solution is possible\n" + grid.toString());
 		
 		ArrayList<GameMove> list = new ArrayList<GameMove>();
 		if (!grid.isSolved())
 		{
+			// get valid values
+			ArrayList<List<Integer>> validValuesGrid = buildValidValuesGridForPuzzle(grid);
+			validValuesGrid = refineValidValuesGrid(grid, validValuesGrid);
+			
 			// for each square
-			for (int y=0; y<grid.getHeight(); y++)
+			for (int i=0; i<validValuesGrid.size(); i++)
 			{
-				for (int x=0; x<grid.getWidth(); x++)
+				int y = i / grid.getWidth();
+				int x = i % grid.getWidth();
+				
+				List<Integer> values = validValuesGrid.get(i);
+				if (values.size() == 1)
 				{
-					List<Integer> values = getValidValuesForSquare(grid, x, y);
-					if (values.size() == 1)
-					{
-						GameMove move = new GameMove(x, y, values.get(0));
-						list.add(move);
-					}
+					GameMove move = new GameMove(x, y, values.get(0));
+					list.add(move);
 				}
 			}
-			
 		}
 		
 		return list;
+	}
+	
+	private static ArrayList<List<Integer>> refineValidValuesGrid(GameGrid grid, ArrayList<List<Integer>> validValuesGrid)
+	{
+		ArrayList<List<Integer>> refinedGrid = new ArrayList<List<Integer>>();
+		
+		// analyze each cell
+		int i=0;
+		for (List<Integer> values : validValuesGrid)
+		{
+			ArrayList<Integer> refinedValues = new ArrayList<Integer>();
+		
+			int x = i % grid.getWidth();
+			int y = i / grid.getWidth();
+			
+			for (int value : values)
+			{
+				boolean isUnique = isUniqueToRow(grid, validValuesGrid, x, y, value) 
+								|| isUniqueToColumn(grid, validValuesGrid, x, y, value) 
+								|| isUniqueToQuadrant(grid, validValuesGrid, x, y, value);
+				if (isUnique)
+				{
+					refinedValues.add(value);
+				}
+			}
+			
+			refinedGrid.add(refinedValues);
+			i++;
+		}
+
+		return refinedGrid;
+	}
+	
+	private static boolean isUniqueToRow(GameGrid grid, ArrayList<List<Integer>> validValuesGrid, int x, int y, int v)
+	{
+		int i = y * grid.getWidth();
+		for (int testX=0; testX < grid.getWidth(); testX++)
+		{
+			if (testX != x)
+			{
+				List<Integer> validValues = validValuesGrid.get(i + testX);
+				for (Integer testV : validValues)
+				{
+					if (testV.equals(v))
+						return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	private static boolean isUniqueToColumn(GameGrid grid, ArrayList<List<Integer>> validValuesGrid, int x, int y, int v)
+	{
+		int i = x;
+		for (int testY=0; testY < grid.getHeight(); testY++)
+		{
+			if (testY != y)
+			{
+				List<Integer> validValues = validValuesGrid.get(i + (testY*grid.getWidth()));
+				for (Integer testV : validValues)
+				{
+					if (testV.equals(v))
+						return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	private static boolean isUniqueToQuadrant(GameGrid grid, ArrayList<List<Integer>> validValuesGrid, int x, int y, int v)
+	{
+		int quadStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+		int quadStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+		int quadEndX = quadStartX + SudokuConstants.GRID_WIDTH;
+		int quadEndY = quadStartY + SudokuConstants.GRID_WIDTH;
+		for (int testY=quadStartY; testY < quadEndY; testY++)
+		{
+			for (int testX=quadStartX; testX < quadEndX; testX++)
+			{
+				if (! ((testX == x) && (testY == y)) )
+				{
+					List<Integer> validValues = validValuesGrid.get(testX + (testY*grid.getWidth()));
+					for (Integer testV : validValues)
+					{
+						if (testV.equals(v))
+							return false;
+					}
+				}
+			}
+		}
+	
+		return true;
 	}
 	
 	public static List<Integer> getValidValuesForSquare(GameGrid grid, int x, int y)

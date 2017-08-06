@@ -99,7 +99,7 @@ public class GameGridTest {
 
 	@Test
 	public void testIsBoardValidNo() {
-		GameGrid grid = SampleGrids.BAD;
+		GameGrid grid = SampleGrids.BAD_NOTVALID;
 		assertFalse(grid.isValidBoard());
 	}
 }
