@@ -1,4 +1,4 @@
-package com.glroland.sudoku.model;
+package com.glroland.sudoku.game;
 
 import static org.junit.Assert.*;
 
@@ -11,4 +11,9 @@ public class PuzzleTest {
 	public void setUp() throws Exception {
 	}
 
+	@Test
+	public void test()
+	{
+		assertTrue(true);
+	}
 }

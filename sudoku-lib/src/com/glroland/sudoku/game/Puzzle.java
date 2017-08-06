@@ -1,10 +1,19 @@
-package com.glroland.sudoku.model;
+package com.glroland.sudoku.game;
+
+import java.util.ArrayList;
+
+import com.glroland.sudoku.exceptions.IllegalMoveException;
+import com.glroland.sudoku.model.GameGrid;
+import com.glroland.sudoku.model.GameMove;
+import com.glroland.sudoku.model.PlayableGameGrid;
+import com.glroland.sudoku.util.SudokuConstants;
 
 public class Puzzle {
 
 	private GameGrid initialPuzzle;
 	private GameGrid puzzleSolution;
 	private PlayableGameGrid activeGrid;
+	private ArrayList<GameMove> playerMoves;
 	
 	public Puzzle(GameGrid initial, GameGrid solution)
 	{
@@ -30,6 +39,9 @@ public class Puzzle {
 		initialPuzzle = initial;
 		puzzleSolution = solution;
 		activeGrid = new PlayableGameGrid(initialPuzzle);
+		
+		// reset the moves list
+		playerMoves = new ArrayList<GameMove>();
 	}
 	
 	public GameGrid getPuzzleSolution()
@@ -45,5 +57,36 @@ public class Puzzle {
 	public GameGrid getActiveGrid()
 	{
 		return activeGrid;
+	}
+	
+	public void makeMove(int x, int y, int v)
+	{
+		// is the move allowed per the active grid playboard?
+		if (!activeGrid.isValidMove(x, y, v))
+		{
+			throw new IllegalMoveException("Move attempted against active puzzle", x, y, v);
+		}
+		
+		// is the move part of the initial game board?
+		if (initialPuzzle.getValue(x,  y) != SudokuConstants.VALUE_EMPTY)
+		{
+			throw new IllegalMoveException("Unpermitted attempt to change part of the original game puzzle", x, y, v);			
+		}
+		
+		activeGrid.setValue(x, y, v);
+		
+		// store the move
+		GameMove move = new GameMove(x, y, v);
+		playerMoves.add(move);
+	}
+	
+	public boolean isCorrect()
+	{
+		return puzzleSolution.isDerivative(activeGrid);
+	}
+	
+	public boolean isSolved()
+	{
+		return activeGrid.isSolved();
 	}
 }

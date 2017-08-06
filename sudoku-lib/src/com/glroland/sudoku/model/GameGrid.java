@@ -156,4 +156,27 @@ public class GameGrid {
 		
 		return true;
 	}
+	
+	public String toString()
+	{
+		StringBuilder s = new StringBuilder();
+		for (int i=0; i<grid.length; i++)
+		{
+			// convert array into relative positioning
+			int x = i % width;
+			int y = i / width;
+			int v = grid[i];
+			
+			if ((x > 0) && ((x % SudokuConstants.GRID_WIDTH) == 0))
+				s.append("|");
+			s.append(v);
+			if (x == (width - 1))
+			{
+				s.append("\n");
+				if ((y > 0) && (y < (height - 1)) && ((y % SudokuConstants.GRID_WIDTH) == (SudokuConstants.GRID_WIDTH-1)))
+					s.append("-----------\n");
+			}
+		}
+		return s.toString();
+	}
 }
