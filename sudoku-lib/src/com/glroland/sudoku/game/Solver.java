@@ -73,52 +73,23 @@ public class Solver {
 			throw new IllegalArgumentException("Input grid passed to solver is null!");
 		if (!grid.isValidBoard())
 			throw new IllegalArgumentException("Input game board is not valid - hence no solution is possible");
-		
+
 		ArrayList<Integer> validValues = new ArrayList<Integer>();
-		for (int i=SudokuConstants.VALUE_MIN; i<=SudokuConstants.VALUE_MAX; i++)
+
+		// populated squares assume valid values - do not reassess non-empty values
+		if (grid.getValue(x, y) == SudokuConstants.VALUE_EMPTY)
 		{
-			boolean isValid = true;
-			
-			// disqualify by current row first
-			for (int testX=0; testX<grid.getWidth(); testX++)
+			// brute force test per square
+			for (int i=SudokuConstants.VALUE_MIN; i<=SudokuConstants.VALUE_MAX; i++)
 			{
-				if (testX != x)
+				boolean isValid = true;
+				
+				// disqualify by current row first
+				for (int testX=0; testX<grid.getWidth(); testX++)
 				{
-					int gridValue = grid.getValue(testX, y);
-					if (gridValue == i)
+					if (testX != x)
 					{
-						isValid = false;
-						break;
-					}
-				}
-			}
-			
-			// disqualify by current column next
-			for (int testY=0; testY<grid.getHeight(); testY++)
-			{
-				if (testY != y)
-				{
-					int gridValue = grid.getValue(x, testY);
-					if (gridValue == i)
-					{
-						isValid = false;
-						break;
-					}
-				}
-			}		
-			
-			// disqualify by quadrant last
-			int quadStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-			int quadStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-			int quadEndX = quadStartX + SudokuConstants.GRID_WIDTH;
-			int quadEndY = quadStartY + SudokuConstants.GRID_WIDTH;
-			for (int testY=quadStartY; testY < quadEndY; testY++)
-			{
-				for (int testX=quadStartX; testX < quadEndX; testX++)
-				{
-					if ((testX != x) && (testY != y))
-					{
-						int gridValue = grid.getValue(testX, testY);
+						int gridValue = grid.getValue(testX, y);
 						if (gridValue == i)
 						{
 							isValid = false;
@@ -126,11 +97,47 @@ public class Solver {
 						}
 					}
 				}
+				
+				// disqualify by current column next
+				for (int testY=0; testY<grid.getHeight(); testY++)
+				{
+					if (testY != y)
+					{
+						int gridValue = grid.getValue(x, testY);
+						if (gridValue == i)
+						{
+							isValid = false;
+							break;
+						}
+					}
+				}		
+				
+				// disqualify by quadrant last
+				int quadStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+				int quadStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+				int quadEndX = quadStartX + SudokuConstants.GRID_WIDTH;
+				int quadEndY = quadStartY + SudokuConstants.GRID_WIDTH;
+				for (int testY=quadStartY; testY < quadEndY; testY++)
+				{
+					for (int testX=quadStartX; testX < quadEndX; testX++)
+					{
+						if ((testX != x) && (testY != y))
+						{
+							int gridValue = grid.getValue(testX, testY);
+							if (gridValue == i)
+							{
+								isValid = false;
+								break;
+							}
+						}
+					}
+				}
+				
+				if (isValid)
+					validValues.add(i);
 			}
-			
-			if (isValid)
-				validValues.add(i);
 		}
+		
 		return validValues;
 	}
 }
