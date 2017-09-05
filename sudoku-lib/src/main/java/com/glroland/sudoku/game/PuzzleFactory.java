@@ -1,44 +1,99 @@
 package com.glroland.sudoku.game;
 
-import com.glroland.sudoku.model.GameGrid;
+import java.util.ArrayList;
+import java.util.Random;
+
 import com.glroland.sudoku.model.PlayableGameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleFactory 
 {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Puzzle createPuzzle()
 	{
-		PlayableGameGrid solution = new PlayableGameGrid();
-		for (int corner=0; corner < solution.getWidth(); corner++)
+		// create basic value array that can be cloned
+		ArrayList allValues = new ArrayList();
+		for (int i=1; i<= SudokuConstants.PUZZLE_WIDTH; i++)
+			allValues.add(i);
+		
+		// create basic puzzle solution matrix
+		int gridSize = SudokuConstants.PUZZLE_WIDTH * SudokuConstants.PUZZLE_HEIGHT;
+		ArrayList [] grid = new ArrayList[gridSize];
+		for (int i=0; i<gridSize; i++)
+			grid[i] = (ArrayList)allValues.clone();
+
+		// randomly refine values, cell by cell
+		Random r = new Random();
+		for (int i=0; i < gridSize; i++)
 		{
-			// fill remainder of row
-			for (int x=corner; x<solution.getWidth(); x++)
+			// randomly select one of the values in the list and make it active
+			ArrayList values = grid[i];
+			if ((values == null) || (values.size() == 0))
 			{
-				if (solution.getValue(x, corner) == SudokuConstants.VALUE_EMPTY)
-				{
-					int value = generateValueForSquare(solution, x, corner);
-					if ((value == SudokuConstants.VALUE_EMPTY) || !solution.isValidValue(value))
-					{
-						throw new RuntimeException("Unable to generate value for squar in Rowe: X=" + x + " Y=" + corner + "\nPuzzle:\n" + solution);
-					}
-					solution.setValue(x, corner, value);
-				}
+//				throw new RuntimeException("While randomizing cell value, encountered a null or empty solution matrix entry at position: I=" + i);
+				continue;
+			}
+			int value;
+			if (values.size() == 1)
+				value = (int)values.get(0);
+			else
+			{
+				value = (int)values.get(r.nextInt(values.size()));
+				values.clear();
+				values.add(value);
 			}
 			
-			// fill remainder of column
-			for (int y=corner; y<solution.getWidth(); y++)
+			// remove it from every cell in the row
+			int endI = ((i / SudokuConstants.PUZZLE_WIDTH) * SudokuConstants.PUZZLE_WIDTH) + SudokuConstants.PUZZLE_WIDTH - 1;
+			for (int clear = i + 1; clear <= endI; clear++)
 			{
-				if (solution.getValue(corner, y) == SudokuConstants.VALUE_EMPTY)
-				{
-					int value = generateValueForSquare(solution, corner, y);
-					if ((value == SudokuConstants.VALUE_EMPTY) || !solution.isValidValue(value))
-					{
-						throw new RuntimeException("Unable to generate value for square in Column: X=" + corner + " Y=" + y + "\nPuzzle:\n" + solution);
-					}
-					solution.setValue(corner, y, value);
-				}
+				ArrayList vi = grid[clear];
+				removeValueFromList(vi, value);
 			}
+			
+			// remove it from every cell in the column
+			for (int clear = i + SudokuConstants.PUZZLE_WIDTH; clear < gridSize; clear += SudokuConstants.PUZZLE_WIDTH)
+			{
+				ArrayList vi = grid[clear];
+				removeValueFromList(vi, value);				
+			}
+			
+			// remove it from every cell in the quadrant
+			int x = i % SudokuConstants.PUZZLE_WIDTH;
+			int y = i / SudokuConstants.PUZZLE_WIDTH;
+			int gridStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+			int gridStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+			int gridEndX = gridStartX + SudokuConstants.GRID_WIDTH - 1;
+			int gridEndY = gridStartY + SudokuConstants.GRID_WIDTH - 1;
+			for (int gy = gridStartY; gy <= gridEndY; gy++)
+				for (int gx = gridStartX; gx <= gridEndX; gx++)
+				{
+					if ((gy != y) && (gx != x))
+					{
+						ArrayList vi = grid[gx + (gy * SudokuConstants.PUZZLE_WIDTH)];
+						removeValueFromList(vi, value);
+					}
+				}
 		}
+		
+		// create solution from solution matrix
+		PlayableGameGrid solution = new PlayableGameGrid();
+		for (int y=0; y<SudokuConstants.PUZZLE_HEIGHT; y++)
+			for (int x=0; x<SudokuConstants.PUZZLE_WIDTH; x++)
+			{
+				ArrayList values = grid[x + (y * SudokuConstants.PUZZLE_WIDTH)];
+				if ((values == null) || (values.size() == 0))
+				{
+//					throw new RuntimeException("While building solution object, encountered a null solution matrix entry at position: " + x + " ," + y);
+					continue;
+				}
+				else if (values.size() != 1)
+				{
+					throw new RuntimeException("While building solution object, encountered a solution matrix entry at position (" + x + " ," + y + ") that had an unusual size, expected 1 but received: " + values.size());
+				}
+				int v = (int)values.get(0);
+				solution.setValue(x, y, v);
+			}
 		
 		if (!solution.isValidBoard())
 		{
@@ -53,52 +108,26 @@ public class PuzzleFactory
 		return puzzle;
 	}
 	
-	private static int generateValueForSquare(GameGrid grid, int x, int y)
+	@SuppressWarnings("rawtypes")
+	private static void removeValueFromList(ArrayList values, int v)
 	{
-		int v = SudokuConstants.VALUE_EMPTY;
-
-		while (true)
-		{
-			v = (int)((double)(grid.getWidth()) * Math.random()) + 1;
-			boolean isUnique = true;
-			
-			// is unique to row?
-			for (int testX=0; testX<grid.getWidth(); testX++)
-				if (grid.getValue(testX, y) == v)
-				{
-					isUnique = false;
-					break;
-				}
-
-			// is unique to column?
-			for (int testY=0; testY<grid.getHeight(); testY++)
-				if (grid.getValue(x, testY) == v)
-				{
-					isUnique = false;
-					break;
-				}
-			
-			// is unique to quadrant?
-			int quadStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-			int quadStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-			int quadEndX = quadStartX + SudokuConstants.GRID_WIDTH;
-			int quadEndY = quadStartY + SudokuConstants.GRID_WIDTH;
-			for (int testY=quadStartY; testY < quadEndY; testY++)
+		if ((values != null) && (values.size() != 0))
+		{		
+			int remove = -1;
+			for (int i=0; i < values.size(); i++)
 			{
-				for (int testX=quadStartX; testX < quadEndX; testX++)
+				int iv = (int)values.get(i);
+				if (iv == v)
 				{
-					if (grid.getValue(testX, testY) == v)
-					{
-						isUnique = false;
-						break;
-					}
+					remove = i;
+					break;
 				}
 			}
-
-			if (isUnique)
-				break;
+			
+			if (remove != -1)
+			{
+				values.remove(remove);
+			}
 		}
-		
-		return v;
 	}
 }

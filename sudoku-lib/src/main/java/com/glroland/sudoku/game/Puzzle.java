@@ -24,7 +24,7 @@ public class Puzzle {
 			throw new IllegalArgumentException("Solution to puzzle is null!");
 		
 		// validate that the solution is complete
-		if (solution.isSolved())
+		if (!solution.isSolved())
 			throw new IllegalArgumentException("Provided solution is not actually complete");
 		
 		// validate that the solution is accurate
@@ -32,7 +32,7 @@ public class Puzzle {
 			throw new IllegalArgumentException("Provided solution is not a valid game board");
 		
 		// ensure that the initial puzzle is a derivative of the solution
-		if (solution.isDerivative(initial))
+		if (!solution.isDerivative(initial))
 			throw new IllegalArgumentException("Initial game board is not a derivative of the solution");
 		
 		// store values
@@ -88,5 +88,17 @@ public class Puzzle {
 	public boolean isSolved()
 	{
 		return activeGrid.isSolved();
+	}
+	
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder("Solution:\n");
+		sb.append(puzzleSolution.toString()).append("\n");
+		sb.append("Initial Puzzle:\n");
+		sb.append(initialPuzzle.toString()).append("\n");
+		sb.append("Current State of Game Play:\n");
+		sb.append(activeGrid.toString()).append("\n");
+		
+		return sb.toString();
 	}
 }

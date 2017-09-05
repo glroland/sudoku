@@ -13,9 +13,10 @@ public class PuzzleFactoryTest {
 
 	@Test
 	public void testCreatePuzzle() {
-//		PuzzleFactory pz = new PuzzleFactory();
-//		Puzzle puzzle = pz.createPuzzle();
-//		assertNotNull(puzzle);
+		PuzzleFactory pz = new PuzzleFactory();
+		Puzzle p = pz.createPuzzle();
+		assertNotNull(p);
+		assertTrue(p.getPuzzleSolution().isValidBoard());
+		assertTrue(p.getPuzzleSolution().isSolved());
 	}
-
 }

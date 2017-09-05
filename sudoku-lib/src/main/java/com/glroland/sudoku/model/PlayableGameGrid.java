@@ -19,8 +19,7 @@ public class PlayableGameGrid extends GameGrid {
 		if (g.grid.length != grid.length)
 			throw new IllegalArgumentException("Input GameGrid to clone is not of the same size as the current game grid. grid.length=" + grid.length + "  g.grid.length=" + g.grid.length);
 		
-		for (int p=0; p<g.grid.length; p++)
-			grid[p] = g.grid[p];
+		System.arraycopy(g.grid, 0, grid, 0, g.grid.length);
 	}
 	
 	public boolean isValidValue(int v)

@@ -19,6 +19,15 @@ public class GameGrid {
 			}
 		}
 	}
+	public GameGrid(int [] gcopy)
+	{
+		if ((gcopy == null) || (gcopy.length != grid.length))
+		{
+			throw new IllegalArgumentException("Input game grid passed to GameGrid constructor is invalid");
+		}
+		
+		System.arraycopy(gcopy, 0, grid, 0, grid.length);
+	}
 	
 	public boolean isValidLocation(int x, int y)
 	{
@@ -47,7 +56,7 @@ public class GameGrid {
 		{
 			if (testX != x)
 			{
-				if (grid[testX + (y*height)] == v)
+				if (grid[testX + (y*width)] == v)
 					return false;
 			}
 		}
@@ -57,7 +66,7 @@ public class GameGrid {
 		{
 			if (testY != y)
 			{
-				if (grid[x + (testY*getHeight())] == v)
+				if (grid[x + (testY*width)] == v)
 					return false;
 			}
 		}
@@ -73,7 +82,7 @@ public class GameGrid {
 			{
 				if ((testX != x) && (testY != y))
 				{
-					if (grid[testX + (testY*getHeight())] == v)
+					if (grid[testX + (testY*width)] == v)
 						return false;
 				}
 			}
