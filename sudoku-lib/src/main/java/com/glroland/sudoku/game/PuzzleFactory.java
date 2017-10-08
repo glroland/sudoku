@@ -8,21 +8,89 @@ import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleFactory 
 {
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static Puzzle createPuzzle()
+	@SuppressWarnings("rawtypes")
+	private final ArrayList ALL_VALUES = new ArrayList();
+	
+	@SuppressWarnings("unchecked")
+	public PuzzleFactory()
 	{
 		// create basic value array that can be cloned
-		ArrayList allValues = new ArrayList();
 		for (int i=1; i<= SudokuConstants.PUZZLE_WIDTH; i++)
-			allValues.add(i);
-		
+			ALL_VALUES.add(i);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Puzzle createPuzzle()
+	{		
 		// create basic puzzle solution matrix
 		int gridSize = SudokuConstants.PUZZLE_WIDTH * SudokuConstants.PUZZLE_HEIGHT;
 		ArrayList [] grid = new ArrayList[gridSize];
 		for (int i=0; i<gridSize; i++)
-			grid[i] = (ArrayList)allValues.clone();
+			grid[i] = (ArrayList)ALL_VALUES.clone();
 
-		// randomly refine values, cell by cell
+		PlayableGameGrid solution = null;
+		int phase = 0;
+		for (int i=0; i < 1000; i++)
+		{
+			// randomly refine values, cell by cell
+			randomlyPopulateCells(grid);
+			solution = createGridFromArray(grid);
+			
+			if(solution.isSolved())
+				break;
+			else
+			{
+				
+				
+				phase++;
+			}
+		}
+
+		// validate solution from solution matrix
+		if (!solution.isValidBoard())
+		{
+			throw new RuntimeException("Unable to create a valid game grid.  Initial grid that led to this error:\n" + solution);
+		}
+		if (!solution.isSolved())
+		{
+			throw new RuntimeException("Unable to create solvable game grid.  Initial grid that led to this error:\n" + solution);
+		}
+		
+		Puzzle puzzle = new Puzzle(solution, solution);
+		
+		
+		return puzzle;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private PlayableGameGrid createGridFromArray(ArrayList [] grid)
+	{
+		PlayableGameGrid solution = new PlayableGameGrid();
+		for (int y=0; y<SudokuConstants.PUZZLE_HEIGHT; y++)
+			for (int x=0; x<SudokuConstants.PUZZLE_WIDTH; x++)
+			{
+				ArrayList values = grid[x + (y * SudokuConstants.PUZZLE_WIDTH)];
+				if ((values == null) || (values.size() == 0))
+				{
+//					throw new RuntimeException("While building solution object, encountered a null solution matrix entry at position: " + x + " ," + y);
+					continue;
+				}
+				else if (values.size() != 1)
+				{
+					throw new RuntimeException("While building solution object, encountered a solution matrix entry at position (" + x + " ," + y + ") that had an unusual size, expected 1 but received: " + values.size());
+				}
+				int v = (Integer)values.get(0);
+				solution.setValue(x, y, v);
+			}
+		
+		return solution;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void randomlyPopulateCells(ArrayList [] grid)
+	{
+		int gridSize = grid.length;
+		
 		Random r = new Random();
 		for (int i=0; i < gridSize; i++)
 		{
@@ -35,10 +103,10 @@ public class PuzzleFactory
 			}
 			int value;
 			if (values.size() == 1)
-				value = (int)values.get(0);
+				value = (Integer)values.get(0);
 			else
 			{
-				value = (int)values.get(r.nextInt(values.size()));
+				value = (Integer)values.get(r.nextInt(values.size()));
 				values.clear();
 				values.add(value);
 			}
@@ -75,48 +143,17 @@ public class PuzzleFactory
 					}
 				}
 		}
-		
-		// create solution from solution matrix
-		PlayableGameGrid solution = new PlayableGameGrid();
-		for (int y=0; y<SudokuConstants.PUZZLE_HEIGHT; y++)
-			for (int x=0; x<SudokuConstants.PUZZLE_WIDTH; x++)
-			{
-				ArrayList values = grid[x + (y * SudokuConstants.PUZZLE_WIDTH)];
-				if ((values == null) || (values.size() == 0))
-				{
-//					throw new RuntimeException("While building solution object, encountered a null solution matrix entry at position: " + x + " ," + y);
-					continue;
-				}
-				else if (values.size() != 1)
-				{
-					throw new RuntimeException("While building solution object, encountered a solution matrix entry at position (" + x + " ," + y + ") that had an unusual size, expected 1 but received: " + values.size());
-				}
-				int v = (int)values.get(0);
-				solution.setValue(x, y, v);
-			}
-		
-		if (!solution.isValidBoard())
-		{
-			throw new RuntimeException("Unable to create a valid game grid.  Initial grid that led to this error:\n" + solution);
-		}
-		if (!solution.isSolved())
-		{
-			throw new RuntimeException("Unable to create solvable game grid.  Initial grid that led to this error:\n" + solution);
-		}
-		
-		Puzzle puzzle = new Puzzle(solution, solution);
-		return puzzle;
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static void removeValueFromList(ArrayList values, int v)
+	private void removeValueFromList(ArrayList values, int v)
 	{
 		if ((values != null) && (values.size() != 0))
 		{		
 			int remove = -1;
 			for (int i=0; i < values.size(); i++)
 			{
-				int iv = (int)values.get(i);
+				int iv = (Integer)values.get(i);
 				if (iv == v)
 				{
 					remove = i;

@@ -7,7 +7,6 @@
 
 	<modules>
 		<module>sudoku-lib</module>
-		<module>sudoku-web</module>
 	</modules>
 
 	<dependencies>
