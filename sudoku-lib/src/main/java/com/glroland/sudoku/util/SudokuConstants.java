@@ -11,5 +11,5 @@ public class SudokuConstants {
 	public static final int VALUE_EMPTY = 0;
 	public static final int VALUE_MIN = 1;
 	public static final int VALUE_MAX = PUZZLE_SIZE;
-
+	
 }

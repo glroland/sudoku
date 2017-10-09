@@ -3,6 +3,7 @@ package com.glroland.sudoku.game;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.glroland.sudoku.exceptions.PuzzleGenerationDeadEndException;
 import com.glroland.sudoku.model.PlayableGameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
@@ -28,24 +29,10 @@ public class PuzzleFactory
 		for (int i=0; i<gridSize; i++)
 			grid[i] = (ArrayList)ALL_VALUES.clone();
 
-		PlayableGameGrid solution = null;
-		int phase = 0;
-		for (int i=0; i < 1000; i++)
-		{
-			// randomly refine values, cell by cell
-			randomlyPopulateCells(grid);
-			solution = createGridFromArray(grid);
+		// randomly refine values, cell by cell
+		randomlyPopulateCells(grid);
+		PlayableGameGrid solution = createGridFromArray(grid);
 			
-			if(solution.isSolved())
-				break;
-			else
-			{
-				
-				
-				phase++;
-			}
-		}
-
 		// validate solution from solution matrix
 		if (!solution.isValidBoard())
 		{
@@ -98,8 +85,7 @@ public class PuzzleFactory
 			ArrayList values = grid[i];
 			if ((values == null) || (values.size() == 0))
 			{
-//				throw new RuntimeException("While randomizing cell value, encountered a null or empty solution matrix entry at position: I=" + i);
-				continue;
+				throw new PuzzleGenerationDeadEndException("While randomizing cell value, encountered a null or empty solution matrix entry at position: I=" + i);
 			}
 			int value;
 			if (values.size() == 1)

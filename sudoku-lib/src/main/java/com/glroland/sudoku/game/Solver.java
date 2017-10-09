@@ -3,6 +3,7 @@ package com.glroland.sudoku.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.glroland.sudoku.exceptions.UnsolvablePuzzleException;
 import com.glroland.sudoku.model.GameGrid;
 import com.glroland.sudoku.model.GameMove;
 import com.glroland.sudoku.model.PlayableGameGrid;
@@ -22,9 +23,9 @@ public class Solver {
 		while (!playGrid.isSolved())
 		{
 			// are there any next moves?
-			List<GameMove> nextMoves = getNextMovesForPuzzle(playGrid);
+			List<GameMove> nextMoves = getNextMovesForPuzzle(grid, playGrid);
 			if (nextMoves.size() == 0)
-				throw new RuntimeException("Unable to solve game board!\nInput:\n" + grid.toString() + "\nCurrent Solution State:\n" + playGrid.toString());
+				throw new UnsolvablePuzzleException(grid, playGrid);
 			
 			// make each of the recommended next moves
 			for (GameMove move : nextMoves)
@@ -51,7 +52,7 @@ public class Solver {
 		return moveGrid;
 	}
 	
-	public static List<GameMove> getNextMovesForPuzzle(GameGrid grid)
+	public static List<GameMove> getNextMovesForPuzzle(GameGrid initialPuzzle, GameGrid grid)
 	{
 		// validate input grid first
 		if (grid == null)
@@ -63,8 +64,8 @@ public class Solver {
 		if (!grid.isSolved())
 		{
 			// get valid values
-			ArrayList<List<Integer>> validValuesGrid = buildValidValuesGridForPuzzle(grid);
-			validValuesGrid = refineValidValuesGrid(grid, validValuesGrid);
+			ArrayList<List<Integer>> validValuesGrid_Pre = buildValidValuesGridForPuzzle(grid);
+			ArrayList<List<Integer>> validValuesGrid = refineValidValuesGrid(grid, validValuesGrid_Pre);
 			
 			// for each square
 			for (int i=0; i<validValuesGrid.size(); i++)
@@ -78,6 +79,12 @@ public class Solver {
 					GameMove move = new GameMove(x, y, values.get(0));
 					list.add(move);
 				}
+			}
+			
+			// if there are no more moves, attempt to determine puzzle problem
+			if (list.isEmpty())
+			{
+				throw new UnsolvablePuzzleException(initialPuzzle, grid);
 			}
 		}
 		
@@ -111,7 +118,7 @@ public class Solver {
 			refinedGrid.add(refinedValues);
 			i++;
 		}
-
+		
 		return refinedGrid;
 	}
 	

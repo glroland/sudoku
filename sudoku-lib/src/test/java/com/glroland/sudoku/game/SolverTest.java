@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.glroland.sudoku.exceptions.UnsolvablePuzzleException;
 import com.glroland.sudoku.model.GameGrid;
 import com.glroland.sudoku.model.SampleGrids;
 
@@ -34,11 +35,47 @@ public class SolverTest {
 			GameGrid grid = Solver.createSolution(SampleGrids.BAD_UNSOLVABLE);
 			fail("Unsolvable puzzle should have threw an exception");
 		}
-		catch(RuntimeException e)
+		catch(UnsolvablePuzzleException e)
 		{
 		}
 	}
 
+	@Test
+	public void testSolveGameBoardIsBroken() {
+		try
+		{
+			GameGrid grid = Solver.createSolution(SampleGrids.BAD_NOTVALID);
+			fail("Unsolvable puzzle should have threw an exception");
+		}
+		catch(RuntimeException e)
+		{
+		}
+	}
+	
+	@Test
+	public void testSolveGameMultipleSolutions() {
+		try
+		{
+			GameGrid grid = Solver.createSolution(SampleGrids.GAME1_IMMATURE);
+			fail("Unsolvable puzzle should have threw an exception");
+		}
+		catch(UnsolvablePuzzleException e)
+		{
+		}
+	}
+
+	@Test
+	public void testSolveGameEmptyGrid() {
+		try
+		{
+			GameGrid grid = Solver.createSolution(SampleGrids.EMPTY);
+			fail("Unsolvable puzzle should have threw an exception");
+		}
+		catch(UnsolvablePuzzleException e)
+		{
+		}
+	}
+	
 	@Test
 	public void testGetValidValuesForSquare_1()
 	{

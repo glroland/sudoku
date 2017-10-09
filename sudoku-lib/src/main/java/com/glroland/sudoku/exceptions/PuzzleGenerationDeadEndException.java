@@ -13,11 +13,11 @@ public class PuzzleGenerationDeadEndException extends RuntimeException {
 	
 	public PuzzleGenerationDeadEndException(String msg, GameGrid currentState)
 	{
-		super("Encountered a dead end when generatinsg a new puzzle!\nCurrent Solution State:\n" + currentState.toString());
+		super("Encountered a dead end when generating a new puzzle!\nCurrent Solution State:\n" + currentState.toString());
 	}
 	
 	public PuzzleGenerationDeadEndException(String msg)
 	{
-		super("Encountered a dead end when generatinsg a new puzzle!  (No details passed to exception)");
+		super("Encountered a dead end when generating a new puzzle!  (No details passed to exception)");
 	}
 }
