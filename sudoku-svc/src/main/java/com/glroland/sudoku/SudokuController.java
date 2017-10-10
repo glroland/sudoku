@@ -1,4 +1,4 @@
-package com.glroland.sudoku.ocr;
+package com.glroland.sudoku;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

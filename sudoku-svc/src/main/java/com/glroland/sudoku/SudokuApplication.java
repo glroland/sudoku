@@ -1,4 +1,4 @@
-package com.glroland.sudoku.ocr;
+package com.glroland.sudoku;
 
 import java.util.Arrays;
 
