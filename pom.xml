@@ -7,6 +7,7 @@
 
 	<modules>
 		<module>sudoku-lib</module>
+		<module>sudoku-svc</module>
 		<module>sudoku-ocr-svc</module>
 	</modules>
 
