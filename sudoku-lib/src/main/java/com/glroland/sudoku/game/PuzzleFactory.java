@@ -3,12 +3,42 @@ package com.glroland.sudoku.game;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.glroland.sudoku.exceptions.PuzzleGenerationDeadEndException;
+import com.glroland.sudoku.exceptions.PuzzleGenerationException;
 import com.glroland.sudoku.model.PlayableGameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleFactory 
 {
+	private class PuzzleState
+	{
+		private ArrayList [] grid = null;
+		
+		public int chosenSequence = -1;
+		public int chosenValue = -1;
+		public ArrayList oldList = null;
+		
+		public boolean deadEnd = false;
+		
+		public void setGrid(ArrayList [] gridIn)
+		{
+			if (gridIn == null)
+				throw new IllegalArgumentException("Input grid array list is null");
+			
+			grid = new ArrayList[gridIn.length];
+			for (int i=0; i<gridIn.length; i++)
+			{
+				grid[i] = new ArrayList();
+				for (int v=0; v<gridIn[i].size(); v++)
+					grid[i].add(gridIn[i].get(v));
+			}
+		}
+		
+		public ArrayList [] getGrid()
+		{
+			return grid;
+		}
+	}
+	
 	@SuppressWarnings("rawtypes")
 	private final ArrayList ALL_VALUES = new ArrayList();
 	
@@ -29,11 +59,14 @@ public class PuzzleFactory
 		for (int i=0; i<gridSize; i++)
 			grid[i] = (ArrayList)ALL_VALUES.clone();
 
-		// randomly refine values, cell by cell
-		randomlyPopulateCells(grid);
-		PlayableGameGrid solution = createGridFromArray(grid);
-			
+		// recursive puzzle generation
+		PuzzleState state = new PuzzleState();
+		state.setGrid(grid);
+		state = populatePuzzle(state);
+		grid = state.getGrid();
+				
 		// validate solution from solution matrix
+		PlayableGameGrid solution = createGridFromArray(state.getGrid());
 		if (!solution.isValidBoard())
 		{
 			throw new RuntimeException("Unable to create a valid game grid.  Initial grid that led to this error:\n" + solution);
@@ -42,7 +75,8 @@ public class PuzzleFactory
 		{
 			throw new RuntimeException("Unable to create solvable game grid.  Initial grid that led to this error:\n" + solution);
 		}
-		
+
+		// create puzzle object now that we have a valid game grid
 		Puzzle puzzle = new Puzzle(solution, solution);
 		
 		
@@ -73,62 +107,118 @@ public class PuzzleFactory
 		return solution;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void randomlyPopulateCells(ArrayList [] grid)
+	private PuzzleState populatePuzzle(PuzzleState priorState)
 	{
-		int gridSize = grid.length;
+		// stage a clean state for new iteration
+		PuzzleState state = new PuzzleState();
+		state.setGrid(priorState.getGrid());
 		
+		// randomly refine values, cell by cell
+		boolean result = populateCell(state);
+		if (result)  // success
+		{
+			// rinse and repeat
+			state = populatePuzzle(state);
+		}
+		else
+		{
+			// trip dead end
+			state.deadEnd = true;
+		}
+		
+		if(state.deadEnd) 
+		{
+			if ((state.oldList != null) && (state.oldList.size() > 1))
+			{
+				// -- remove "bad try" and try again
+				state.oldList.remove(state.chosenSequence);
+				state.deadEnd = false;
+				state = populatePuzzle(state);		
+			}
+		}
+		
+		return state;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private boolean populateCell(PuzzleState state)
+	{
+		int gridSize = state.getGrid().length;
+		
+		// cleanse 1 values and identify dead ends first
+		for (int i=0; i < gridSize; i++)
+		{
+			// randomly select one of the values in the list and make it active
+			ArrayList values = state.getGrid()[i];
+			if ((values == null) || (values.size() == 0))
+			{
+				return false;
+//				throw new PuzzleGenerationException("While randomizing cell value, encountered a null or empty solution matrix entry at position: I=" + i);
+			}
+			if (values.size() == 1)
+			{
+				int value = (Integer)values.get(0);
+				cleanseValue(state.getGrid(), value, i);
+			}
+		}
+
+		// make one "decision" per invocation
 		Random r = new Random();
 		for (int i=0; i < gridSize; i++)
 		{
 			// randomly select one of the values in the list and make it active
-			ArrayList values = grid[i];
-			if ((values == null) || (values.size() == 0))
+			ArrayList values = state.getGrid()[i];
+			if (values.size() > 1)
 			{
-				throw new PuzzleGenerationDeadEndException("While randomizing cell value, encountered a null or empty solution matrix entry at position: I=" + i);
-			}
-			int value;
-			if (values.size() == 1)
-				value = (Integer)values.get(0);
-			else
-			{
-				value = (Integer)values.get(r.nextInt(values.size()));
+				int seq = r.nextInt(values.size());
+				state.chosenSequence = seq;
+				int value = (Integer)values.get(seq);
+				state.chosenValue = value;
+				state.oldList = (ArrayList)values.clone();
 				values.clear();
 				values.add(value);
+				cleanseValue(state.getGrid(), value, i);
+				
+				break;
 			}
-			
-			// remove it from every cell in the row
-			int endI = ((i / SudokuConstants.PUZZLE_WIDTH) * SudokuConstants.PUZZLE_WIDTH) + SudokuConstants.PUZZLE_WIDTH - 1;
-			for (int clear = i + 1; clear <= endI; clear++)
-			{
-				ArrayList vi = grid[clear];
-				removeValueFromList(vi, value);
-			}
-			
-			// remove it from every cell in the column
-			for (int clear = i + SudokuConstants.PUZZLE_WIDTH; clear < gridSize; clear += SudokuConstants.PUZZLE_WIDTH)
-			{
-				ArrayList vi = grid[clear];
-				removeValueFromList(vi, value);				
-			}
-			
-			// remove it from every cell in the quadrant
-			int x = i % SudokuConstants.PUZZLE_WIDTH;
-			int y = i / SudokuConstants.PUZZLE_WIDTH;
-			int gridStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-			int gridStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-			int gridEndX = gridStartX + SudokuConstants.GRID_WIDTH - 1;
-			int gridEndY = gridStartY + SudokuConstants.GRID_WIDTH - 1;
-			for (int gy = gridStartY; gy <= gridEndY; gy++)
-				for (int gx = gridStartX; gx <= gridEndX; gx++)
-				{
-					if ((gy != y) && (gx != x))
-					{
-						ArrayList vi = grid[gx + (gy * SudokuConstants.PUZZLE_WIDTH)];
-						removeValueFromList(vi, value);
-					}
-				}
 		}
+		
+		return true;
+	}
+	
+	private void cleanseValue(ArrayList [] grid, int value, int i)
+	{
+		// remove it from every cell in the row
+		int endI = ((i / SudokuConstants.PUZZLE_WIDTH) * SudokuConstants.PUZZLE_WIDTH) + SudokuConstants.PUZZLE_WIDTH - 1;
+		for (int clear = i + 1; clear <= endI; clear++)
+		{
+			ArrayList vi = grid[clear];
+			removeValueFromList(vi, value);
+		}
+		
+		// remove it from every cell in the column
+		for (int clear = i + SudokuConstants.PUZZLE_WIDTH; clear < grid.length; clear += SudokuConstants.PUZZLE_WIDTH)
+		{
+			ArrayList vi = grid[clear];
+			removeValueFromList(vi, value);				
+		}
+		
+		// remove it from every cell in the quadrant
+		int x = i % SudokuConstants.PUZZLE_WIDTH;
+		int y = i / SudokuConstants.PUZZLE_WIDTH;
+		int gridStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+		int gridStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
+		int gridEndX = gridStartX + SudokuConstants.GRID_WIDTH - 1;
+		int gridEndY = gridStartY + SudokuConstants.GRID_WIDTH - 1;
+		for (int gy = gridStartY; gy <= gridEndY; gy++)
+			for (int gx = gridStartX; gx <= gridEndX; gx++)
+			{
+				if ((gy != y) && (gx != x))
+				{
+					ArrayList vi = grid[gx + (gy * SudokuConstants.PUZZLE_WIDTH)];
+					removeValueFromList(vi, value);
+				}
+			}
 	}
 	
 	@SuppressWarnings("rawtypes")
