@@ -6,13 +6,18 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import com.glroland.sudoku.model.GameGrid;
 import com.glroland.sudoku.model.SampleGrids;
 import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleFactoryTest {
+
+	@Rule
+    public Timeout globalTimeout = Timeout.seconds(5);
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,9 +43,9 @@ public class PuzzleFactoryTest {
 	@Test
 	public void testCreatePuzzle() {
 		PuzzleFactory pz = new PuzzleFactory();
-//		Puzzle p = pz.createPuzzle();
-//		assertNotNull(p);
-//		assertTrue(p.getPuzzleSolution().isValidBoard());
-//		assertTrue(p.getPuzzleSolution().isSolved());
+		Puzzle p = pz.createPuzzle();
+		assertNotNull(p);
+		assertTrue(p.getPuzzleSolution().isValidBoard());
+		assertTrue(p.getPuzzleSolution().isSolved());
 	}
 }

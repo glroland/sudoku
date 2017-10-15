@@ -76,10 +76,16 @@ public class PuzzleCreationGameGrid implements Cloneable
 		return grid;
 	}
 
-	public boolean isComplete()
+	public boolean isFullyPopulated()
 	{
-		GameGrid gameGrid = this.getResultingGrid();
-		return gameGrid.isValidBoard() && gameGrid.isSolved();
+		for (int i=0; i<SudokuConstants.PUZZLE_BLOCK_COUNT; i++)
+		{
+			ArrayList<Integer> moves = grid[i];
+			if ((moves == null) || (moves.size() != 1))
+				return false;
+		}
+		
+		return true;
 	}
 	
 	public Object clone()

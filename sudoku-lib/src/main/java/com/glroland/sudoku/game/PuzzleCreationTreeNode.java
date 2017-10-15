@@ -9,11 +9,10 @@ import com.glroland.sudoku.util.SudokuConstants;
 public class PuzzleCreationTreeNode 
 {
 	private ArrayList<PuzzleCreationTreeNode> nextNodes = new ArrayList<PuzzleCreationTreeNode>();
-	private PuzzleCreationTreeNode parentNode;
+	private PuzzleCreationTreeNode parentNode = null;
 	
 	private final PuzzleCreationGameGrid incomingGrid;
 	private int myMovePosition = -1;
-	private int myMoveValue = -1;
 	private PuzzleCreationGameGrid outgoingGrid;
 	
 	private Random r = new Random();
@@ -57,6 +56,7 @@ public class PuzzleCreationTreeNode
 			if (myMovePosition < (SudokuConstants.PUZZLE_BLOCK_COUNT - 1))
 			{
 				PuzzleCreationTreeNode next = new PuzzleCreationTreeNode(nextGrid, myMovePosition+1);
+				next.parentNode = this;
 				nextNodes.add(next);
 			}
 		}
@@ -65,10 +65,8 @@ public class PuzzleCreationTreeNode
 		{
 			node.populate();
 			outgoingGrid = node.getInputGrid();
-			if (outgoingGrid.isComplete())
-			{
+			if (outgoingGrid.isFullyPopulated())
 				return;
-			}
 		}
 	}
 	
@@ -79,6 +77,9 @@ public class PuzzleCreationTreeNode
 	
 	public GameGrid getResult()
 	{
+		if (outgoingGrid == null)
+			return null;
+		
 		return outgoingGrid.getResultingGrid();
 	}
 }
