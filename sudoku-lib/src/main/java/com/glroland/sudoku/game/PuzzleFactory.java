@@ -1,6 +1,7 @@
 package com.glroland.sudoku.game;
 
-import com.glroland.sudoku.model.PlayableGameGrid;
+import com.glroland.sudoku.exceptions.PuzzleGenerationException;
+import com.glroland.sudoku.model.GameGrid;
 
 public class PuzzleFactory 
 {
@@ -8,12 +9,14 @@ public class PuzzleFactory
 	
 	public Puzzle createPuzzle()
 	{
+		// generate solved puzzle
 		PuzzleCreationTreeNode root = new PuzzleCreationTreeNode();
-		
-		
-		
-		PlayableGameGrid solution = null;
-
+		root.populate();
+		GameGrid solution = root.getResult();
+		if (!solution.isValidBoard())
+			throw new PuzzleGenerationException("Invalid board created by puzzle generator", solution);
+		if (!solution.isSolved())
+			throw new PuzzleGenerationException("Incomplete game solution created by puzzle generator", solution);
 		
 		// create puzzle object now that we have a valid game grid
 		Puzzle puzzle = new Puzzle(solution, solution);
@@ -204,62 +207,6 @@ public class PuzzleFactory
 		
 		return true;
 	}
-	
-	private void cleanseValue(ArrayList [] grid, int value, int i)
-	{
-		// remove it from every cell in the row
-		int endI = ((i / SudokuConstants.PUZZLE_WIDTH) * SudokuConstants.PUZZLE_WIDTH) + SudokuConstants.PUZZLE_WIDTH - 1;
-		for (int clear = i + 1; clear <= endI; clear++)
-		{
-			ArrayList vi = grid[clear];
-			removeValueFromList(vi, value);
-		}
-		
-		// remove it from every cell in the column
-		for (int clear = i + SudokuConstants.PUZZLE_WIDTH; clear < grid.length; clear += SudokuConstants.PUZZLE_WIDTH)
-		{
-			ArrayList vi = grid[clear];
-			removeValueFromList(vi, value);				
-		}
-		
-		// remove it from every cell in the quadrant
-		int x = i % SudokuConstants.PUZZLE_WIDTH;
-		int y = i / SudokuConstants.PUZZLE_WIDTH;
-		int gridStartX = (x / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-		int gridStartY = (y / SudokuConstants.GRID_WIDTH) * SudokuConstants.GRID_WIDTH;
-		int gridEndX = gridStartX + SudokuConstants.GRID_WIDTH - 1;
-		int gridEndY = gridStartY + SudokuConstants.GRID_WIDTH - 1;
-		for (int gy = gridStartY; gy <= gridEndY; gy++)
-			for (int gx = gridStartX; gx <= gridEndX; gx++)
-			{
-				if ((gy != y) && (gx != x))
-				{
-					ArrayList vi = grid[gx + (gy * SudokuConstants.PUZZLE_WIDTH)];
-					removeValueFromList(vi, value);
-				}
-			}
-	}
-	
-	@SuppressWarnings("rawtypes")
-	private void removeValueFromList(ArrayList values, int v)
-	{
-		if ((values != null) && (values.size() != 0))
-		{		
-			int remove = -1;
-			for (int i=0; i < values.size(); i++)
-			{
-				int iv = (Integer)values.get(i);
-				if (iv == v)
-				{
-					remove = i;
-					break;
-				}
-			}
-			
-			if (remove != -1)
-			{
-				values.remove(remove);
-			}
-		}
-	}*/
+
+	*/
 }
