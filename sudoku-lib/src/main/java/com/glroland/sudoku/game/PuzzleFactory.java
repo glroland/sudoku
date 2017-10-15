@@ -1,14 +1,33 @@
 package com.glroland.sudoku.game;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import com.glroland.sudoku.exceptions.PuzzleGenerationException;
 import com.glroland.sudoku.model.PlayableGameGrid;
-import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleFactory 
 {
+	
+	
+	public Puzzle createPuzzle()
+	{
+		PuzzleCreationTreeNode root = new PuzzleCreationTreeNode();
+		
+		
+		
+		PlayableGameGrid solution = null;
+
+		
+		// create puzzle object now that we have a valid game grid
+		Puzzle puzzle = new Puzzle(solution, solution);
+		
+		
+		return puzzle;
+
+	}
+	
+	
+	
+	
+	
+	/*
 	private class PuzzleState
 	{
 		private ArrayList [] grid = null;
@@ -242,5 +261,5 @@ public class PuzzleFactory
 				values.remove(remove);
 			}
 		}
-	}
+	}*/
 }
