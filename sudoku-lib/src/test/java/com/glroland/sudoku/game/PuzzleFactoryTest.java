@@ -3,7 +3,7 @@ package com.glroland.sudoku.game;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +29,7 @@ public class PuzzleFactoryTest {
 		PuzzleCreationGameGrid createGrid = new PuzzleCreationGameGrid();
 		for (int i=0; i<SudokuConstants.PUZZLE_BLOCK_COUNT; i++)
 		{
-			ArrayList<Integer> moves = createGrid.getMoveList(i);
+			LinkedList<Integer> moves = createGrid.getMoveList(i);
 			moves.add(SampleGrids.GAME1_SOLUTION.getValue(i % SudokuConstants.PUZZLE_WIDTH, i / SudokuConstants.PUZZLE_WIDTH));
 		}
 		PuzzleCreationTreeNode node = new PuzzleCreationTreeNode(createGrid, 0);

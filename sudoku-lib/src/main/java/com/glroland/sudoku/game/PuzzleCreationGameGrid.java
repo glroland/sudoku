@@ -1,6 +1,6 @@
 package com.glroland.sudoku.game;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import com.glroland.sudoku.model.GameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
@@ -8,39 +8,41 @@ import com.glroland.sudoku.util.SudokuConstants;
 public class PuzzleCreationGameGrid implements Cloneable
 {
 	@SuppressWarnings("unchecked")
-	private ArrayList<Integer> [] grid = new ArrayList[SudokuConstants.PUZZLE_BLOCK_COUNT];
+	private LinkedList<Integer> [] grid = new LinkedList[SudokuConstants.PUZZLE_BLOCK_COUNT];
 	
 	public PuzzleCreationGameGrid()
 	{
 		for (int i = 0; i < grid.length; i++)
-			grid[i] = new ArrayList<Integer>();
+			grid[i] = new LinkedList<Integer>();
 	}
 	
-	public ArrayList<Integer> getMoveList(int i)
+	public LinkedList<Integer> getMoveList(int i)
 	{
 		return grid[i];
 	}
 	
-	public ArrayList<Integer> getMoveList(int x, int y)
+	public LinkedList<Integer> getMoveList(int x, int y)
 	{
-		return grid[x + (y*SudokuConstants.PUZZLE_WIDTH)];
+		return grid[x + (y*SudokuConstants.PUZZLE_WIDTH)];		
 	}
 
-	public void cleanseValue(int value, int pivot)
+	public void cleanseValue(int val, int pivot)
 	{
+		Integer value = new Integer(val);
+		
 		// remove it from every cell in the row
 		int endI = ((pivot / SudokuConstants.PUZZLE_WIDTH) * SudokuConstants.PUZZLE_WIDTH) + SudokuConstants.PUZZLE_WIDTH - 1;
 		for (int clear = pivot + 1; clear <= endI; clear++)
 		{
-			ArrayList<Integer> vi = grid[clear];
-			vi.remove(new Integer(value));
+			LinkedList<Integer> vi = grid[clear];
+			vi.remove(value);
 		}
 		
 		// remove it from every cell in the column
 		for (int clear = pivot + SudokuConstants.PUZZLE_WIDTH; clear < grid.length; clear += SudokuConstants.PUZZLE_WIDTH)
 		{
-			ArrayList<Integer> vi = grid[clear];
-			vi.remove(new Integer(value));
+			LinkedList<Integer> vi = grid[clear];
+			vi.remove(value);
 		}
 		
 		// remove it from every cell in the quadrant
@@ -55,8 +57,8 @@ public class PuzzleCreationGameGrid implements Cloneable
 			{
 				if ((gy != y) && (gx != x))
 				{
-					ArrayList<Integer> vi = grid[gx + (gy * SudokuConstants.PUZZLE_WIDTH)];
-					vi.remove(new Integer(value));
+					LinkedList<Integer> vi = grid[gx + (gy * SudokuConstants.PUZZLE_WIDTH)];
+					vi.remove(value);
 				}
 			}
 	}
@@ -66,21 +68,23 @@ public class PuzzleCreationGameGrid implements Cloneable
 		int [] values = new int [SudokuConstants.PUZZLE_BLOCK_COUNT];
 		for (int i=0; i<SudokuConstants.PUZZLE_BLOCK_COUNT; i++)
 		{
-			ArrayList<Integer> pos = grid[i];
-			if (pos.size() != 1)
-				throw new RuntimeException("Unable to translate PuzzleCreationGameGrid to GameGrid because puzzle isn't completed!  Pos=" + i);
-			values[i] = pos.get(0);
+			values[i] = SudokuConstants.VALUE_EMPTY;
+			
+			LinkedList<Integer> pos = grid[i];
+			if (pos.size() > 1)
+				throw new RuntimeException("Unable to translate PuzzleCreationGameGrid to GameGrid because puzzle isn't completed!  Pos=" + i + " Size=" + pos.size());
+			else if (pos.size() == 1)
+				values[i] = pos.get(0);
 		}
 		
-		GameGrid grid = new GameGrid(values);
-		return grid;
+		return new GameGrid(values);
 	}
 
 	public boolean isFullyPopulated()
 	{
 		for (int i=0; i<SudokuConstants.PUZZLE_BLOCK_COUNT; i++)
 		{
-			ArrayList<Integer> moves = grid[i];
+			LinkedList<Integer> moves = grid[i];
 			if ((moves == null) || (moves.size() != 1))
 				return false;
 		}
@@ -92,17 +96,12 @@ public class PuzzleCreationGameGrid implements Cloneable
 	{
 		PuzzleCreationGameGrid freshCopy = new PuzzleCreationGameGrid();
 		
-		ArrayList<Integer> [] copy = freshCopy.grid;
-		for (int i=0; i < copy.length; i++)
+		for (int i=0; i < freshCopy.grid.length; i++)
 		{
 			if (grid[i] != null)
-			{
-				copy[i] = new ArrayList<Integer>();
-				copy[i].addAll(grid[i]);
-			}
+				freshCopy.grid[i] = (LinkedList<Integer>)grid[i].clone();
 		}
 		
-		freshCopy.grid = copy;
 		return freshCopy;
 	}
 }

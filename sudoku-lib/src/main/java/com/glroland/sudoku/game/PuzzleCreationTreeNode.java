@@ -1,6 +1,7 @@
 package com.glroland.sudoku.game;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Random;
 
 import com.glroland.sudoku.model.GameGrid;
@@ -8,7 +9,7 @@ import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleCreationTreeNode 
 {
-	private ArrayList<PuzzleCreationTreeNode> nextNodes = new ArrayList<PuzzleCreationTreeNode>();
+	private LinkedList<PuzzleCreationTreeNode> nextNodes = new LinkedList<PuzzleCreationTreeNode>();
 	private PuzzleCreationTreeNode parentNode = null;
 	
 	private final PuzzleCreationGameGrid incomingGrid;
@@ -17,6 +18,8 @@ public class PuzzleCreationTreeNode
 	
 	private Random r = new Random();
 
+	private static int c = 0;
+	
 	public PuzzleCreationTreeNode()
 	{
 		this(null, 0);
@@ -35,36 +38,37 @@ public class PuzzleCreationTreeNode
 			incomingGrid = in;
 		}
 		myMovePosition = position;
+		
+		synchronized(PuzzleCreationTreeNode.class) {
+			c++;
+			System.out.println("Node instance count: " + c);
+		}
 	}
 	
 	public void populate()
 	{
+		nextNodes.clear();
+		
 		// select a value in the current square
-		ArrayList<Integer> moves = (ArrayList<Integer>)incomingGrid.getMoveList(myMovePosition).clone();
-		int moveCount;
-		while ((moveCount = moves.size()) > 0)
+		LinkedList<Integer> moves = (LinkedList<Integer>)incomingGrid.getMoveList(myMovePosition).clone();
+		Collections.shuffle(moves, r);
+
+		for (Integer value : moves)
 		{
-			moveCount = moves.size();		
-			int select = r.nextInt(moveCount);
-			int value = moves.remove(select);
-			
 			PuzzleCreationGameGrid nextGrid = (PuzzleCreationGameGrid)incomingGrid.clone();
 			nextGrid.getMoveList(myMovePosition).clear();
 			nextGrid.getMoveList(myMovePosition).add(value);
 			nextGrid.cleanseValue(value,  myMovePosition);
-			
+			outgoingGrid = nextGrid;
+
 			if (myMovePosition < (SudokuConstants.PUZZLE_BLOCK_COUNT - 1))
 			{
-				PuzzleCreationTreeNode next = new PuzzleCreationTreeNode(nextGrid, myMovePosition+1);
-				next.parentNode = this;
-				nextNodes.add(next);
+				PuzzleCreationTreeNode node = new PuzzleCreationTreeNode(nextGrid, myMovePosition+1);
+				node.parentNode = this;
+				nextNodes.add(node);
+				node.populate();
+				outgoingGrid = node.getInputGrid();
 			}
-		}
-			
-		for (PuzzleCreationTreeNode node : nextNodes)
-		{
-			node.populate();
-			outgoingGrid = node.getInputGrid();
 			if (outgoingGrid.isFullyPopulated())
 				return;
 		}

@@ -7,10 +7,11 @@ public class GameGrid {
 
 	private final int width = SudokuConstants.PUZZLE_WIDTH;
 	private final int height = SudokuConstants.PUZZLE_HEIGHT;
-	protected int [] grid = new int[width * height];
+	protected int [] grid = null;
 
 	public GameGrid()
 	{
+		grid = new int[width * height];
 		for (int x=0; x<width; x++)
 		{
 			for (int y=0; y<height; y++)
@@ -19,14 +20,16 @@ public class GameGrid {
 			}
 		}
 	}
+	
 	public GameGrid(int [] gcopy)
 	{
-		if ((gcopy == null) || (gcopy.length != grid.length))
+		if ((gcopy == null) || (gcopy.length != (width * height)))
 		{
 			throw new IllegalArgumentException("Input game grid passed to GameGrid constructor is invalid");
 		}
 		
-		System.arraycopy(gcopy, 0, grid, 0, grid.length);
+		grid = gcopy;
+//		System.arraycopy(gcopy, 0, grid, 0, grid.length);
 	}
 	
 	public boolean isValidLocation(int x, int y)
