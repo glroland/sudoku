@@ -14,6 +14,8 @@ public class PuzzleFactory
 {	
 	private Random r = new Random();
 	
+	private final int COMPLEXITY_COUNTER = 100;
+	
 	public Puzzle createPuzzle()
 	{
 		// create starter grid
@@ -33,7 +35,8 @@ public class PuzzleFactory
 		
 		// create game grid
 		GameGrid gameBoard = (GameGrid)solution.clone();
-		gameBoard = recursiveDeteriorate(gameBoard, solution);
+		for (int counter=0; counter < COMPLEXITY_COUNTER; counter++)
+			gameBoard = recursiveDeteriorate(gameBoard, solution);
 		
 		// create puzzle object now that we have a valid game grid
 		Puzzle puzzle = new Puzzle(gameBoard, solution);
@@ -54,10 +57,18 @@ public class PuzzleFactory
 		}
 		
 		// randomly remove a square
-		int pos = r.nextInt(SudokuConstants.PUZZLE_BLOCK_COUNT);
-		int x = pos % SudokuConstants.PUZZLE_WIDTH;
-		int y = pos / SudokuConstants.PUZZLE_WIDTH;
 		PlayableGameGrid modifiable = new PlayableGameGrid(snapshot);
+		int pos = 0;
+		int x = 0;
+		int y = 0;
+		for (int counter=0; counter < COMPLEXITY_COUNTER; counter++)
+		{
+			pos = r.nextInt(SudokuConstants.PUZZLE_BLOCK_COUNT);
+			x = pos % SudokuConstants.PUZZLE_WIDTH;
+			y = pos / SudokuConstants.PUZZLE_WIDTH;
+			if (modifiable.getValue(x, y) != SudokuConstants.VALUE_EMPTY)
+				break;
+		}
 		modifiable.setValue(x, y, SudokuConstants.VALUE_EMPTY);
 		
 		try
