@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import com.glroland.sudoku.exceptions.PuzzleGenerationException;
+import com.glroland.sudoku.exceptions.UnsolvablePuzzleException;
 import com.glroland.sudoku.model.GameGrid;
+import com.glroland.sudoku.model.PlayableGameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleFactory 
@@ -29,13 +31,66 @@ public class PuzzleFactory
 		if (!solution.isSolved())
 			throw new PuzzleGenerationException("Incomplete game solution created by puzzle generator", solution);
 		
+		// create game grid
+		GameGrid gameBoard = (GameGrid)solution.clone();
+		gameBoard = recursiveDeteriorate(gameBoard, solution);
+		
 		// create puzzle object now that we have a valid game grid
-		Puzzle puzzle = new Puzzle(solution, solution);
-		
-		
+		Puzzle puzzle = new Puzzle(gameBoard, solution);
 		return puzzle;
 
 	}	
+	
+	private GameGrid recursiveDeteriorate(GameGrid snapshot, GameGrid solution)
+	{
+		// validate arguments
+		if (snapshot == null)
+		{
+			throw new IllegalArgumentException("Input Snapshot GameGrid object is null!");
+		}
+		if (solution == null)
+		{
+			throw new IllegalArgumentException("Input Solution GameGrid object is null!");
+		}
+		
+		// randomly remove a square
+		int pos = r.nextInt(SudokuConstants.PUZZLE_BLOCK_COUNT);
+		int x = pos % SudokuConstants.PUZZLE_WIDTH;
+		int y = pos / SudokuConstants.PUZZLE_WIDTH;
+		PlayableGameGrid modifiable = new PlayableGameGrid(snapshot);
+		modifiable.setValue(x, y, SudokuConstants.VALUE_EMPTY);
+		
+		try
+		{
+			// attempt to solve
+			GameGrid modifiableSolution = Solver.createSolution(modifiable);
+			if (modifiableSolution != null)
+			{
+				if (modifiableSolution.equals(solution))
+				{
+					GameGrid deeperGame = recursiveDeteriorate(modifiable, solution);
+					if (deeperGame == null)
+						return modifiable;
+					else
+					{
+						GameGrid deeperSolution = Solver.createSolution(deeperGame);
+						if (deeperSolution != null)
+						{
+							if (deeperSolution.equals(solution))
+								return deeperGame;
+						}
+						return modifiable;
+					}
+				}
+			}
+		} 
+		catch (UnsolvablePuzzleException e)
+		{
+			return snapshot;
+		}
+		
+		return null;
+	}
 	
 	private PuzzleCreationGameGrid recursiveGeneration(int pos, PuzzleCreationGameGrid inputGrid)
 	{

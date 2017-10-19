@@ -43,6 +43,27 @@ public class GameGrid {
 		return true;
 	}
 	
+	public Object clone()
+	{
+		int [] gridCopy = grid.clone();
+		return new GameGrid(gridCopy);
+	}
+	
+	public boolean equals(Object in)
+	{
+		if (in == null)
+			return false;
+		if (!(in instanceof GameGrid))
+			return false;
+		GameGrid inGame = (GameGrid)in;
+		if (inGame.grid.length != grid.length)
+			return false;
+		for (int i=0; i<grid.length; i++)
+			if (inGame.grid[i] != grid[i])
+				return false;
+		
+		return true;
+	}
 	
 	public boolean isValidMove(int x, int y, int v)
 	{

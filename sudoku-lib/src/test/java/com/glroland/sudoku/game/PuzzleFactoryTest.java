@@ -24,6 +24,7 @@ public class PuzzleFactoryTest {
 		assertNotNull(p);
 		assertTrue(p.getPuzzleSolution().isValidBoard());
 		assertTrue(p.getPuzzleSolution().isSolved());
-		System.out.println("Generated Puzzle:\n" + p.getPuzzleSolution().toString());
+		System.out.println("Generated Puzzle Solution:\n" + p.getPuzzleSolution().toString());
+		System.out.println("Generated Puzzle Game Board:\n" + p.getInitialPuzzle().toString());
 	}
 }
