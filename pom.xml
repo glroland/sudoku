@@ -6,6 +6,8 @@
 	<packaging>pom</packaging>
 	<properties>
     		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<dependency-check-format>HTML</dependency-check-format>
+		<dependency-check-failscore>8</dependency-check-failscore>
         </properties>
 
 	<modules>
@@ -25,6 +27,27 @@
 
 
 <build>
+<plugins>
+        <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>1.4.0</version>
+            <configuration>
+                <format>${dependency-check-format}</format>
+		<failBuildOnCVSS>${dependency-check-failscore}</failBuildOnCVSS>
+		<skipProvidedScope>false</skipProvidedScope>
+                <skipRuntimeScope>false</skipRuntimeScope>
+            </configuration>
+<executions>
+	<execution>
+		<goals>
+			<goal>check</goal>
+		</goals>
+	</execution>
+</executions>
+        </plugin>
+</plugins>
+
 <pluginManagement>
     <plugins>
       <plugin>
