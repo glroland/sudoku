@@ -7,7 +7,7 @@ import { SingletonService } from '../../providers/singleton/singleton';
   templateUrl: 'about.html'
 })
 export class AboutPage {
-  txtServerUrl:url = singleton.serverURL;
+  txtServerUrl:string = singleton.serverURL;
 
   constructor(public navCtrl: NavController, public singleton:SingletonService) {
   }

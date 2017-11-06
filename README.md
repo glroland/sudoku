@@ -10,4 +10,5 @@ Install:
 * Eclipse
 * AngularJS
 * Atom
+* Ionic (npm install -g ionic cordova)
 

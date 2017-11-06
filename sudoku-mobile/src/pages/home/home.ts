@@ -11,7 +11,6 @@ import 'rxjs/add/operator/catch';
   templateUrl: 'home.html'
 })
 export class HomePage {
-  txtDebug:text = "abc";
   public txtGameGrid = [];
 
   constructor(public navCtrl: NavController, public http: Http, public singleton:SingletonService) {
