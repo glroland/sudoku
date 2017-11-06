@@ -1,0 +1,22 @@
+page-home {
+  .game-table {
+    width: 100%;
+  }
+  .game-quad {
+    border: 3px black solid;
+  }
+  .game-row {
+    display: table-row;
+  }
+  .game-cell {
+    display: table-cell;
+    font-family: sans-serif;
+    font-size: 25px;
+    width: 30px;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    background-color: white;
+    border: 1px black solid;
+  }
+}
