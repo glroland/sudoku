@@ -1,5 +1,6 @@
 package com.glroland.sudoku;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +17,10 @@ public class SudokuController {
 
     @RequestMapping("/")
     public String index() {
-        return "Hello World!";
+        return "Sudoku!";
     }
 
+    @CrossOrigin(origins = "*")
     @RequestMapping("/generate")
     public Game generate()
     {
@@ -34,6 +36,7 @@ public class SudokuController {
     	return game;
     }
     
+    @CrossOrigin(origins = "*")
     @RequestMapping("/solve")
     public Board solve(@RequestParam(value="puzzle") Board puzzle)
     {
