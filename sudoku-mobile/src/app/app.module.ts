@@ -9,6 +9,8 @@ import { SettingsPage } from '../pages/settings/settings';
 import { PlayPage } from '../pages/play/play';
 import { TabsPage } from '../pages/tabs/tabs';
 
+import { GameBoardComponent } from '../components/gameboard/gameboard'
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -19,7 +21,8 @@ import { SingletonService } from '../providers/singleton/singleton';
     MyApp,
     SettingsPage,
     PlayPage,
-    TabsPage
+    TabsPage,
+    GameBoardComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,8 @@ import { SingletonService } from '../providers/singleton/singleton';
     MyApp,
     SettingsPage,
     PlayPage,
-    TabsPage
+    TabsPage,
+    GameBoardComponent
   ],
   providers: [
     StatusBar,

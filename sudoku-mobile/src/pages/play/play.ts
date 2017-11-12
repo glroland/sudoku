@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { SingletonService } from '../../providers/singleton/singleton';
+import { GameBoardComponent } from '../../components/gameboard/gameboard';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
