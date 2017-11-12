@@ -5,8 +5,8 @@ import { MyApp } from './app.component';
 
 import { HttpModule } from '@angular/http';
 
-import { AboutPage } from '../pages/about/about';
-import { HomePage } from '../pages/home/home';
+import { SettingsPage } from '../pages/settings/settings';
+import { PlayPage } from '../pages/play/play';
 import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -17,8 +17,8 @@ import { SingletonService } from '../providers/singleton/singleton';
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    HomePage,
+    SettingsPage,
+    PlayPage,
     TabsPage
   ],
   imports: [
@@ -29,8 +29,8 @@ import { SingletonService } from '../providers/singleton/singleton';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    HomePage,
+    SettingsPage,
+    PlayPage,
     TabsPage
   ],
   providers: [

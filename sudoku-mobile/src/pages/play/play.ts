@@ -7,18 +7,16 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-play',
+  templateUrl: 'play.html'
 })
-export class HomePage {
+export class PlayPage {
   public txtGameGrid = [];
 
   constructor(public navCtrl: NavController, public http: Http, public singleton:SingletonService) {
 
-      var url = "http://sudoku-svc-sudoku.a3c1.starter-us-west-1.openshiftapps.com/generate";
-
       http
-        .get(url, {observe: 'response'})
+        .get(singleton.serverURL + "/generate")
         .subscribe(resp => {
           console.log(resp.text());
           var sudokuResponse = resp.json();
@@ -44,7 +42,15 @@ export class HomePage {
 
   }
 
-  resetGame = function() {
-    alert("hi");
+  onReset = function() {
+    alert("reset");
+  }
+
+  onCheck = function() {
+    alert("check");
+  }
+
+  onNew = function() {
+    alert("new");
   }
 }

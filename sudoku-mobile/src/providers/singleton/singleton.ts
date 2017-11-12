@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class SingletonService {
-  public serverURL:string = "http://sudoku-svc-sudoku.a3c1.starter-us-west-1.openshiftapps.com";
+  public defaultServerURL:string = "http://misc:8080";
+  public serverURL:string = this.defaultServerURL;
 
 }
