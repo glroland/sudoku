@@ -9,6 +9,7 @@ import { SettingsPage } from '../pages/settings/settings';
 import { PlayPage } from '../pages/play/play';
 import { TabsPage } from '../pages/tabs/tabs';
 
+import { GameCell } from '../components/gamecell/gamecell';
 import { GameBoardComponent } from '../components/gameboard/gameboard'
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -22,6 +23,7 @@ import { SingletonService } from '../providers/singleton/singleton';
     SettingsPage,
     PlayPage,
     TabsPage,
+    GameCell,
     GameBoardComponent
   ],
   imports: [
@@ -35,6 +37,7 @@ import { SingletonService } from '../providers/singleton/singleton';
     SettingsPage,
     PlayPage,
     TabsPage,
+    GameCell,
     GameBoardComponent
   ],
   providers: [

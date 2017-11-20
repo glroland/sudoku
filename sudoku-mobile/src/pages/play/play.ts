@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http } from '@angular/http';
 import { SingletonService } from '../../providers/singleton/singleton';
 import { GameBoardComponent } from '../../components/gameboard/gameboard';
 import 'rxjs/add/operator/do';
@@ -12,46 +12,60 @@ import 'rxjs/add/operator/catch';
   templateUrl: 'play.html'
 })
 export class PlayPage {
-  public txtGameGrid = [];
+  public gameboard: GameBoardComponent = new GameBoardComponent();
+  public http: Http;
+  public singleton: SingletonService;
+  public puzzleGrid: any = [];
 
-  constructor(public navCtrl: NavController, public http: Http, public singleton:SingletonService) {
+  constructor(public navCtrl: NavController, public inHttp: Http, public inSingleton:SingletonService) {
+    this.http = inHttp;
+    this.singleton = inSingleton;
 
-      http
-        .get(singleton.serverURL + "/generate")
-        .subscribe(resp => {
-          console.log(resp.text());
-          var sudokuResponse = resp.json();
-
-          var puzzle = sudokuResponse.puzzle.grid;
-          var solution = sudokuResponse.solution.grid;
-
-          for (var y=0; y<9; y++)
-          {
-            for (var x=0; x<9; x++)
-            {
-              var value = puzzle[y][x];
-              if (value > 0)
-              {
-                console.log("X=" + x + " Y=" + y + " Val=" + value);
-
-                var index = x + (y * 9);
-                this.txtGameGrid[index] = value;
-              }
-            }
-          }
-        });
-
+    this.onNew();
   }
 
   onReset = function() {
-    alert("reset");
+    this.gameboard.reset();
   }
 
   onCheck = function() {
     alert("check");
   }
 
+  bind = function(board) {
+    for (var y=0; y<9; y++)
+    {
+      for (var x=0; x<9; x++)
+      {
+        var value = board[y][x];
+        if (value > 0)
+        {
+          console.log("X=" + x + " Y=" + y + " Val=" + value);
+
+          var index = x + (y * 9);
+          this.puzzleGrid[index] = value;
+        }
+      }
+    }
+  }
+
   onNew = function() {
-    alert("new");
+    this.onReset();
+
+    this.http
+      .get(this.singleton.serverURL + "/generate")
+      .subscribe(resp => {
+        console.log(resp.text());
+        var sudokuResponse = resp.json();
+
+        var puzzle = sudokuResponse.puzzle.grid;
+        var solution = sudokuResponse.solution.grid;
+
+        this.bind(puzzle);
+      },
+      err => {
+            alert("SUDOKU-SVC Invocation Error: " + err);
+        });
+
   }
 }
