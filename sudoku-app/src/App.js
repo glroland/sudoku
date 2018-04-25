@@ -45,6 +45,8 @@ class Game extends Component {
     return (<div className="game">
       <div className="game-board">
         <Board game={this}/>
+        <br/>
+        <PlayValues game={this}/>
       </div>
     </div>);
   }
@@ -217,6 +219,25 @@ class Square extends Component {
 
   handleClick(square) {
     console.log("Square Clicked - Square=" + square + " Board=" + this.board + " X=" + this.x + " Y=" + this.y + " Value=" + this.getValue() + " IsLocked=" + this.state.isLocked);
+  }
+}
+
+class PlayValues extends Component {
+  render() {
+    return (<div className="board-row">
+      <button className="square" onClick={() => this.onClick(this)}>1</button>
+      <button className="square" onClick={() => this.onClick(this)}>2</button>
+      <button className="square" onClick={() => this.onClick(this)}>3</button>
+      <button className="square" onClick={() => this.onClick(this)}>4</button>
+      <button className="square" onClick={() => this.onClick(this)}>5</button>
+      <button className="square" onClick={() => this.onClick(this)}>6</button>
+      <button className="square" onClick={() => this.onClick(this)}>7</button>
+      <button className="square" onClick={() => this.onClick(this)}>8</button>
+      <button className="square" onClick={() => this.onClick(this)}>9</button>
+    </div>);
+  }
+
+  onClick(buttonRef) {
   }
 }
 
