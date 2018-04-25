@@ -7,11 +7,11 @@ class App extends Component {
       <header className="App-header">
         <h1 className="App-title">
           Sudoku
-        </h1>{" "}
-      </header>{" "}
+        </h1>
+      </header>
       <div className="App-body">
         <Game/>
-      </div>{" "}
+      </div>
     </div>);
   }
 }
@@ -20,18 +20,10 @@ class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      history: [
-        {
-          squares: Array(81).fill(null)
-        }
-      ],
-      stepNumber: 0,
-      xIsNext: true,
-      puzzleGrid: null,
-      solutionGrid: null,
-      gameGrid: null
     };
 
+    this.puzzleGrid = Array(81).fill(0);
+    this.solutionGrid = Array(81).fill(0);
     this.newGame();
   }
 
@@ -40,10 +32,10 @@ class Game extends Component {
     .then(results => {
       return results.json();
     }).then(data => {
-      this.state.puzzleGrid = data.puzzle.grid;
-      this.state.solutionGrid = data.solution.grid;
-
-      this.state.gameGrid = JSON.parse(JSON.stringify(data.puzzle.grid))
+      this.puzzleGrid = data.puzzle.grid;
+      console.log("Puzzle = " + this.puzzleGrid);
+      this.solutionGrid = data.solution.grid;
+      console.log("Solution = " + this.solutionGrid);
     })
   }
 
@@ -55,15 +47,32 @@ class Game extends Component {
     </div>);
   }
 
-  handleClick(i) {
+  getPuzzle() {
+    return this.puzzleGrid;
   }
 }
 
 class Board extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+
+    this.game = props.game;
+  }
+
   render() {
     return (<div>
       <div className="board-row">
-        <Square x="1" y="1" />
+        <Square x="1" y="1" board={this} />
+        <Square x="2" y="1" board={this} />
+        <Square x="3" y="1" board={this} />
+        <Square x="4" y="1" board={this} />
+        <Square x="5" y="1" board={this} />
+        <Square x="6" y="1" board={this} />
+        <Square x="7" y="1" board={this} />
+        <Square x="8" y="1" board={this} />
+        <Square x="9" y="1" board={this} />
       </div>
       <div className="board-row">
       </div>
@@ -83,21 +92,28 @@ class Board extends Component {
       </div>
     </div>);
   }
+
+  getValue(x, y) {
+      let pos = ((y - 1) * 9) + x - 1;
+      return this.game.getPuzzle()[pos];
+  }
+
+  handleClick(square) {
+    console.log("HandleClick = " + square);
+  }
 }
 
 class Square extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      x: props.x,
-      y: props.y,
-      value: props.value,
       isLocked: false
     };
 
-    if ((this.state.value >= 1) && (this.state.value <= 9)) {
-      this.state.isLocked = true;
-    }
+    this.x = parseInt(props.x);
+    this.y = parseInt(props.y);
+
+    this.board = props.board;
   }
 
   render() {
@@ -105,19 +121,28 @@ class Square extends Component {
 
     var cn = classSquare;
 
+    var value = this.getValue();
+    console.log("V = " + value);
+    if (value == 0)
+      value = "";
+
     if (this.state.isLocked) {
       return (<button className={cn}>
-        <b>{this.state.value}</b>
+        <b>{value}</b>
       </button>);
     } else {
-      return (<button className={cn} onClick={i => this.handleClick()}>
-        {this.state.value}
+      return (<button className={cn} onClick={() => this.handleClick(this)}>
+        {value}
       </button>);
     }
   }
 
-  handleClick() {
-    console.log("clicked - " + this.state.pos + " board=" + this.state.board);
+  getValue() {
+      return this.board.getValue(this.x, this.y);
+  }
+
+  handleClick(square) {
+    console.log("Square Clicked - Square=" + square + " Board=" + this.board + " X=" + this.x + " Y=" + this.y + " Value=" + this.getValue() + " IsLocked=" + this.state.isLocked);
   }
 }
 
