@@ -36,6 +36,8 @@ class Game extends Component {
       console.log("Puzzle = " + this.puzzleGrid);
       this.solutionGrid = data.solution.grid;
       console.log("Solution = " + this.solutionGrid);
+
+      this.forceUpdate();
     })
   }
 
@@ -166,8 +168,7 @@ class Board extends Component {
   }
 
   getValue(x, y) {
-      let pos = ((y - 1) * 9) + x - 1;
-      return this.game.getPuzzle()[pos];
+      return this.game.getPuzzle()[(y-1)][x-1];
   }
 
   handleClick(square) {
@@ -179,7 +180,6 @@ class Square extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLocked: false
     };
 
     this.x = parseInt(props.x);
@@ -194,11 +194,13 @@ class Square extends Component {
     var cn = classSquare;
 
     var value = this.getValue();
-    console.log("V = " + value);
-    if (value == 0)
-      value = "";
+    let isLocked = true;
+    if (value == 0) {
+        isLocked = false;
+        value = "";
+    }
 
-    if (this.state.isLocked) {
+    if (isLocked) {
       return (<button className={cn}>
         <b>{value}</b>
       </button>);
