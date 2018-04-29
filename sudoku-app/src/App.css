@@ -40,10 +40,12 @@ ol, ul {
   background: #000;
 }
 
-.board-grid-a {
+.board-grid-a button{
+  background: #fff;
 }
 
-.board-grid-b {
+.board-grid-b button {
+  background: #ddd;
 }
 
 .status {
