@@ -1,0 +1,12 @@
+.project
+sudoku-ocr-svc/.classpath
+sudoku-ocr-svc/.project
+sudoku-ocr-svc/.settings
+sudoku-ocr-svc/target
+sudoku-svc/.classpath
+sudoku-svc/.project
+sudoku-svc/.settings
+sudoku-svc/target
+.settings
+.vscode
+target
