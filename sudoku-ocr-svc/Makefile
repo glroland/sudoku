@@ -1,8 +1,18 @@
 clean:
 	find . -name "*.pyc" -exec rm -f {} \;
 
+init:
+	conda env create sudoku
+	conda install --yes --file requirements.txt
+
+ocrtrain:
+#	conda init bash
+#	conda activate sudoku
+	python -m train
+
 run:
+	conda activate sudoku
 	python -m ocrsvc
 
 ocrtest:
-	python -m test
+	python -m unittest discover -s . -p "*_test.py"

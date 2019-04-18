@@ -1,2 +1,4 @@
-print "Running full test suite."
+import unittest
 
+print("Running full test suite.")
+unittest.main()
