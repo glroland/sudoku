@@ -4,6 +4,7 @@ clean:
 init:
 	conda env create sudoku
 	conda install --yes --file requirements.txt
+	conda install -c conda-forge flask-restful 
 
 ocrtrain:
 #	conda init bash
