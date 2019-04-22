@@ -136,10 +136,11 @@ class SudokuOCRCore(object):
                 print("squareTopX=" + str(squareTopX) + " squareTopY=" + str(squareTopY) + " squareBottomX=" + str(squareBottomX) + " squareBottomY=" + str(squareBottomY), " digit=" + str(digit))
                 if expected != None:
                     index = (y * constants.SudokuOCRConstants.SUDOKU_GRID_WIDTH) + x
-                if expected[index] != digit:
-                    print("XXX Expected=" + str(expected[index]) + " and Received=" + str(digit))
-                    digitImage.show(digitImage)
+                    if expected[index] != digit:
+                        print("XXX Expected=" + str(expected[index]) + " and Received=" + str(digit))
+                        digitImage.show(digitImage)
     
+        print ("Result: " + str(result))
         return result
 
 

@@ -5,7 +5,7 @@ import array
 
 class TestPuzzleOCR(unittest.TestCase):
 
-    def test_one(self):
+    def test_puzzlepng(self):
         ocrcore = core.SudokuOCRCore()
         im = ocrcore.load_image_from_disk("test/images/puzzle.png")
         expected = array.array('i',[ 
@@ -22,6 +22,8 @@ class TestPuzzleOCR(unittest.TestCase):
         actual = ocrcore.eval_what_puzzle(im, expected)
         self.assertEquals(len(actual), len(expected))
         np.testing.assert_array_equal(expected, actual, 'puzzle.png', True)
+        if (np.array_equal(expected, actual) == True):
+            print ("THEY MATCH!!!!  I Can't Believe it!")
 
 
 
