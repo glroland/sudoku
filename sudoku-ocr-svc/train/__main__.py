@@ -1,6 +1,6 @@
 import tensorflow as tf
 import os
-from ocrlib import core
+from ocrlib import constants
 import numpy as np
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
@@ -41,4 +41,4 @@ val_loss, val_acc = model.evaluate(X_test, y_test)
 print(val_loss)
 print(val_acc)
 
-model.save(core.SUDOKU_MODEL_FILE)
+model.save(constants.SudokuOCRConstants.SUDOKU_MODEL_FILE)
