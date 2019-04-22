@@ -13,7 +13,7 @@ ocrtrain:
 	python -m train
 
 run:
-	conda activate sudoku
+#	conda activate sudoku
 	python -m ocrsvc
 
 ocrtest:

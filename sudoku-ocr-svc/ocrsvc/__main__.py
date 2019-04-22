@@ -36,7 +36,7 @@ def op_extract():
      im = ocrcore.load_image_from_bytes(imbytes)
      puzzle = ocrcore.eval_what_puzzle(im)
      print ('Puzzle extracted successfully - Length = ' + str(len(imbytes)) + " Puzzle = " + str(puzzle) + "\n")
-     return json.dumps({'puzzle': puzzle}, cls=NumpyArrayJSONEncoder)
+     return json.dumps({'puzzle': {'grid': puzzle} }, cls=NumpyArrayJSONEncoder)
         
 if __name__ == '__main__':
      app.run(port='5002')
