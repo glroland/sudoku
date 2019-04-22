@@ -10,9 +10,19 @@ class SudokuOCRCore(object):
 
     SUDOKU_EMPTY_GRID = None
     SODOKU_MODEL = None
+    SUDOKU_EMPTY_GRID = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
 
     def __init__(self):
-        self.SUDOKU_EMPTY_GRID = array.array('i',(0 for i in range(0, constants.SudokuOCRConstants.SUDOKU_GRID_WIDTH * constants.SudokuOCRConstants.SUDOKU_GRID_HEIGHT)))
         self.SODOKU_MODEL = tf.keras.models.load_model(constants.SudokuOCRConstants.SUDOKU_MODEL_FILE)
 
     def load_image_from_bytes(self, imbytes):
@@ -128,16 +138,14 @@ class SudokuOCRCore(object):
                 digitImage = image.crop([squareTopX + padWidth, squareTopY + padHeight, squareBottomX - padWidth, squareBottomY - padHeight])
                 expectedDigit = None
                 if expected != None:
-                    index = (y * constants.SudokuOCRConstants.SUDOKU_GRID_WIDTH) + x
-                    expectedDigit = expected[index]
+                    expectedDigit = expected[y][x]
                 digit = self.eval_what_digit(digitImage, expectedDigit)
-                result[x + (y * constants.SudokuOCRConstants.SUDOKU_GRID_WIDTH)] = digit
+                result[y][x] = digit
 
                 print("squareTopX=" + str(squareTopX) + " squareTopY=" + str(squareTopY) + " squareBottomX=" + str(squareBottomX) + " squareBottomY=" + str(squareBottomY), " digit=" + str(digit))
                 if expected != None:
-                    index = (y * constants.SudokuOCRConstants.SUDOKU_GRID_WIDTH) + x
-                    if expected[index] != digit:
-                        print("XXX Expected=" + str(expected[index]) + " and Received=" + str(digit))
+                    if expected[y][x] != digit:
+                        print("XXX Expected=" + str(expectedDigit) + " and Received=" + str(digit))
                         digitImage.show(digitImage)
     
         print ("Result: " + str(result))
