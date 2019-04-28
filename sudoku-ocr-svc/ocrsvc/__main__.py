@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_restful import Resource, Api
+from flask_cors import CORS
 from werkzeug import secure_filename
 import numpy as np
 from json import dumps
@@ -8,6 +9,7 @@ import json
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 class NumpyArrayJSONEncoder(json.JSONEncoder):
     def default(self, obj):
