@@ -3,64 +3,73 @@ import {
   withRouter
 } from 'react-router-dom';
 import "../App.css";
+import CameraStep from "./CameraStep";
+import MarkStep from "./MarkStep";
+
+const CONST_NOT_SUPPORTED = 0;
+const CONST_STEP_1_CAMERA = 1;
+const CONST_STEP_2_MARK = 2;
+
+const CONST_IMAGE_WIDTH = 480;
+const CONST_IMAGE_HEIGHT = CONST_IMAGE_WIDTH;
 
 class ScanPage extends Component {
-    localStream = null;
 
+  currentStep = 0;
+  imgData = null;
+  
     constructor(props) {
       super(props);
       this.state = {
       };
-  
-    }
-  
-    supportUploadCheck() {
-      return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-    }
-    render() {
-      let statusMsg;
+
+      this.gameStatusRef = React.createRef();
+
       if (!this.supportUploadCheck()) {
-        statusMsg = "Feature Not Supported or Allowed...";
-      } else {
-        statusMsg = "Ready for Upload!"
+        this.currentStep = CONST_NOT_SUPPORTED;
       }
-        
+      else {
+        this.currentStep = CONST_STEP_1_CAMERA;
+      }
+      this.imgData = null;
+    }
+    
+    render() {
+      var stepRender = "";
+      if (this.currentStep === CONST_STEP_1_CAMERA) {
+        stepRender = <CameraStep width={CONST_IMAGE_WIDTH} height={CONST_IMAGE_HEIGHT} snapshotCallbackRef={this} snapshotCallback={this.snapshotCallback} />;
+      }
+      else if (this.currentStep === CONST_STEP_2_MARK) {
+        stepRender = <MarkStep width={CONST_IMAGE_WIDTH} height={CONST_IMAGE_HEIGHT} markCallbackRef={this} markCallback={this.markCallback} imgData={this.imgData} />;        
+      }
+      
       return (
         <div className="options">
           <h1 className="welcome-title">Sudoku!</h1>
-          {statusMsg}<br />
+          <input ref={this.gameStatusRef} type="text" className="game-status" value="" /><br/>
           <br/>
-          <div className="scan-work">
-          </div>
-          <canvas id="previewCanvas" />
-          <img id="captureImg" alt="" />
-          <br/>
-          <button className="welcome-button" onClick={() => this.snapshot()}>Capture</button><br />
+          {stepRender}<br />
           <button className="welcome-button" onClick={() => this.mainmenu()}>Back</button><br />
           <br/>
           <br/>
           <div className="welcome-text">Copyright 2019 Lee Roland</div>
-          <video autoPlay></video>
         </div>);
     }
   
-    snapshot() {
-      const video = document.querySelector('video');
+    snapshotCallback(self, imageDataUrl) {
+      self.imgData = imageDataUrl;
 
-      let captureDiv = document.createElement('canvas');
-      captureDiv.width = video.videoWidth;
-      captureDiv.height = video.videoHeight;
-      let context = captureDiv.getContext('2d');
-      context.drawImage(video, 0, 0);
-
-      let captureImg = document.getElementById('captureImg');
-      let dataUrl = captureDiv.toDataURL('image/png');
-      captureImg.src = dataUrl;
-
-      this.uploadImage(this.b64toBlob(dataUrl.replace(/^data:image\/(png|jpg);base64,/, "")));
+      self.currentStep = CONST_STEP_2_MARK;
+      self.forceUpdate();
     }
 
-    b64toBlob(b64Data, contentType='image/png', sliceSize=512) {
+    markCallback(self) {
+      alert('markCallback');
+    }
+
+//       captureImg.src = dataUrl;
+//      this.uploadImage(this.b64toBlob(dataUrl.replace(/^data:image\/(png|jpg);base64,/, "")));
+/*    b64toBlob(b64Data, contentType='image/png', sliceSize=512) {
       const byteCharacters = atob(b64Data);
       const byteArrays = [];
     
@@ -112,22 +121,6 @@ class ScanPage extends Component {
       this.endCapture();
     }
 
-    beginCapture() {
-      const constraints = {
-        video: {width: {exact: 480}, height: {exact: 480}},
-        audio: false
-      };
-      
-      const video = document.querySelector('video');
-      
-      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-          this.localStream = stream;
-          video.srcObject = stream;
-          this.renderCanvas();
-        });
-        video.play();
-    }
-
     renderCanvas() {
       const video = document.querySelector('video');
       if (video == undefined) 
@@ -156,9 +149,24 @@ class ScanPage extends Component {
       requestAnimationFrame(() => {
         this.renderCanvas();
       });
+    } */
+
+    supportUploadCheck() {
+      return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     }
 
-    endCapture() {
+    setStatus(msg) {
+      if (this.gameStatusRef.current != null) {
+        this.gameStatusRef.current.value = msg;
+      }
+    }
+
+    mainmenu() {
+//      this.endCapture();
+      this.props.history.push('/');
+    }
+
+/*    endCapture() {
       const constraints = {
         video: true
       };
@@ -167,12 +175,7 @@ class ScanPage extends Component {
       navigator.mediaDevices.getUserMedia(constraints).
         then((stream) => {video.srcObject = null});
       video.pause();
-    }
-
-    mainmenu() {
-      this.endCapture();
-      this.props.history.push('/');
-    }
+    } */
   }
   
   export default withRouter(ScanPage);
