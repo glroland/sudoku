@@ -5,10 +5,14 @@ import {
 import "../App.css";
 import CameraStep from "./CameraStep";
 import MarkStep from "./MarkStep";
+import PreviewStep from "./PreviewStep";
+import UploadStep from "./UploadStep";
 
 const CONST_NOT_SUPPORTED = 0;
 const CONST_STEP_1_CAMERA = 1;
 const CONST_STEP_2_MARK = 2;
+const CONST_STEP_3_PREVIEW = 3;
+const CONST_STEP_4_UPLOAD = 4;
 
 const CONST_IMAGE_WIDTH = 480;
 const CONST_IMAGE_HEIGHT = CONST_IMAGE_WIDTH;
@@ -32,6 +36,7 @@ class ScanPage extends Component {
         this.currentStep = CONST_STEP_1_CAMERA;
       }
       this.imgData = null;
+      this.markedImgData = null;
     }
     
     render() {
@@ -41,6 +46,12 @@ class ScanPage extends Component {
       }
       else if (this.currentStep === CONST_STEP_2_MARK) {
         stepRender = <MarkStep width={CONST_IMAGE_WIDTH} height={CONST_IMAGE_HEIGHT} markCallbackRef={this} markCallback={this.markCallback} imgData={this.imgData} />;        
+      }
+      else if (this.currentStep === CONST_STEP_3_PREVIEW) {
+        stepRender = <PreviewStep  width={CONST_IMAGE_WIDTH} height={CONST_IMAGE_HEIGHT} previewCallbackRef={this} previewCallback={this.previewCallback} imgData={this.markedImgData} />; 
+      }
+      else if (this.currentStep === CONST_STEP_4_UPLOAD) {
+        stepRender = <UploadStep  width={CONST_IMAGE_WIDTH} height={CONST_IMAGE_HEIGHT} uploadCallbackRef={this} uploadCallback={this.uploadCallback} imgData={this.markedImgData} />; 
       }
       
       return (
@@ -63,93 +74,26 @@ class ScanPage extends Component {
       self.forceUpdate();
     }
 
-    markCallback(self) {
-      alert('markCallback');
+    markCallback(self, imageDataUrl) {
+      self.markedImgData = imageDataUrl;
+
+      self.currentStep = CONST_STEP_3_PREVIEW;
+      self.forceUpdate();
     }
 
-//       captureImg.src = dataUrl;
-//      this.uploadImage(this.b64toBlob(dataUrl.replace(/^data:image\/(png|jpg);base64,/, "")));
-/*    b64toBlob(b64Data, contentType='image/png', sliceSize=512) {
-      const byteCharacters = atob(b64Data);
-      const byteArrays = [];
-    
-      for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        const slice = byteCharacters.slice(offset, offset + sliceSize);
-    
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-    
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
+    previewCallback(self, confirmedFlag) {
+      if (!confirmedFlag) {
+        self.currentStep = CONST_STEP_2_MARK;
       }
-    
-      const blob = new Blob(byteArrays, {type: contentType});
-      return blob;
-    }
-
-    uploadImage(imageBytes) {
-      var serviceUrl = process.env.REACT_APP_SVC_URL;
-      if ((serviceUrl === undefined))
-        serviceUrl = 'http://svc-sudoku.apps3.home.glroland.com';
-      console.log("Service URL = " + serviceUrl);
-  
-      var formData = new FormData();
-      //var blob = new Blob(imageBytes, { type: "image/png"});
-      formData.append("file", imageBytes);
-
-      serviceUrl = 'http://localhost:5002';
-      fetch(serviceUrl + '/extract', {
-        method: 'POST',
-        body: formData
-      })
-      .then(results => {
-        console.log("Raw Upload Results = " + results);
-        return results;
-      }).then(data => {
-        console.log("Raw Upload Data = " + data);
-      });
-
-    }
-
-    componentDidMount() {
-      this.beginCapture();
-    }
- 
-    componentWillUnmount() {
-      this.endCapture();
-    }
-
-    renderCanvas() {
-      const video = document.querySelector('video');
-      if (video == undefined) 
-        return;
-
-      let previewCanvas = document.getElementById('previewCanvas');
-
-      previewCanvas.width = video.videoWidth;
-      previewCanvas.height = video.videoHeight;
-
-      let context = previewCanvas.getContext('2d');
-      context.drawImage(video, 0, 0);
-      context.beginPath();
-      let blockWidth = previewCanvas.width / 9;
-      let blockHeight = previewCanvas.height / 9;
-      var x, y;
-      for (x = 0; x < 9; x++) {
-        for (y = 0; y < 9; y++) {
-          context.rect((x * blockWidth), (y * blockHeight), ((x + 1) * blockWidth) - 1, ((y + 1) * blockHeight) - 1);
-        }
+      else {
+        self.currentStep = CONST_STEP_4_UPLOAD;
       }
-      context.strokeStyle = 'red';
-      context.lineWidth = 1;
-      context.stroke();
+      self.forceUpdate();
+    }
 
-      requestAnimationFrame(() => {
-        this.renderCanvas();
-      });
-    } */
+    uploadCallback(self, puzzle) {
+      alert("upload callback" + puzzle[0][0]);
+    }
 
     supportUploadCheck() {
       return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
@@ -162,20 +106,9 @@ class ScanPage extends Component {
     }
 
     mainmenu() {
-//      this.endCapture();
       this.props.history.push('/');
     }
 
-/*    endCapture() {
-      const constraints = {
-        video: true
-      };
-      
-      const video = document.querySelector('video');
-      navigator.mediaDevices.getUserMedia(constraints).
-        then((stream) => {video.srcObject = null});
-      video.pause();
-    } */
   }
   
   export default withRouter(ScanPage);
