@@ -24,11 +24,32 @@ class CameraStep extends Component {
           <div>Step #1: Photograph Puzzle</div>
           <video autoPlay></video>
           <button className="welcome-button" onClick={() => this.snapshot()}>Capture</button><br />
+          <button className="welcome-button" onClick={() => this.testImage()}>Test Image</button><br />
         </div>);
     }
   
     componentDidMount() {
       this.beginCapture();
+    }
+
+    sleep = (milliseconds) => {
+      return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
+    testImage() {
+      let img = document.createElement('img');
+      img.src = "/puzzle.png";
+      this.sleep(500).then(() => {
+        let captureDiv = document.createElement('canvas');
+        captureDiv.width = img.width;
+        captureDiv.height = img.height;
+        let context = captureDiv.getContext('2d');
+        context.drawImage(img, 0, 0);
+  
+        let dataUrl = captureDiv.toDataURL('image/png');
+  
+        this.props.snapshotCallback(this.props.snapshotCallbackRef, dataUrl);
+        })
     }
 
     beginCapture() {

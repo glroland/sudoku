@@ -18,10 +18,10 @@ class MarkStep extends Component {
       this.imageLoaded = false;
       this.mouseDown = false;
 
-      this.leftX = 0;
-      this.leftY = 0;
-      this.rightX = this.props.width;
-      this.rightY = this.props.height;
+      this.grid1 = {x: 0, y: 0};
+      this.grid2 = {x: this.props.width, y: 0};
+      this.grid3 = {x: this.props.width, y: this.props.height};
+      this.grid4 = {x: 0, y: this.props.height};
 
       this.hiddenImg = document.createElement("img");
     }
@@ -35,26 +35,65 @@ class MarkStep extends Component {
         </div>);
     }
 
+    drawQuad(context, x1, y1, x2, y2, x3, y3, x4, y4) {
+//        context.beginPath();
+        context.moveTo(x1, y1);
+        context.lineTo(x2, y2);
+        context.lineTo(x3, y3);
+        context.lineTo(x4, y4);
+        context.lineTo(x1, y1);
+//        context.stroke();
+    }
+
     renderCanvas() {
-        let width = this.rightX - this.leftX + 1;
-        let height = this.rightY - this.leftY + 1;
+        let width = this.grid2.x - this.grid1.x + 1;
+        let height = this.grid3.y - this.grid2.y + 1;
+        let blockWidth = width / 9;
+        let blockHeight = height / 9;
 
         let canvas = this.canvasRef.current;
   
         let context = canvas.getContext('2d');
         context.drawImage(this.hiddenImg, 0, 0);
         context.beginPath();
-        let blockWidth = width / 9;
-        let blockHeight = height / 9;
-        var x, y;
+/*        var x, y;
         for (x = 0; x < 9; x++) {
           for (y = 0; y < 9; y++) {
-            context.rect(this.leftX + (x * blockWidth), 
-                         this.leftY + (y * blockHeight), 
-                         blockWidth, 
-                         blockHeight);
+            let block1 = {x: this.grid1.x + (x * ((this.grid2.x - this.grid1.x + 1) / 9)), //yes
+                          y: this.grid1.y + (y * ((this.grid2.y - this.grid1.y + 1) / 9))};
+            let block2 = {x: this.grid2.x - ((8-x) * ((this.grid2.x - this.grid1.x + 1) / 9)), 
+                          y: this.grid2.y - ((8-y) * ((this.grid2.y - this.grid1.y + 1) / 9))};
+            let block3 = {x: this.grid3.x - ((8-x) * ((this.grid3.x - this.grid4.x + 1) / 9)), 
+                          y: this.grid3.y - ((8-y) * ((this.grid3.y - this.grid4.y + 1) / 9))};
+            let block4 = {x: this.grid4.x + (x * ((this.grid3.x - this.grid4.x + 1) / 9)), //yes
+                          y: this.grid4.y + (y * ((this.grid3.y - this.grid4.y + 1) / 9))};
+             
+            if ((x === 0) && (y === 0)) {
+                console.log("Logical (" + x + " " + y + ")");
+                console.log("Grid1 (" + this.grid1.x + " " + this.grid1.y + ") " + 
+                            "Grid2 (" + this.grid2.x + " " + this.grid2.y + ") " +
+                            "Grid3 (" + this.grid3.x + " " + this.grid3.y + ") " +
+                            "Grid4 (" + this.grid4.x + " " + this.grid4.y + ")");
+                console.log("Block1 (" + block1.x + " " + block1.y + ") " + 
+                            "Block2 (" + block2.x + " " + block2.y + ") " +
+                            "Block3 (" + block3.x + " " + block3.y + ") " +
+                            "Block4 (" + block4.x + " " + block4.y + ")");
+            }
+
+            this.drawQuad(context, 
+                          block1.x, block1.y, 
+                          block2.x, block2.y, 
+                          block3.x, block3.y, 
+                          block4.x, block4.y);
           }
-        }
+        }*/
+
+        this.drawQuad(context,
+                      this.grid1.x, this.grid1.y,
+                      this.grid2.x, this.grid2.y,
+                      this.grid3.x, this.grid3.y,
+                      this.grid4.x, this.grid4.y);
+                      
         context.strokeStyle = 'red';
         context.lineWidth = 1;
         context.stroke();  
@@ -114,20 +153,20 @@ class MarkStep extends Component {
         let quadrant = this.whichQuadrant(pos.x, pos.y);
 
         if (quadrant === 1) {
-            this.leftX = pos.x;
-            this.leftY = pos.y;
+            this.grid1.x = pos.x;
+            this.grid1.y = pos.y;
         }
         else if (quadrant === 2) {
-            this.rightX = pos.x;
-            this.leftY = pos.y;
+            this.grid2.x = pos.x;
+            this.grid2.y = pos.y;
         }
         else if (quadrant === 3) {
-            this.rightX = pos.x;
-            this.rightY = pos.y;
+            this.grid3.x = pos.x;
+            this.grid3.y = pos.y;
         }
         else if (quadrant === 4) {
-            this.leftX = pos.x;
-            this.rightY = pos.y;
+            this.grid4.x = pos.x;
+            this.grid4.y = pos.y;
         }
 
         this.renderCanvas();
@@ -150,14 +189,27 @@ class MarkStep extends Component {
     }
 
     proceed() {
-        let width = this.rightX - this.leftX + 1;
-        let height = this.rightY - this.leftY + 1;
+/*
+        let horScaling = 0;
+        let horSkewing = 0;
+        let vertSkewing = 0;
+        let vertScaling = 0;
+        let horMoving = 0;
+        let vertMoving = 0;
+
+        let canvas = this.canvasRef.current;  
+        let context = canvas.getContext('2d');
+        context.transform(horScaling, horSkewing, vertSkewing, vertScaling, horMoving, vertMoving);
+*/
+
+        let width = this.grid2.x - this.grid1.x + 1;
+        let height = this.grid3.y - this.grid1.y + 1;
 
         let canvas = this.canvasRef.current;  
         let context = canvas.getContext('2d');
 
         context.drawImage(this.hiddenImg, 
-            this.leftX, this.leftY, width, height,
+            this.grid1.x, this.grid1.y, width, height,
             0, 0, canvas.width, canvas.height);
 
         let dataUrl = canvas.toDataURL('image/png');
