@@ -34,7 +34,7 @@ ENV PATH /opt/conda/bin:$PATH
 
 # Install dependencies via Anaconda
 RUN mkdir -p /deploy/app
-COPY app/requirements.txt /deploy/app/requirements.txt
+COPY requirements.txt /deploy/app/requirements.txt
 RUN conda install -y --file /deploy/app/requirements.txt
 
 # Deploy application
