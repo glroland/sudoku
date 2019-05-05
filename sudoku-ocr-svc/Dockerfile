@@ -39,7 +39,7 @@ RUN conda install -y --file /deploy/app/requirements.txt
 
 # Deploy application
 COPY gunicorn_config.py /deploy/gunicorn_config.py
-COPY * /deploy
+COPY ./ /deploy
 WORKDIR /deploy
 
 # Set Python path
