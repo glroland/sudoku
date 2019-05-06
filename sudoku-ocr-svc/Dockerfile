@@ -36,6 +36,8 @@ ENV PATH /opt/conda/bin:$PATH
 RUN mkdir -p /deploy/app
 COPY requirements.txt /deploy/app/requirements.txt
 RUN conda install -y --file /deploy/app/requirements.txt
+RUN conda install -c conda-forge flask-restful 
+RUN conda install -c anaconda flask-cors
 
 # Deploy application
 COPY gunicorn_config.py /deploy/gunicorn_config.py

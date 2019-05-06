@@ -3,9 +3,10 @@ clean:
 
 init:
 	conda update -n base -c defaults conda
-	conda env create sudoku
+	conda create -n sudoku
 	conda install --yes --file requirements.txt
 	conda install -c conda-forge flask-restful 
+	conda install -c anaconda flask-cors
 
 ocrtrain:
 #	conda init bash
