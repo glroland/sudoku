@@ -1,5 +1,4 @@
 *.pyc
 MNIST_data
 .DS_Store
-sudoku_digit.model
 
