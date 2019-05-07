@@ -36,7 +36,7 @@ class Game extends Component {
   
       var serviceUrl = process.env.REACT_APP_SVC_URL;
       if ((serviceUrl === undefined))
-        serviceUrl = 'http://svc-sudoku.apps3.home.glroland.com';
+        serviceUrl = 'http://localhost:8080';
       console.log("Service URL = " + serviceUrl);
   
       fetch(serviceUrl + '/generate')
