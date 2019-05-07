@@ -57,7 +57,7 @@ class ScanPage extends Component {
       return (
         <div className="options">
           <h1 className="welcome-title">Sudoku!</h1>
-          <input ref={this.gameStatusRef} type="text" className="game-status" value="" /><br/>
+          <input ref={this.gameStatusRef} type="text" className="game-status" value="" readOnly /><br/>
           <br/>
           {stepRender}<br />
           <button className="welcome-button" onClick={() => this.mainmenu()}>Back</button><br />
