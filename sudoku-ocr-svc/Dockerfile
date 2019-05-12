@@ -49,5 +49,5 @@ ENV PYTHONPATH=/deploy
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "ocrsvc"]
+CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "main:app"]
 
