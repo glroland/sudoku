@@ -42,6 +42,7 @@ RUN conda install -c anaconda flask-cors
 # Deploy application
 COPY gunicorn_config.py /deploy/gunicorn_config.py
 COPY app /deploy/app
+COPY wsgi.py /deploy/app
 WORKDIR /deploy/app
 
 # Set Python path
@@ -49,5 +50,5 @@ ENV PYTHONPATH=/deploy
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "main:app"]
+CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "wsgi:app"]
 
