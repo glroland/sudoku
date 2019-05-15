@@ -40,7 +40,6 @@ RUN /deploy/app/conda_packages.sh
 # Deploy application
 COPY gunicorn_config.py /deploy/gunicorn_config.py
 COPY app /deploy/app
-COPY wsgi.py /deploy/app
 WORKDIR /deploy/app
 
 # Set Python path
