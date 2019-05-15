@@ -34,10 +34,8 @@ ENV PATH /opt/conda/bin:$PATH
 
 # Install dependencies via Anaconda
 RUN mkdir -p /deploy/app
-COPY requirements.txt /deploy/app/requirements.txt
-RUN conda install -y --file /deploy/app/requirements.txt
-RUN conda install -c conda-forge flask-restful 
-RUN conda install -c anaconda flask-cors
+COPY setup/conda_packages.sh /deploy/app
+RUN /deploy/app/conda_packages.sh
 
 # Deploy application
 COPY gunicorn_config.py /deploy/gunicorn_config.py
@@ -50,5 +48,5 @@ ENV PYTHONPATH=/deploy
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "wsgi:app"]
+CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "ocrsvc:app"]
 

@@ -49,4 +49,4 @@ class NumpyArrayJSONEncoder(json.JSONEncoder):
           return json.dumps({'puzzle': {'grid': puzzle} }, cls=NumpyArrayJSONEncoder)
         
 if __name__ == '__main__':
-     app.run(port='5002')
+     app.run()
