@@ -73,9 +73,7 @@ class UploadStep extends Component {
       
       let pJson = JSON.parse(JSON.stringify(p));
   
-      var serviceUrl = process.env.REACT_APP_SVC_URL;
-      if ((serviceUrl === undefined))
-        serviceUrl = 'http://svc-sudoku.apps3.home.glroland.com';
+      var serviceUrl = process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080';
       console.log("Service URL = " + serviceUrl);
   
       fetch(serviceUrl + '/solve', {
@@ -110,10 +108,8 @@ class UploadStep extends Component {
     uploadImage(imageBytes) {
       this.boardRef.current.clear();
 
-      var serviceUrl = undefined;
-      if ((serviceUrl === undefined))
-        serviceUrl = 'http://ocrsvc-sudoku.apps3.home.glroland.com';
-      console.log("Service URL = " + serviceUrl);
+      var serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000';
+      console.log("OCR Service URL = " + serviceUrl);
   
       var formData = new FormData();
       //var blob = new Blob(imageBytes, { type: "image/png"});

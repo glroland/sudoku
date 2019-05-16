@@ -34,9 +34,8 @@ class Game extends Component {
       this.solutionGrid = JSON.parse(JSON.stringify(this.puzzleGrid));
       this.initialGrid = JSON.parse(JSON.stringify(this.puzzleGrid));
   
-      var serviceUrl = process.env.REACT_APP_SVC_URL;
-      if ((serviceUrl === undefined))
-        serviceUrl = 'http://svc-sudoku.apps3.home.glroland.com';
+      console.log(process.env);
+      var serviceUrl = process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080';
       console.log("Service URL = " + serviceUrl);
   
       fetch(serviceUrl + '/generate')
