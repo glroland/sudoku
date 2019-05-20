@@ -38,6 +38,7 @@ class Game extends Component {
       var serviceUrl = process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080';
       console.log("Service URL = " + serviceUrl);
   
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/generate')
       .then(results => {
         return results.json();
