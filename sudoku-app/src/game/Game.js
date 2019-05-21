@@ -37,7 +37,8 @@ class Game extends Component {
       console.log(process.env);
       var serviceUrl = process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080';
       console.log("Service URL = " + serviceUrl);
-  
+
+      console.log("Disabling TLS Cert validation");
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/generate')
       .then(results => {

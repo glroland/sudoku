@@ -76,6 +76,7 @@ class UploadStep extends Component {
       var serviceUrl = process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080';
       console.log("Service URL = " + serviceUrl);
   
+      console.log("Disabling TLS Cert validation");
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/solve', {
         method: "POST",
@@ -116,6 +117,7 @@ class UploadStep extends Component {
       //var blob = new Blob(imageBytes, { type: "image/png"});
       formData.append("file", imageBytes);
 
+      console.log("Disabling TLS Cert validation");
       process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/extract', {
         method: 'POST',
