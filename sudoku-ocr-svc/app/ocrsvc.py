@@ -38,9 +38,6 @@ class NumpyArrayJSONEncoder(json.JSONEncoder):
           f = request.files['file']
           imbytes = f.read()          
           print("Upload called with file of length: " + str(len(imbytes)))
-          f2 = open("/Users/lroland/upload.png", "wb")
-          f2.write(imbytes)
-          f2.close()
 
           ocrcore = core.SudokuOCRCore()
           im = ocrcore.load_image_from_bytes(imbytes)
