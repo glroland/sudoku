@@ -1,0 +1,22 @@
+node {
+   def mvnHome
+   stage('Preparation') { // for display purposes
+      git '$SUDOKU_GIT_URL'
+      mvnHome = tool 'Maven'
+      if (!isUnix()) {
+          error "Builds on Windows are not supported."
+      }
+   }
+   stage('Build') {
+      withEnv(["MVN_HOME=$mvnHome"]) {
+        sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore --projects sudoku-lib,sudoku-svc clean install'
+      }
+   }
+   stage('Security Scan') {
+       dependencyCheck additionalArguments: '', odcInstallation: 'Dependency Check'
+   }
+   stage('Results') {
+      archiveArtifacts 'sudoku-svc/target/*.jar'
+   }
+}
+
