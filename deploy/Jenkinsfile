@@ -19,7 +19,7 @@ node {
       archiveArtifacts 'sudoku-svc/target/*.jar'
    }
    stage('OpenShift Image Build') {
-      withEnv(["PATH+OC=${tool 'oc_cli'}"]) {
+      withEnv(["PATH=${tool 'oc_cli'}"]) {
          openshift.withCluster('ocp4.home.glroland.com') {
             openshift.withProject('sudoku-build') {
                openshift.delete('buildconfig', 'abc', '--cascade')
