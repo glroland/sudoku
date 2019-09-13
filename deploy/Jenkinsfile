@@ -19,17 +19,29 @@ node {
       archiveArtifacts 'sudoku-svc/target/*.jar'
    }
    stage('OpenShift Image Build') {
-      withEnv(["PATH=${tool 'oc_cli'}"]) {
-         openshift.withCluster('ocp4.home.glroland.com') {
-            openshift.withProject('sudoku-build') {
-               openshift.selector('buildconfig', [ name:'abc' ]).delete()
-               openshift.selector('imagestream', [ name:'abc' ]).delete()
+      echo "Entering OpenShift Image Build"
+      try {
+         withEnv(["PATH=${tool 'oc_cli'}"]) {
+            openshift.verbose()
+            echo "OpenShift.withCluster()"
+            openshift.withCluster('ocp4.home.glroland.com') {
+               echo "OpenShift.withProject()"
+               openshift.withProject('sudoku-build') {
+                  echo "OpenShift.delete()s"
+                  openshift.selector('buildconfig', [ name:'abc' ]).delete()
+                  openshift.selector('imagestream', [ name:'abc' ]).delete()
 
-               openshift.newBuild('java:latest', '--name=abc', '--binary') {
-                  openshift.startBuild('abc', '--from-file=sudoku-svc/target/sudoku-svc-1.0.jar', '--wait')
+                  echo "OpenShift.newBuild()"
+                  openshift.newBuild('java:latest', '--name=abc', '--binary') {
+                     echo "OpenShift.startBuild()"
+                     openshift.startBuild('abc', '--from-file=sudoku-svc/target/sudoku-svc-1.0.jar', '--wait')
+                  }
                }
             }
          }
       }
+      catch (e) {
+        "Error encountered: ${e}"
+    }
    }
 }
