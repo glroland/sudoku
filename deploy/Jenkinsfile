@@ -22,8 +22,8 @@ node {
       withEnv(["PATH=${tool 'oc_cli'}"]) {
          openshift.withCluster('ocp4.home.glroland.com') {
             openshift.withProject('sudoku-build') {
-               openshift.delete('buildconfig', 'abc', '--cascade')
-               openshift.delete('imagestream', 'abc', '--cascade')
+               openshift.selector('buildconfig', [ name:'abc' ]).delete()
+               openshift.selector('imagestream', [ name:'abc' ]).delete()
 
                openshift.newBuild('java:latest', '--name=abc', '--binary') {
                   openshift.startBuild('abc', '--from-file=sudoku-svc/target/sudoku-svc-1.0.jar', '--wait')
