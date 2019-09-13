@@ -28,8 +28,8 @@ node {
                echo "OpenShift.withProject()"
                openshift.withProject('$OPENSHIFT_PROJECT') {
                   echo "OpenShift.delete()s"
-                  openshift.selector('buildconfig', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
-                  openshift.selector('imagestream', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
+//                  openshift.selector('buildconfig', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
+//                  openshift.selector('imagestream', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
 
                   echo "OpenShift.newBuild()"
                   openshift.newBuild('java:latest', '--name=$OPENSHIFT_BUILD_NAME', '--binary') {
@@ -41,7 +41,8 @@ node {
          }
       }
       catch (e) {
-        "Error encountered: ${e}"
+        echo "Error encountered: ${e}"
+        error "Error encountered: ${e}"
     }
    }
 }
