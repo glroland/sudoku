@@ -1,6 +1,6 @@
 class SudokuOCRConstants:
 
-    SUDOKU_MODEL_FILE = 'sudoku_digit.model'
+    SUDOKU_MODEL_FILE = 'sudoku_digit_model.h5'
 
     SUDOKU_GRID_WIDTH = 9
     SUDOKU_GRID_HEIGHT = SUDOKU_GRID_WIDTH
@@ -10,3 +10,5 @@ class SudokuOCRConstants:
     SUDOKU_OCR_DIGIT_PAD_PERCENT = 5
     SUDOKU_BLANK_THRESHOLD = 0
     SUDOKU_MIN_PADDING = 5
+
+    SUDOKU_DEBUG = False

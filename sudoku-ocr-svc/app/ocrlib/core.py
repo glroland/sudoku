@@ -22,8 +22,7 @@ class SudokuOCRCore(object):
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    def __init__(self):
-        self.SODOKU_MODEL = tf.keras.models.load_model(constants.SudokuOCRConstants.SUDOKU_MODEL_FILE)
+#    def __init__(self):
 
     def load_image_from_bytes(self, imbytes):
         im = Image.open(io.BytesIO(imbytes))
@@ -113,12 +112,23 @@ class SudokuOCRCore(object):
             return False
 
     def eval_what_digit(self, image, expectedDigit = None):
+        if self.SODOKU_MODEL == None:
+            self.SODOKU_MODEL = tf.keras.models.load_model(constants.SudokuOCRConstants.SUDOKU_MODEL_FILE)
+
         image = self.preprocess(image)
         image_array = np.asarray(image).reshape(1, constants.SudokuOCRConstants.SUDOKU_OCR_DIGIT_WIDTH * constants.SudokuOCRConstants.SUDOKU_OCR_DIGIT_HEIGHT)
         predictions = self.SODOKU_MODEL.predict(image_array)
         if expectedDigit != None:
             print(predictions)
         return np.argmax(predictions[0])
+
+    def debug_image_save(self, image, x, y):
+        if constants.SudokuOCRConstants.SUDOKU_DEBUG:
+            clone = image.copy()
+            clone.convert('RGB')
+            clone.save("debug_ " + str(x) + "_" + str(y) + ".png")
+        
+        return
 
     def eval_what_puzzle(self, image, expected = None):
         result = np.copy(self.SUDOKU_EMPTY_GRID)
@@ -136,6 +146,7 @@ class SudokuOCRCore(object):
                 squareTopX = (squareWidth * x)
                 squareBottomX = (squareWidth * (x + 1)) - 1
                 digitImage = image.crop([squareTopX + padWidth, squareTopY + padHeight, squareBottomX - padWidth, squareBottomY - padHeight])
+                self.debug_image_save(digitImage, x, y)
                 expectedDigit = None
                 if expected != None:
                     expectedDigit = expected[y][x]
