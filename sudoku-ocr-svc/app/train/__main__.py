@@ -4,6 +4,7 @@ from ocrlib import constants
 from ocrlib import core
 import numpy as np
 import os
+from PIL import Image
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 # conda install nomkl (to avoid it, according to google :) )
@@ -51,17 +52,17 @@ y_train_files = np.asarray(y_train_files, dtype=np.uint8)
 print (X_train_files.shape)
 print (y_train_files.shape)
 
+# Image.fromarray(X_train_files[0]).show()
+# Image.fromarray(X_train_files[1]).show()
+# Image.fromarray(X_train_mnist[100]).show()
+# Image.fromarray(X_train_mnist[600]).show()
+
 X_train = np.concatenate([X_train_mnist, X_train_files], axis=0)
+# X_train = X_train_mnist
 print (X_train.shape)
 y_train = np.concatenate([y_train_mnist, y_train_files], axis=0)
+# y_train = y_train_mnist
 print (y_train.shape)
-
-X_train = X_train_files
-y_train = y_train_files
-print(X_train_mnist.dtype) 
-print(X_train_files.dtype) 
-print(y_train_mnist.dtype) 
-print(y_train_files.dtype) 
 
 X_train = tf.keras.utils.normalize(X_train, axis=1)
 X_test = tf.keras.utils.normalize(X_test, axis=1)
