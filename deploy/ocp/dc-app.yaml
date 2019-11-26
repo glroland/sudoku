@@ -25,6 +25,8 @@ spec:
       labels:
         app: app
         deploymentconfig: app
+      annotations:
+        sidecar.istio.io/inject: 'true'
     spec:
       containers:
       - env:

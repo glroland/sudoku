@@ -25,6 +25,8 @@ spec:
       labels:
         app: svc
         deploymentconfig: svc
+      annotations:
+        sidecar.istio.io/inject: 'true'
     spec:
       containers:
       - image: svc:latest

@@ -25,6 +25,8 @@ spec:
       labels:
         app: ocr-svc
         deploymentconfig: ocr-svc
+      annotations:
+        sidecar.istio.io/inject: 'true'
     spec:
       containers:
       - image: ocr-svc:latest
