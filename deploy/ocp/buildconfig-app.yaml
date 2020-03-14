@@ -12,7 +12,13 @@ spec:
       kind: ImageStreamTag
       name: app:latest
   postCommit: {}
-  resources: {}
+  resources:
+    limits:
+      cpu: '1'
+      memory: 1Gi
+    requests:
+      cpu: 10m
+      memory: 10Mi
   runPolicy: Serial
   source:
     contextDir: sudoku-app
