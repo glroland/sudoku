@@ -21,7 +21,7 @@ pipeline {
                     -f "ALL" 
                     --prettyPrint''', odcInstallation: 'OWASP Dependency-Check'
 
-        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+        dependencyCheckPublisher pattern: 'dependency-check-report.html'
       }
     }
 
@@ -31,7 +31,7 @@ pipeline {
   }
   post {
     always {
-      step(followSymlinks: false, artifacts: 'sudoku-svc/target/sudoku-svc-1.0.jar,dependency-check-report.xml', $class: 'ArtifactArchiver')
+      step(followSymlinks: false, artifacts: 'sudoku-svc/target/sudoku-svc-1.0.jar,dependency-check-report.html', $class: 'ArtifactArchiver')
     }
 
   }
