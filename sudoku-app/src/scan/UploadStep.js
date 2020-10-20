@@ -110,7 +110,12 @@ class UploadStep extends Component {
     uploadImage(imageBytes) {
       this.boardRef.current.clear();
 
-      var serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000';
+      var serviceUrl = window.location.origin.toString();
+      if (typeof window == 'undefined') {
+        console.log("Unable to extract base URL path from window.  Using default");
+        serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000'
+      }
+      serviceUrl = serviceUrl + '/api/ocr';
       console.log("OCR Service URL = " + serviceUrl);
   
       var formData = new FormData();

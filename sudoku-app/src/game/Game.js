@@ -35,7 +35,12 @@ class Game extends Component {
       this.initialGrid = JSON.parse(JSON.stringify(this.puzzleGrid));
   
       console.log(process.env);
-      var serviceUrl = process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080';
+      var serviceUrl = window.location.origin.toString();
+      if (typeof window == 'undefined') {
+        console.log("Unable to extract base URL path from window.  Using default");
+        serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000'
+      }
+      serviceUrl = serviceUrl + '/api/game';
       console.log("Service URL = " + serviceUrl);
 
       console.log("Disabling TLS Cert validation");
