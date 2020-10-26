@@ -136,7 +136,8 @@ spec:
         deploymentconfig: ocr-svc
     spec:
       containers:
-      - imagePullPolicy: Always
+      - image: ocr-svc:latest
+        imagePullPolicy: Always
         name: ocr-svc
         resources: {}
         terminationMessagePath: /dev/termination-log

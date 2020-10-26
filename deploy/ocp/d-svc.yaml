@@ -156,7 +156,8 @@ spec:
         deploymentconfig: svc
     spec:
       containers:
-      - imagePullPolicy: Always
+      - image: svc:latest
+        imagePullPolicy: Always
         name: svc
         ports:
         - containerPort: 8080

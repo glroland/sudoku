@@ -177,6 +177,7 @@ spec:
           value: "0"
         - name: PORT
           value: "3000"
+        image: app:latest
         imagePullPolicy: Always
         name: app
         ports:
