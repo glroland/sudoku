@@ -1,8 +1,62 @@
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
+  annotations:
+    app.openshift.io/vcs-ref: master
+    app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: "2020-10-25T23:09:19Z"
   labels:
-    name: ocr-svc
+    app: ocr-svc
+    app.kubernetes.io/component: ocr-svc
+    app.kubernetes.io/instance: ocr-svc
+    app.kubernetes.io/part-of: sudoku
+  managedFields:
+  - apiVersion: build.openshift.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:app.openshift.io/vcs-ref: {}
+          f:app.openshift.io/vcs-uri: {}
+          f:openshift.io/generated-by: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:app.kubernetes.io/component: {}
+          f:app.kubernetes.io/instance: {}
+          f:app.kubernetes.io/part-of: {}
+      f:spec:
+        f:output:
+          f:to:
+            .: {}
+            f:kind: {}
+            f:name: {}
+        f:runPolicy: {}
+        f:source:
+          f:contextDir: {}
+          f:git:
+            .: {}
+            f:uri: {}
+          f:type: {}
+        f:strategy:
+          f:dockerStrategy:
+            .: {}
+            f:dockerfilePath: {}
+          f:type: {}
+        f:triggers: {}
+    manager: Mozilla
+    operation: Update
+    time: "2020-10-25T23:09:19Z"
+  - apiVersion: build.openshift.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:lastVersion: {}
+    manager: openshift-apiserver
+    operation: Update
+    time: "2020-10-25T23:09:19Z"
   name: ocr-svc
 spec:
   failedBuildsHistoryLimit: 5
@@ -15,16 +69,22 @@ spec:
   resources: {}
   runPolicy: Serial
   source:
-    contextDir: sudoku-ocr-svc
+    contextDir: /sudoku-ocr-svc
     git:
       uri: https://github.com/glroland/sudoku.git
     type: Git
   strategy:
     dockerStrategy:
-      env:
-      - name: EXAMPLE
-        value: sample-app
+      dockerfilePath: Dockerfile
     type: Docker
   successfulBuildsHistoryLimit: 5
   triggers:
+  - generic:
+      secretReference:
+        name: ocr-svc-generic-webhook-secret
+    type: Generic
+  - github:
+      secretReference:
+        name: ocr-svc-github-webhook-secret
+    type: GitHub
   - type: ConfigChange

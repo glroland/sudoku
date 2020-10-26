@@ -1,8 +1,36 @@
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
+  annotations:
+    app.openshift.io/vcs-ref: master
+    app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: "2020-10-25T23:09:19Z"
+  generation: 1
   labels:
     app: ocr-svc
+    app.kubernetes.io/component: ocr-svc
+    app.kubernetes.io/instance: ocr-svc
+    app.kubernetes.io/part-of: sudoku
+  managedFields:
+  - apiVersion: image.openshift.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:app.openshift.io/vcs-ref: {}
+          f:app.openshift.io/vcs-uri: {}
+          f:openshift.io/generated-by: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:app.kubernetes.io/component: {}
+          f:app.kubernetes.io/instance: {}
+          f:app.kubernetes.io/part-of: {}
+    manager: Mozilla
+    operation: Update
+    time: "2020-10-25T23:09:19Z"
   name: ocr-svc
 spec:
   lookupPolicy:
