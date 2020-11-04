@@ -146,11 +146,17 @@ commands:
               }
             ]
           }
-  - name: 1. Run the application
+  - name: 1. Install the application
     actions:
       - type: exec
         component: sudoku-app
-        command: npm install && node --inspect=9229 app.js
+        command: npm install
+        workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-app'
+  - name: 2. Run the application
+    actions:
+      - type: exec
+        component: sudoku-app
+        command: PORT=8080 npm --inspect=9229 start
         workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-app'
   - name: Debug remote node application
     actions:
