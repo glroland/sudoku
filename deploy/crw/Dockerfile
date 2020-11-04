@@ -25,15 +25,9 @@ ENV PATH="/opt/conda/bin:/usr/bin:/usr/sbin${PATH:+:${PATH}}" \
     LD_LIBRARY_PATH="/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" \
     PKG_CONFIG_PATH="/usr/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}" \
     XDG_DATA_DIRS=/usr/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share} \
-    PYTHONPATH=/deploy \
     HOME=/home/jboss
 
 USER root
-
-RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    curl https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh -o ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -f -b -p /opt/conda && \
-    rm ~/miniconda.sh
 
 RUN yum install -y --setopt=tsflags=nodocs wget curl openshift-clients-4.3.19 \
     yum update -y librepo libnghttp2 dbus dbus dbus-common dbus-daemon dbus-libs dbus-tools systemd nodejs npm libicu gnutls && \
@@ -51,6 +45,11 @@ RUN yum install -y --setopt=tsflags=nodocs wget curl openshift-clients-4.3.19 \
     > ${HOME}/group.template && \
     echo "jboss ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers && \
     echo "Installed Packages" && rpm -qa | sort -V && echo "End Of Installed Packages"
+
+RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
+    curl https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh -o /projects/miniconda.sh && \
+    /bin/bash /projects/miniconda.sh -f -b -p /opt/conda && \
+    rm /projects/miniconda.sh
 
 ADD entrypoint.sh ${HOME}/entrypoint.sh
 
