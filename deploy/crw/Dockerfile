@@ -25,7 +25,7 @@ ENV PATH="/opt/conda/bin:/usr/bin:/usr/sbin${PATH:+:${PATH}}" \
     LD_LIBRARY_PATH="/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" \
     PKG_CONFIG_PATH="/usr/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}" \
     XDG_DATA_DIRS=/usr/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share} \
-    PYTHONPATH=/deploy
+    PYTHONPATH=/deploy \
     HOME=/home/jboss
 
 USER root
