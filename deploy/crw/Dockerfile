@@ -1,5 +1,5 @@
-# https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8-minimal
-FROM registry.access.redhat.com/ubi8-minimal:8.2-349
+# https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8
+FROM registry.access.redhat.com/ubi8:8.3-199
 
 ENV SUMMARY="Red Hat CodeReady Workspaces - Anaconda3 Stack container" \
     DESCRIPTION="Red Hat CodeReady Workspaces - Anaconda3 Stack container" \
