@@ -27,7 +27,7 @@ ENV HOME=/home/jboss \
     XDG_CONFIG_DIRS="/etc/xdg:${XDG_CONFIG_DIRS:-/etc/xdg}" \
     XDG_DATA_DIRS="/usr/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 
-RUN microdnf install -y bash tar gzip which shadow-utils findutils wget curl openshift-clients-4.4.0-202005231254.git.1.1e3e6b3.el8 \
+RUN microdnf install -y bash tar gzip which shadow-utils findutils wget curl \
     sudo git procps-ng nss_wrapper bzip2 && \
     microdnf update -y zlib gnutls systemd-libs systemd pango libnghttp2 sqlite libarchive && \
     microdnf clean all && rm -rf /var/cache/yum && \
@@ -54,6 +54,11 @@ RUN \
 
 ADD entrypoint.sh ${HOME}/entrypoint.sh
 RUN chmod +x ${HOME}/*.sh
+
+RUN curl https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz -o openshift-client.tar.gz && \
+    gzip -dc openshift-client.tar.gz | tar xvf - && \
+    mv oc /usr/local/bin && \
+    rm -f openshift-client.tar.gz
 
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
     curl https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh -o /projects/miniconda.sh && \
