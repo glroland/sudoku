@@ -58,6 +58,7 @@ RUN chmod +x ${HOME}/*.sh
 RUN curl https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz -o openshift-client.tar.gz && \
     gzip -dc openshift-client.tar.gz | tar xvf - && \
     mv oc /usr/local/bin && \
+    mv kubectl /usr/local/bin && \
     rm -f openshift-client.tar.gz
 
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
