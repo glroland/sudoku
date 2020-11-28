@@ -66,7 +66,8 @@ RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
     /bin/bash /projects/miniconda.sh -f -b -p /opt/conda && \
     rm /projects/miniconda.sh
 
-RUN chown -R jboss /opt/conda/pkgs
+RUN chown -R jboss /opt/conda/pkgs && \
+    chown -R jboss ${HOME}
 
 EXPOSE 8080
 
