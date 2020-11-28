@@ -65,7 +65,7 @@ RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
     curl https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh -o /projects/miniconda.sh && \
     /bin/bash /projects/miniconda.sh -f -b -p /opt/conda && \
     rm /projects/miniconda.sh && \
-    chown -R 1000680000 /opt/conda/pkgs && \
+    chown -R 1000680000 /opt/conda && \
     chown -R 1000680000 ${HOME} && \
     date > ${HOME}/IMAGE_BUILD_DATE.txt
 
