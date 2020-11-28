@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import numpy as np
 from json import dumps
 from ocrlib import core
