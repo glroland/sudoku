@@ -1,78 +1,69 @@
 apiVersion: 1.0.0
+metadata:
+  name: sudoku-sqwi1
 projects:
   - name: sudoku
     source:
       location: 'https://github.com/glroland/sudoku.git'
       type: github
       branch: master
-metadata:
-  generateName: sudoku-
 components:
+  - id: che-incubator/typescript/latest
+    memoryLimit: 512Mi
+    type: chePlugin
+  - id: ms-vscode/node-debug2/latest
+    type: chePlugin
+  - mountSources: true
+    endpoints:
+      - name: 8080-tcp
+        port: 8080
+    memoryLimit: 512Mi
+    type: dockerimage
+    volumes:
+      - name: maven
+        containerPath: /home/user/.m2
+    alias: sudoku-svc
+    image: 'registry.redhat.io/codeready-workspaces/plugin-java8-rhel8:latest'
+    env:
+      - value: '-XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xms20m -Djava.security.egd=file:/dev/./urandom -Duser.home=/home/jboss'
+        name: JAVA_OPTS
+      - value: $(JAVA_OPTS)
+        name: MAVEN_OPTS
+  - mountSources: true
+    memoryLimit: 512Mi
+    type: dockerimage
+    alias: sudoku-ocr-svc
+    image: 'registry.home.glroland.com/openshift/conda-crw:latest'
+  - mountSources: true
+    endpoints:
+      - name: nodejs
+        port: 8080
+    memoryLimit: 1Gi
+    type: dockerimage
+    alias: sudoku-app
+    image: registry.redhat.io/codeready-workspaces/plugin-java8-rhel8
+    env:
+      - value: 220fd770-c028-480d-8f95-f84353c7d55a
+        name: SECRET
+      - value: production
+        name: NODE_ENV
   - id: redhat/java11/latest
     type: chePlugin
   - id: redhat/dependency-analytics/latest
     type: chePlugin
   - id: ms-python/python/latest
-    type: chePlugin
+    memoryLimit: 512Mi
     preferences:
       python.globalModuleInstallation: true
-    memoryLimit: 512Mi
-  - type: chePlugin
-    id: che-incubator/typescript/latest
-    memoryLimit: 512Mi
-  - type: chePlugin
-    id: ms-vscode/node-debug2/latest
-  - mountSources: true
-    memoryLimit: 512Mi
-    endpoints:
-      - name: 8080-tcp
-        port: 8080
-    type: dockerimage
-    volumes:
-      - name: maven
-        containerPath: /home/user/.m2
-    image: 'registry.redhat.io/codeready-workspaces/plugin-java8-rhel8:latest'
-    env:
-      - value: >-
-          -XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10
-          -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4
-          -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true
-          -Xms20m -Djava.security.egd=file:/dev/./urandom
-          -Duser.home=/home/jboss
-        name: JAVA_OPTS
-      - value: $(JAVA_OPTS)
-        name: MAVEN_OPTS
-    alias: sudoku-svc
-  - mountSources: true
-    type: dockerimage
-    alias: sudoku-ocr-svc
-    memoryLimit: 512Mi
-    image: >-
-      registry.redhat.io/codeready-workspaces/plugin-java8-rhel8
-  - type: dockerimage
-    alias: sudoku-app
-    memoryLimit: 1Gi
-    image: >-
-      registry.redhat.io/codeready-workspaces/plugin-java8-rhel8
-    env:
-      - name: SECRET
-        value: 220fd770-c028-480d-8f95-f84353c7d55a
-      - name: NODE_ENV
-        value: production
-    endpoints:
-      - name: nodejs
-        port: 8080
-    mountSources: true
+    type: chePlugin
 commands:
   - name: 1. Build
     actions:
-      - workdir: '${CHE_PROJECTS_ROOT}/sudoku'
+      - workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-svc'
         type: exec
-        command: >-
-          MAVEN_OPTS="-Xmx200m" && mvn -Duser.home=${HOME} -DskipTests clean
-          install
+        command: 'MAVEN_OPTS="-Xmx200m" && mvn -Duser.home=${HOME} -DskipTests clean install'
         component: sudoku-svc
-  - name: 2. Run
+  - name: 2. Run Sudoku Service
     actions:
       - workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-svc'
         type: exec
@@ -82,9 +73,8 @@ commands:
     actions:
       - workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-svc'
         type: exec
-        command: >-
-          mvn  -Duser.home=${HOME} spring-boot:run
-          -Dspring-boot.run.jvmArguments="-Xdebug
+        command: |-
+          mvn  -Duser.home=${HOME} spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug
            -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
         component: sudoku-svc
   - name: 4. Run tests
@@ -124,16 +114,21 @@ commands:
              }]
            }
         type: vscode-launch
-  - name: 1. Run
+  - name: 1. Install Conda Packages
     actions:
-      - type: exec
+      - workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-ocr-svc/setup'
+        type: exec
+        command: '/opt/conda/bin/conda init && . ${HOME}/.bashrc && /bin/bash conda_packages.sh'
         component: sudoku-ocr-svc
-        command: python hello-world.py
-        workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-ocr-svc'
+  - name: 2. Run OCR Service
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-ocr-svc/app'
+        type: exec
+        command: '/opt/conda/bin/conda init && . ${HOME}/.bashrc && gunicorn --config ../gunicorn_config.py ocrsvc:app'
+        component: sudoku-ocr-svc
   - name: Debug current file
     actions:
-      - type: vscode-launch
-        referenceContent: |
+      - referenceContent: |
           {
             "version": "0.2.0",
             "configurations": [
@@ -146,22 +141,22 @@ commands:
               }
             ]
           }
+        type: vscode-launch
   - name: 1. Install the application
     actions:
-      - type: exec
-        component: sudoku-app
+      - workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-app'
+        type: exec
         command: npm install
-        workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-app'
-  - name: 2. Run the application
-    actions:
-      - type: exec
         component: sudoku-app
+  - name: 2. Run web application
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-app'
+        type: exec
         command: PORT=8080 npm --inspect=9229 start
-        workdir: '${CHE_PROJECTS_ROOT}/sudoku/sudoku-app'
+        component: sudoku-app
   - name: Debug remote node application
     actions:
-      - type: vscode-launch
-        referenceContent: |
+      - referenceContent: |
           {
           "version": "0.2.0",
           "configurations": [
@@ -172,3 +167,5 @@ commands:
               "port": 9229
             }]
           }
+        type: vscode-launch
+
