@@ -82,14 +82,10 @@ spec:
   source:
     git:
       uri: https://github.com/glroland/sudoku.git
+    contextDir: 'sudoku-svc'
     type: Git
   strategy:
     sourceStrategy:
-      env:
-      - name: ARTIFACT_DIR
-        value: sudoku-svc/target/
-      - name: MODULE_DIR
-        value: sudoku-svc
       from:
         kind: ImageStreamTag
         name: java:11
