@@ -11,4 +11,5 @@ sudoku-svc/target
 .vscode
 target
 .DS_Store
+.odo/odo-file-index.json
 
