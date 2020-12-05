@@ -17,7 +17,7 @@ public class SudokuController {
 
     @RequestMapping("/")
     public String index() {
-        return "Sudoku!";
+        return "Sudoku Rules!";
     }
 
     @CrossOrigin(origins = "*")
