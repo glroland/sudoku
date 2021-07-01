@@ -1,0 +1,58 @@
+commands:
+- exec:
+    commandLine: mvn -Dmaven.repo.local=/home/user/.m2/repository compile
+    component: tools
+    workingDir: $PROJECTS_ROOT
+  id: init-compile
+- exec:
+    commandLine: mvn -Dmaven.repo.local=/home/user/.m2/repository quarkus:dev -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+    component: tools
+    group:
+      isDefault: true
+      kind: run
+    hotReloadCapable: true
+    workingDir: $PROJECTS_ROOT
+  id: dev-run
+- exec:
+    commandLine: mvn -Dmaven.repo.local=/home/user/.m2/repository quarkus:dev -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Ddebug=${DEBUG_PORT}
+    component: tools
+    group:
+      isDefault: true
+      kind: debug
+    hotReloadCapable: true
+    workingDir: $PROJECTS_ROOT
+  id: dev-debug
+components:
+- container:
+    endpoints:
+    - name: 8080-http
+      targetPort: 8080
+    - name: port-8080-tcp
+      protocol: tcp
+      targetPort: 8080
+    - exposure: public
+      name: web
+      path: /
+      protocol: http
+      targetPort: 8080
+    image: quay.io/eclipse/che-quarkus:nightly
+    memoryLimit: 1512Mi
+    mountSources: true
+    volumeMounts:
+    - name: m2
+      path: /home/user/.m2
+  name: tools
+- name: m2
+  volume:
+    size: 3Gi
+events:
+  postStart:
+  - init-compile
+metadata:
+  name: sudoku-log-svc
+  version: 1.1.0
+schemaVersion: 2.0.0
+starterProjects:
+- name: redhat-product
+  zip:
+    location: https://code.quarkus.redhat.com/d?e=io.quarkus%3Aquarkus-resteasy&e=io.quarkus%3Aquarkus-smallrye-health&e=io.quarkus%3Aquarkus-openshift
