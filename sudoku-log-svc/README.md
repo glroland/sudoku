@@ -56,3 +56,7 @@ If you want to learn more about building native executables, please consult http
 Easily start your RESTful Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+
+
+
+curl -X 'POST' http://localhost:8080/log/game -H 'accept: text/plain' -H 'Content-Type: application/json' -d @src/test/data/log_game_1_request.json
