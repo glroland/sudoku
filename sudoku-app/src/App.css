@@ -75,6 +75,7 @@ ol, ul {
   padding: 0;
   text-align: center;
   width: 34px;
+  color: black;
 }
 
 .squareReadOnly {
@@ -90,6 +91,7 @@ ol, ul {
   padding: 0;
   text-align: center;
   width: 34px;
+  color: blue;
 }
 
 .playValueOption {
