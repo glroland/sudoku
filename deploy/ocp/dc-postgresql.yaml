@@ -1,0 +1,271 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    template.alpha.openshift.io/wait-for-ready: "true"
+  creationTimestamp: "2021-07-08T17:57:23Z"
+  generation: 2
+  labels:
+    app.kubernetes.io/part-of: sudoku
+    template: postgresql-persistent-template
+    template.openshift.io/template-instance-owner: 8ee27071-04f7-43ee-b3ae-a8ab96804204
+  managedFields:
+  - apiVersion: apps.openshift.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          f:app.kubernetes.io/part-of: {}
+    manager: Mozilla
+    operation: Update
+    time: "2021-07-08T17:58:10Z"
+  - apiVersion: apps.openshift.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:template.alpha.openshift.io/wait-for-ready: {}
+        f:labels:
+          .: {}
+          f:template: {}
+          f:template.openshift.io/template-instance-owner: {}
+      f:spec:
+        f:replicas: {}
+        f:selector:
+          .: {}
+          f:name: {}
+        f:strategy:
+          f:activeDeadlineSeconds: {}
+          f:recreateParams:
+            .: {}
+            f:timeoutSeconds: {}
+          f:type: {}
+        f:template:
+          .: {}
+          f:metadata:
+            .: {}
+            f:creationTimestamp: {}
+            f:labels:
+              .: {}
+              f:name: {}
+          f:spec:
+            .: {}
+            f:containers:
+              .: {}
+              k:{"name":"postgresql"}:
+                .: {}
+                f:env:
+                  .: {}
+                  k:{"name":"POSTGRESQL_DATABASE"}:
+                    .: {}
+                    f:name: {}
+                    f:valueFrom:
+                      .: {}
+                      f:secretKeyRef:
+                        .: {}
+                        f:key: {}
+                        f:name: {}
+                  k:{"name":"POSTGRESQL_PASSWORD"}:
+                    .: {}
+                    f:name: {}
+                    f:valueFrom:
+                      .: {}
+                      f:secretKeyRef:
+                        .: {}
+                        f:key: {}
+                        f:name: {}
+                  k:{"name":"POSTGRESQL_USER"}:
+                    .: {}
+                    f:name: {}
+                    f:valueFrom:
+                      .: {}
+                      f:secretKeyRef:
+                        .: {}
+                        f:key: {}
+                        f:name: {}
+                f:image: {}
+                f:imagePullPolicy: {}
+                f:livenessProbe:
+                  .: {}
+                  f:exec:
+                    .: {}
+                    f:command: {}
+                  f:failureThreshold: {}
+                  f:initialDelaySeconds: {}
+                  f:periodSeconds: {}
+                  f:successThreshold: {}
+                  f:timeoutSeconds: {}
+                f:name: {}
+                f:ports:
+                  .: {}
+                  k:{"containerPort":5432,"protocol":"TCP"}:
+                    .: {}
+                    f:containerPort: {}
+                    f:protocol: {}
+                f:readinessProbe:
+                  .: {}
+                  f:exec:
+                    .: {}
+                    f:command: {}
+                  f:failureThreshold: {}
+                  f:initialDelaySeconds: {}
+                  f:periodSeconds: {}
+                  f:successThreshold: {}
+                  f:timeoutSeconds: {}
+                f:resources:
+                  .: {}
+                  f:limits:
+                    .: {}
+                    f:memory: {}
+                f:securityContext:
+                  .: {}
+                  f:capabilities: {}
+                  f:privileged: {}
+                f:terminationMessagePath: {}
+                f:terminationMessagePolicy: {}
+                f:volumeMounts:
+                  .: {}
+                  k:{"mountPath":"/var/lib/pgsql/data"}:
+                    .: {}
+                    f:mountPath: {}
+                    f:name: {}
+            f:dnsPolicy: {}
+            f:restartPolicy: {}
+            f:schedulerName: {}
+            f:securityContext: {}
+            f:terminationGracePeriodSeconds: {}
+            f:volumes:
+              .: {}
+              k:{"name":"postgresql-data"}:
+                .: {}
+                f:name: {}
+                f:persistentVolumeClaim:
+                  .: {}
+                  f:claimName: {}
+        f:triggers: {}
+      f:status:
+        f:availableReplicas: {}
+        f:conditions:
+          .: {}
+          k:{"type":"Available"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Progressing"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+        f:details:
+          .: {}
+          f:causes: {}
+          f:message: {}
+        f:latestVersion: {}
+        f:observedGeneration: {}
+        f:readyReplicas: {}
+        f:replicas: {}
+        f:unavailableReplicas: {}
+        f:updatedReplicas: {}
+    manager: openshift-controller-manager
+    operation: Update
+    time: "2021-07-08T17:58:22Z"
+  name: postgresql
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    name: postgresql
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: postgresql
+    spec:
+      containers:
+      - env:
+        - name: POSTGRESQL_USER
+          valueFrom:
+            secretKeyRef:
+              key: database-user
+              name: postgresql
+        - name: POSTGRESQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: postgresql
+        - name: POSTGRESQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              key: database-name
+              name: postgresql
+        image: image-registry.openshift-image-registry.svc:5000/openshift/postgresql@sha256:0b93d03b4fdb378e80a88b93e5b85559c5f0d126efc9f12154b47d68d6fd6994
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - /usr/libexec/check-container
+            - --live
+          failureThreshold: 3
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: postgresql
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /usr/libexec/check-container
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 512Mi
+        securityContext:
+          capabilities: {}
+          privileged: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/pgsql/data
+          name: postgresql-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: postgresql-data
+        persistentVolumeClaim:
+          claimName: postgresql
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - postgresql
+      from:
+        kind: ImageStreamTag
+        name: postgresql:10-el8
+        namespace: openshift
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/openshift/postgresql@sha256:0b93d03b4fdb378e80a88b93e5b85559c5f0d126efc9f12154b47d68d6fd6994
+    type: ImageChange
+  - type: ConfigChange

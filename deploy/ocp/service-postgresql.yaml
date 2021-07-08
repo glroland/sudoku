@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
+  creationTimestamp: "2021-07-08T17:57:23Z"
+  labels:
+    template: postgresql-persistent-template
+    template.openshift.io/template-instance-owner: 8ee27071-04f7-43ee-b3ae-a8ab96804204
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:template.openshift.io/expose-uri: {}
+        f:labels:
+          .: {}
+          f:template: {}
+          f:template.openshift.io/template-instance-owner: {}
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":5432,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:name: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: openshift-controller-manager
+    operation: Update
+    time: "2021-07-08T17:57:23Z"
+  name: postgresql
+spec:
+  clusterIP: 172.30.226.45
+  clusterIPs:
+  - 172.30.226.45
+  ports:
+  - name: postgresql
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    name: postgresql
+  sessionAffinity: None
+  type: ClusterIP
