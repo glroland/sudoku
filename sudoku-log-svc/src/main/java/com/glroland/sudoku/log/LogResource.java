@@ -89,8 +89,16 @@ public class LogResource {
             throw new RuntimeException(msg);            
         }
 
-        // create game move
+        // log game that the move is related to
         Game game = manager.find(Game.class, gameId);
+        if (game == null)
+        {
+            String msg = "Unable to locate game associated with gameId.  GameID=" + gameId;
+            log.error(msg);
+            throw new RuntimeException(msg);
+        }
+
+        // create game move
         GameMove gameMove = new GameMove();
         gameMove.setGame(game);
         gameMove.setX(x);
