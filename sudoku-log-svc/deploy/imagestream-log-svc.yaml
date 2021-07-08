@@ -8,9 +8,9 @@ metadata:
   creationTimestamp: "2021-07-08T18:46:30Z"
   generation: 1
   labels:
-    app: sudoku-log-svc
-    app.kubernetes.io/component: sudoku-log-svc
-    app.kubernetes.io/instance: sudoku-log-svc
+    app: log-svc
+    app.kubernetes.io/component: log-svc
+    app.kubernetes.io/instance: log-svc
     app.kubernetes.io/name: java
     app.kubernetes.io/part-of: sudoku
     app.openshift.io/runtime: java
@@ -37,7 +37,7 @@ metadata:
     manager: Mozilla
     operation: Update
     time: "2021-07-08T18:46:30Z"
-  name: sudoku-log-svc
+  name: log-svc
 spec:
   lookupPolicy:
     local: false

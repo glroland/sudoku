@@ -12,7 +12,7 @@ metadata:
     manager: Mozilla
     operation: Update
     time: "2021-07-08T19:09:50Z"
-  name: sudoku-log-svc-config
+  name: log-svc-config
 data:
   application.properties: |-
     # quarkus application configuration

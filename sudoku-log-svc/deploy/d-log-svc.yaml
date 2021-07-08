@@ -7,14 +7,14 @@ metadata:
     app.openshift.io/vcs-ref: ""
     app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
     deployment.kubernetes.io/revision: "5"
-    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"sudoku-log-svc:latest","namespace":"sudoku"},"fieldPath":"spec.template.spec.containers[?(@.name==\"sudoku-log-svc\")].image","pause":"false"}]'
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"log-svc:latest","namespace":"sudoku"},"fieldPath":"spec.template.spec.containers[?(@.name==\"log-svc\")].image","pause":"false"}]'
     openshift.io/generated-by: OpenShiftWebConsole
   creationTimestamp: "2021-07-08T18:46:31Z"
   generation: 6
   labels:
-    app: sudoku-log-svc
-    app.kubernetes.io/component: sudoku-log-svc
-    app.kubernetes.io/instance: sudoku-log-svc
+    app: log-svc
+    app.kubernetes.io/component: log-svc
+    app.kubernetes.io/instance: log-svc
     app.kubernetes.io/name: java
     app.kubernetes.io/part-of: sudoku
     app.openshift.io/runtime: java
@@ -27,7 +27,7 @@ metadata:
         f:template:
           f:spec:
             f:containers:
-              k:{"name":"sudoku-log-svc"}:
+              k:{"name":"log-svc"}:
                 f:image: {}
     manager: openshift-controller-manager
     operation: Update
@@ -72,7 +72,7 @@ metadata:
               f:deploymentconfig: {}
           f:spec:
             f:containers:
-              k:{"name":"sudoku-log-svc"}:
+              k:{"name":"log-svc"}:
                 .: {}
                 f:imagePullPolicy: {}
                 f:name: {}
@@ -151,14 +151,14 @@ metadata:
     manager: kube-controller-manager
     operation: Update
     time: "2021-07-08T23:09:15Z"
-  name: sudoku-log-svc
+  name: log-svc
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: sudoku-log-svc
+      app: log-svc
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -168,13 +168,13 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: sudoku-log-svc
-        deploymentconfig: sudoku-log-svc
+        app: log-svc
+        deploymentconfig: log-svc
     spec:
       containers:
-      - image: image-registry.openshift-image-registry.svc:5000/sudoku/sudoku-log-svc@sha256:11c6a5d16cbdc526e49d23035c15fe2f01efa4832a038afd128c1c1beb12a15d
+      - image: image-registry.openshift-image-registry.svc:5000/sudoku/log-svc@sha256:11c6a5d16cbdc526e49d23035c15fe2f01efa4832a038afd128c1c1beb12a15d
         imagePullPolicy: Always
-        name: sudoku-log-svc
+        name: log-svc
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -200,5 +200,5 @@ spec:
           items:
           - key: application.properties
             path: application.properties
-          name: sudoku-log-svc-config
+          name: log-svc-config
         name: application-properties

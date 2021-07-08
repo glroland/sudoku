@@ -9,9 +9,9 @@ metadata:
   creationTimestamp: "2021-07-08T18:46:31Z"
   generation: 2
   labels:
-    app: sudoku-log-svc
-    app.kubernetes.io/component: sudoku-log-svc
-    app.kubernetes.io/instance: sudoku-log-svc
+    app: log-svc
+    app.kubernetes.io/component: log-svc
+    app.kubernetes.io/instance: log-svc
     app.kubernetes.io/name: java
     app.kubernetes.io/part-of: sudoku
     app.openshift.io/runtime: java
@@ -71,19 +71,19 @@ metadata:
     manager: Mozilla
     operation: Update
     time: "2021-07-08T18:48:51Z"
-  name: sudoku-log-svc
+  name: log-svc
 spec:
   failedBuildsHistoryLimit: 5
   nodeSelector: null
   output:
     to:
       kind: ImageStreamTag
-      name: sudoku-log-svc:latest
+      name: log-svc:latest
   postCommit: {}
   resources: {}
   runPolicy: Serial
   source:
-    contextDir: /sudoku-log-svc
+    contextDir: /log-svc
     git:
       uri: https://github.com/glroland/sudoku.git
     type: Git
@@ -98,11 +98,11 @@ spec:
   triggers:
   - generic:
       secretReference:
-        name: sudoku-log-svc-generic-webhook-secret
+        name: log-svc-generic-webhook-secret
     type: Generic
   - github:
       secretReference:
-        name: sudoku-log-svc-github-webhook-secret
+        name: log-svc-github-webhook-secret
     type: GitHub
   - imageChange:
       lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/openshift/java@sha256:155d09c3e672fee032174347418aa7e2c34b1300093dc4858ec0890653f2fec4

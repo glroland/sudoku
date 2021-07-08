@@ -4,5 +4,5 @@ metadata:
   name: sudoku-svc-config
 data:
   application.properties: |-
-    gamelog.url=http://sudoku-log-svc:8080
+    gamelog.url=http://log-svc:8080
     gamelog.failOnError=false

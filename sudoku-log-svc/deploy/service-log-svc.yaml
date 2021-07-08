@@ -8,9 +8,9 @@ metadata:
     openshift.io/generated-by: OpenShiftWebConsole
   creationTimestamp: "2021-07-08T18:46:31Z"
   labels:
-    app: sudoku-log-svc
-    app.kubernetes.io/component: sudoku-log-svc
-    app.kubernetes.io/instance: sudoku-log-svc
+    app: log-svc
+    app.kubernetes.io/component: log-svc
+    app.kubernetes.io/instance: log-svc
     app.kubernetes.io/name: java
     app.kubernetes.io/part-of: sudoku
     app.openshift.io/runtime: java
@@ -65,7 +65,7 @@ metadata:
     manager: Mozilla
     operation: Update
     time: "2021-07-08T18:48:51Z"
-  name: sudoku-log-svc
+  name: log-svc
 spec:
   clusterIP: 172.30.107.146
   clusterIPs:
@@ -84,7 +84,7 @@ spec:
     protocol: TCP
     targetPort: 8778
   selector:
-    app: sudoku-log-svc
-    deploymentconfig: sudoku-log-svc
+    app: log-svc
+    deploymentconfig: log-svc
   sessionAffinity: None
   type: ClusterIP
