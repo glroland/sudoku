@@ -1,5 +1,6 @@
 package com.glroland.sudoku;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,12 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.glroland.sudoku.game.Puzzle;
 import com.glroland.sudoku.game.PuzzleFactory;
 import com.glroland.sudoku.game.Solver;
+import com.glroland.sudoku.gateway.GameLogGateway;
 import com.glroland.sudoku.model.GameGrid;
 import com.glroland.sudoku.model.PlayableGameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
 @RestController
 public class SudokuController {
+
+	@Autowired
+	private GameLogGateway gameLogGateway;
 
     @RequestMapping("/")
     public String index() {
@@ -33,7 +38,16 @@ public class SudokuController {
     	game.setPuzzle(gameGridToBoard(initial));
     	game.setSolution(gameGridToBoard(solution));
     	
+		gameLogGateway.logGame(game);
+
     	return game;
+    }
+    
+    @CrossOrigin(origins = "*")
+    @RequestMapping("/logMove")
+    public long logMove(@RequestParam(value="gameId") long gameId, @RequestParam(value="x") int x, @RequestParam(value="y") int y, @RequestParam(value="value") int value)
+    {
+		return gameLogGateway.logGameMove(gameId, x, y, value);
     }
     
     @CrossOrigin(origins = "*")
