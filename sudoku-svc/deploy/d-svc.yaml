@@ -169,8 +169,20 @@ spec:
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /deployments/config
+          name: application-properties
+          readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 511
+          items:
+          - key: application.properties
+            path: application.properties
+          name: sudoku-svc-config
+        name: application-properties
