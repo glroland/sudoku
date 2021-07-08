@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"postgresql"}]'
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: "2021-07-08T18:46:31Z"
+  labels:
+    app: sudoku-log-svc
+    app.kubernetes.io/component: sudoku-log-svc
+    app.kubernetes.io/instance: sudoku-log-svc
+    app.kubernetes.io/name: java
+    app.kubernetes.io/part-of: sudoku
+    app.openshift.io/runtime: java
+    app.openshift.io/runtime-version: openjdk-11-el7
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:app.openshift.io/connects-to: {}
+          f:app.openshift.io/vcs-ref: {}
+          f:app.openshift.io/vcs-uri: {}
+          f:openshift.io/generated-by: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:app.kubernetes.io/component: {}
+          f:app.kubernetes.io/instance: {}
+          f:app.kubernetes.io/name: {}
+          f:app.kubernetes.io/part-of: {}
+          f:app.openshift.io/runtime: {}
+          f:app.openshift.io/runtime-version: {}
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":8080,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8443,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8778,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:app: {}
+          f:deploymentconfig: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: Mozilla
+    operation: Update
+    time: "2021-07-08T18:48:51Z"
+  name: sudoku-log-svc
+spec:
+  clusterIP: 172.30.107.146
+  clusterIPs:
+  - 172.30.107.146
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: 8443-tcp
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  - name: 8778-tcp
+    port: 8778
+    protocol: TCP
+    targetPort: 8778
+  selector:
+    app: sudoku-log-svc
+    deploymentconfig: sudoku-log-svc
+  sessionAffinity: None
+  type: ClusterIP

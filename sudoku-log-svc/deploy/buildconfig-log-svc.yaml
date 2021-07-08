@@ -1,0 +1,110 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"postgresql"}]'
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: "2021-07-08T18:46:31Z"
+  generation: 2
+  labels:
+    app: sudoku-log-svc
+    app.kubernetes.io/component: sudoku-log-svc
+    app.kubernetes.io/instance: sudoku-log-svc
+    app.kubernetes.io/name: java
+    app.kubernetes.io/part-of: sudoku
+    app.openshift.io/runtime: java
+    app.openshift.io/runtime-version: openjdk-11-el7
+  managedFields:
+  - apiVersion: build.openshift.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:triggers: {}
+      f:status:
+        f:lastVersion: {}
+    manager: openshift-apiserver
+    operation: Update
+    time: "2021-07-08T18:46:31Z"
+  - apiVersion: build.openshift.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:app.openshift.io/connects-to: {}
+          f:app.openshift.io/vcs-ref: {}
+          f:app.openshift.io/vcs-uri: {}
+          f:openshift.io/generated-by: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:app.kubernetes.io/component: {}
+          f:app.kubernetes.io/instance: {}
+          f:app.kubernetes.io/name: {}
+          f:app.kubernetes.io/part-of: {}
+          f:app.openshift.io/runtime: {}
+          f:app.openshift.io/runtime-version: {}
+      f:spec:
+        f:output:
+          f:to:
+            .: {}
+            f:kind: {}
+            f:name: {}
+        f:runPolicy: {}
+        f:source:
+          f:contextDir: {}
+          f:git:
+            .: {}
+            f:uri: {}
+          f:type: {}
+        f:strategy:
+          f:sourceStrategy:
+            .: {}
+            f:from:
+              .: {}
+              f:kind: {}
+              f:name: {}
+              f:namespace: {}
+          f:type: {}
+    manager: Mozilla
+    operation: Update
+    time: "2021-07-08T18:48:51Z"
+  name: sudoku-log-svc
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: sudoku-log-svc:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: /sudoku-log-svc
+    git:
+      uri: https://github.com/glroland/sudoku.git
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: java:openjdk-11-el7
+        namespace: openshift
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - generic:
+      secretReference:
+        name: sudoku-log-svc-generic-webhook-secret
+    type: Generic
+  - github:
+      secretReference:
+        name: sudoku-log-svc-github-webhook-secret
+    type: GitHub
+  - imageChange:
+      lastTriggeredImageID: image-registry.openshift-image-registry.svc:5000/openshift/java@sha256:155d09c3e672fee032174347418aa7e2c34b1300093dc4858ec0890653f2fec4
+    type: ImageChange
+  - type: ConfigChange
