@@ -9,7 +9,7 @@ oc create -f build-svc.yaml
 
 oc create -f deploy-postgresql.yaml 
 
-oc wait --for=condition=Complete build --all  
+oc wait --for=condition=Complete build --all --timeout=30m
 
 oc create -f deploy-app.yaml
 oc create -f deploy-log-svc.yaml
