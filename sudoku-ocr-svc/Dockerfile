@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi
 LABEL maintainer="glroland@hotmail.com"
 
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    curl https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh -o ~/miniconda.sh && \
+    curl https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh -o ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -f -b -p /opt/conda && \
     rm ~/miniconda.sh
 
@@ -24,4 +24,3 @@ ENV PYTHONPATH=/deploy
 EXPOSE 8080
 
 CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "ocrsvc:app"]
-
