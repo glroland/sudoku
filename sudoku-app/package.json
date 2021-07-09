@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cloudnative/health-connect": "^2.1.0",
     "acorn": "^6.3.0",
     "ajv": "^6.10.2",
     "eslint-plugin-flowtype": "^3.13.0",
