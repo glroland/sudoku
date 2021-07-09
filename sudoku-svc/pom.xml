@@ -8,29 +8,33 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <dependency-check-format>HTML</dependency-check-format>
     <dependency-check-failscore>8</dependency-check-failscore>
+    <version.java>11</version.java>
+    <version.spring>2.5.2</version.spring>
+    <version.maven>3.8.1</version.maven>
+    <version.junit>4.13.2</version.junit>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>2.5.2</version>
+      <version>${version.spring}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-tomcat</artifactId>
-      <version>2.5.2</version>
+      <version>${version.spring}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>2.5.2</version>
+      <version>${version.spring}</version>
   </dependency>
   <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.13.1</version>
+      <version>${version.junit}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -40,7 +44,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.5.2</version>
+        <version>${version.spring}</version>
         <executions>
           <execution>
             <goals>
@@ -53,10 +57,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>${version.maven}</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${version.java}</source>
+          <target>${version.java}</target>
         </configuration>
       </plugin>
     </plugins>
@@ -66,10 +70,10 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>${version.maven}</version>
           <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
+            <source>${version.java}</source>
+            <target>${version.java}</target>
           </configuration>
         </plugin>
       </plugins>
