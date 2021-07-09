@@ -98,6 +98,7 @@ kind: Deployment
 metadata:
   annotations:
     alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"log-svc"}]'
     app.openshift.io/vcs-ref: master
     app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
     deployment.kubernetes.io/revision: "2"
@@ -197,6 +198,12 @@ metadata:
     manager: openshift-controller-manager
     operation: Update
     time: "2020-10-25T22:56:53Z"
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:app.openshift.io/connects-to: {}
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
