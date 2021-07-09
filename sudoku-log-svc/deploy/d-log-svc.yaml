@@ -172,7 +172,7 @@ spec:
         deploymentconfig: log-svc
     spec:
       containers:
-      - image: image-registry.openshift-image-registry.svc:5000/sudoku/log-svc@sha256:11c6a5d16cbdc526e49d23035c15fe2f01efa4832a038afd128c1c1beb12a15d
+      - image: log-svc:latest
         imagePullPolicy: Always
         name: log-svc
         ports:

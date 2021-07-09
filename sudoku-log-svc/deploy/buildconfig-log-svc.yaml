@@ -83,7 +83,7 @@ spec:
   resources: {}
   runPolicy: Serial
   source:
-    contextDir: /log-svc
+    contextDir: /sudoku-log-svc
     git:
       uri: https://github.com/glroland/sudoku.git
     type: Git
