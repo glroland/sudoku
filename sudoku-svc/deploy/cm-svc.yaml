@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: sudoku-svc-config
-data:
-  application.properties: |-
-    gamelog.url=http://log-svc:8080
-    gamelog.failOnError=false

@@ -1,3 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: master
+    app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: "2020-10-25T23:09:19Z"
+  labels:
+    app: ocr-svc
+    app.kubernetes.io/component: ocr-svc
+    app.kubernetes.io/instance: ocr-svc
+    app.kubernetes.io/part-of: sudoku
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:app.openshift.io/vcs-ref: {}
+          f:app.openshift.io/vcs-uri: {}
+          f:openshift.io/generated-by: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:app.kubernetes.io/component: {}
+          f:app.kubernetes.io/instance: {}
+          f:app.kubernetes.io/part-of: {}
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":8080,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:app: {}
+          f:deploymentconfig: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: Mozilla
+    operation: Update
+    time: "2020-10-25T23:09:19Z"
+  name: ocr-svc
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: ocr-svc
+    deploymentconfig: ocr-svc
+  sessionAffinity: None
+  type: ClusterIP
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,18 +66,15 @@ metadata:
     app.openshift.io/vcs-ref: master
     app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
     deployment.kubernetes.io/revision: "2"
-    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"svc:latest","namespace":"sudoku"},"fieldPath":"spec.template.spec.containers[?(@.name==\"svc\")].image","pause":"false"}]'
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"ocr-svc:latest","namespace":"sudoku"},"fieldPath":"spec.template.spec.containers[?(@.name==\"ocr-svc\")].image","pause":"false"}]'
     openshift.io/generated-by: OpenShiftWebConsole
-  creationTimestamp: "2020-10-25T22:44:26Z"
+  creationTimestamp: "2020-10-25T23:09:19Z"
   generation: 2
   labels:
-    app: svc
-    app.kubernetes.io/component: svc
-    app.kubernetes.io/instance: svc
-    app.kubernetes.io/name: java
+    app: ocr-svc
+    app.kubernetes.io/component: ocr-svc
+    app.kubernetes.io/instance: ocr-svc
     app.kubernetes.io/part-of: sudoku
-    app.openshift.io/runtime: java
-    app.openshift.io/runtime-version: "11"
   managedFields:
   - apiVersion: apps/v1
     fieldsType: FieldsV1
@@ -35,10 +92,7 @@ metadata:
           f:app: {}
           f:app.kubernetes.io/component: {}
           f:app.kubernetes.io/instance: {}
-          f:app.kubernetes.io/name: {}
           f:app.kubernetes.io/part-of: {}
-          f:app.openshift.io/runtime: {}
-          f:app.openshift.io/runtime-version: {}
       f:spec:
         f:progressDeadlineSeconds: {}
         f:replicas: {}
@@ -61,24 +115,10 @@ metadata:
               f:deploymentconfig: {}
           f:spec:
             f:containers:
-              k:{"name":"svc"}:
+              k:{"name":"ocr-svc"}:
                 .: {}
                 f:imagePullPolicy: {}
                 f:name: {}
-                f:ports:
-                  .: {}
-                  k:{"containerPort":8080,"protocol":"TCP"}:
-                    .: {}
-                    f:containerPort: {}
-                    f:protocol: {}
-                  k:{"containerPort":8443,"protocol":"TCP"}:
-                    .: {}
-                    f:containerPort: {}
-                    f:protocol: {}
-                  k:{"containerPort":8778,"protocol":"TCP"}:
-                    .: {}
-                    f:containerPort: {}
-                    f:protocol: {}
                 f:resources: {}
                 f:terminationMessagePath: {}
                 f:terminationMessagePolicy: {}
@@ -89,7 +129,7 @@ metadata:
             f:terminationGracePeriodSeconds: {}
     manager: Mozilla
     operation: Update
-    time: "2020-10-25T22:44:25Z"
+    time: "2020-10-25T23:09:19Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -97,11 +137,11 @@ metadata:
         f:template:
           f:spec:
             f:containers:
-              k:{"name":"svc"}:
+              k:{"name":"ocr-svc"}:
                 f:image: {}
     manager: openshift-controller-manager
     operation: Update
-    time: "2020-10-25T22:56:53Z"
+    time: "2020-10-25T23:32:17Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -134,15 +174,15 @@ metadata:
         f:updatedReplicas: {}
     manager: kube-controller-manager
     operation: Update
-    time: "2020-10-25T22:57:27Z"
-  name: svc
+    time: "2020-10-25T23:39:36Z"
+  name: ocr-svc
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: svc
+      app: ocr-svc
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -152,67 +192,18 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: svc
-        deploymentconfig: svc
+        app: ocr-svc
+        deploymentconfig: ocr-svc
     spec:
       containers:
-      - image: svc:latest
+      - image: ocr-svc:latest
         imagePullPolicy: Always
-        name: svc
-        ports:
-        - containerPort: 8080
-          protocol: TCP
-        - containerPort: 8443
-          protocol: TCP
-        - containerPort: 8778
-          protocol: TCP
+        name: ocr-svc
         resources: {}
-        readinessProbe:
-          httpGet:
-            path: /actuator/health/readiness
-            port: 8080
-            scheme: HTTP
-          timeoutSeconds: 1
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
-        livenessProbe:
-          httpGet:
-            path: /actuator/health/liveness
-            port: 8080
-            scheme: HTTP
-          timeoutSeconds: 1
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
-        startupProbe:
-          httpGet:
-            path: /actuator/health/liveness
-            port: 8080
-            scheme: HTTP
-          timeoutSeconds: 1
-          periodSeconds: 10
-          successThreshold: 1
-          failureThreshold: 3
-        env:
-          - name: JAVA_OPTS_APPEND
-            value: '-Dlogging.level.root=INFO'
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
-        volumeMounts:
-        - mountPath: /deployments/config
-          name: application-properties
-          readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-      volumes:
-      - configMap:
-          defaultMode: 511
-          items:
-          - key: application.properties
-            path: application.properties
-          name: sudoku-svc-config
-        name: application-properties

@@ -1,37 +1,119 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: svc-config
+data:
+  application.properties: |-
+    gamelog.url=http://log-svc:8080
+    gamelog.failOnError=false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: master
+    app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: "2020-10-25T22:44:26Z"
+  labels:
+    app: svc
+    app.kubernetes.io/component: svc
+    app.kubernetes.io/instance: svc
+    app.kubernetes.io/name: java
+    app.kubernetes.io/part-of: sudoku
+    app.openshift.io/runtime: java
+    app.openshift.io/runtime-version: "11"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:app.openshift.io/vcs-ref: {}
+          f:app.openshift.io/vcs-uri: {}
+          f:openshift.io/generated-by: {}
+        f:labels:
+          .: {}
+          f:app: {}
+          f:app.kubernetes.io/component: {}
+          f:app.kubernetes.io/instance: {}
+          f:app.kubernetes.io/name: {}
+          f:app.kubernetes.io/part-of: {}
+          f:app.openshift.io/runtime: {}
+          f:app.openshift.io/runtime-version: {}
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":8080,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8443,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+          k:{"port":8778,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:app: {}
+          f:deploymentconfig: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: Mozilla
+    operation: Update
+    time: "2020-10-25T22:44:25Z"
+  name: svc
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: 8443-tcp
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  - name: 8778-tcp
+    port: 8778
+    protocol: TCP
+    targetPort: 8778
+  selector:
+    app: svc
+    deploymentconfig: svc
+  sessionAffinity: None
+  type: ClusterIP
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
     alpha.image.policy.openshift.io/resolve-names: '*'
-    app.openshift.io/connects-to: '[{"apiVersion":"apps.openshift.io/v1","kind":"DeploymentConfig","name":"postgresql"}]'
-    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-ref: master
     app.openshift.io/vcs-uri: https://github.com/glroland/sudoku.git
-    deployment.kubernetes.io/revision: "5"
-    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"log-svc:latest","namespace":"sudoku"},"fieldPath":"spec.template.spec.containers[?(@.name==\"log-svc\")].image","pause":"false"}]'
+    deployment.kubernetes.io/revision: "2"
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"svc:latest","namespace":"sudoku"},"fieldPath":"spec.template.spec.containers[?(@.name==\"svc\")].image","pause":"false"}]'
     openshift.io/generated-by: OpenShiftWebConsole
-  creationTimestamp: "2021-07-08T18:46:31Z"
-  generation: 6
+  creationTimestamp: "2020-10-25T22:44:26Z"
+  generation: 2
   labels:
-    app: log-svc
-    app.kubernetes.io/component: log-svc
-    app.kubernetes.io/instance: log-svc
+    app: svc
+    app.kubernetes.io/component: svc
+    app.kubernetes.io/instance: svc
     app.kubernetes.io/name: java
     app.kubernetes.io/part-of: sudoku
     app.openshift.io/runtime: java
-    app.openshift.io/runtime-version: openjdk-11-el7
+    app.openshift.io/runtime-version: "11"
   managedFields:
-  - apiVersion: apps/v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:spec:
-        f:template:
-          f:spec:
-            f:containers:
-              k:{"name":"log-svc"}:
-                f:image: {}
-    manager: openshift-controller-manager
-    operation: Update
-    time: "2021-07-08T18:49:20Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -39,7 +121,6 @@ metadata:
         f:annotations:
           .: {}
           f:alpha.image.policy.openshift.io/resolve-names: {}
-          f:app.openshift.io/connects-to: {}
           f:app.openshift.io/vcs-ref: {}
           f:app.openshift.io/vcs-uri: {}
           f:image.openshift.io/triggers: {}
@@ -57,7 +138,10 @@ metadata:
         f:progressDeadlineSeconds: {}
         f:replicas: {}
         f:revisionHistoryLimit: {}
-        f:selector: {}
+        f:selector:
+          f:matchLabels:
+            .: {}
+            f:app: {}
         f:strategy:
           f:rollingUpdate:
             .: {}
@@ -72,7 +156,7 @@ metadata:
               f:deploymentconfig: {}
           f:spec:
             f:containers:
-              k:{"name":"log-svc"}:
+              k:{"name":"svc"}:
                 .: {}
                 f:imagePullPolicy: {}
                 f:name: {}
@@ -93,31 +177,26 @@ metadata:
                 f:resources: {}
                 f:terminationMessagePath: {}
                 f:terminationMessagePolicy: {}
-                f:volumeMounts:
-                  .: {}
-                  k:{"mountPath":"/deployments/config"}:
-                    .: {}
-                    f:mountPath: {}
-                    f:name: {}
-                    f:readOnly: {}
             f:dnsPolicy: {}
             f:restartPolicy: {}
             f:schedulerName: {}
             f:securityContext: {}
             f:terminationGracePeriodSeconds: {}
-            f:volumes:
-              .: {}
-              k:{"name":"application-properties"}:
-                .: {}
-                f:configMap:
-                  .: {}
-                  f:defaultMode: {}
-                  f:items: {}
-                  f:name: {}
-                f:name: {}
     manager: Mozilla
     operation: Update
-    time: "2021-07-08T23:09:11Z"
+    time: "2020-10-25T22:44:25Z"
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:template:
+          f:spec:
+            f:containers:
+              k:{"name":"svc"}:
+                f:image: {}
+    manager: openshift-controller-manager
+    operation: Update
+    time: "2020-10-25T22:56:53Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
@@ -150,15 +229,15 @@ metadata:
         f:updatedReplicas: {}
     manager: kube-controller-manager
     operation: Update
-    time: "2021-07-08T23:09:15Z"
-  name: log-svc
+    time: "2020-10-25T22:57:27Z"
+  name: svc
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: log-svc
+      app: svc
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -168,26 +247,13 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: log-svc
-        deploymentconfig: log-svc
+        app: svc
+        deploymentconfig: svc
     spec:
-      initContainers:
-        - name: init-wait4db
-          image: busybox
-          command:
-            - sh
-            - '-c'
-            - >-
-              until nslookup postgresql; do echo waiting for database; sleep 2;
-              done;
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          imagePullPolicy: Always
       containers:
-      - image: log-svc:latest
+      - image: svc:latest
         imagePullPolicy: Always
-        name: log-svc
+        name: svc
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -196,11 +262,9 @@ spec:
         - containerPort: 8778
           protocol: TCP
         resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
         readinessProbe:
           httpGet:
-            path: /q/health/ready
+            path: /actuator/health/readiness
             port: 8080
             scheme: HTTP
           timeoutSeconds: 1
@@ -209,7 +273,7 @@ spec:
           failureThreshold: 3
         livenessProbe:
           httpGet:
-            path: /q/health/live
+            path: /actuator/health/liveness
             port: 8080
             scheme: HTTP
           timeoutSeconds: 1
@@ -218,13 +282,18 @@ spec:
           failureThreshold: 3
         startupProbe:
           httpGet:
-            path: /q/health/live
+            path: /actuator/health/liveness
             port: 8080
             scheme: HTTP
           timeoutSeconds: 1
           periodSeconds: 10
           successThreshold: 1
           failureThreshold: 3
+        env:
+          - name: JAVA_OPTS_APPEND
+            value: '-Dlogging.level.root=INFO'
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /deployments/config
           name: application-properties
@@ -240,5 +309,5 @@ spec:
           items:
           - key: application.properties
             path: application.properties
-          name: log-svc-config
+          name: svc-config
         name: application-properties
