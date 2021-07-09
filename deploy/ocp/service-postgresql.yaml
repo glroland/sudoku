@@ -38,9 +38,6 @@ metadata:
     time: "2021-07-08T17:57:23Z"
   name: postgresql
 spec:
-  clusterIP: 172.30.226.45
-  clusterIPs:
-  - 172.30.226.45
   ports:
   - name: postgresql
     port: 5432

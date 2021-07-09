@@ -67,9 +67,6 @@ metadata:
     time: "2021-07-08T18:48:51Z"
   name: log-svc
 spec:
-  clusterIP: 172.30.107.146
-  clusterIPs:
-  - 172.30.107.146
   ports:
   - name: 8080-tcp
     port: 8080
