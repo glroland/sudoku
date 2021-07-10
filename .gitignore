@@ -13,4 +13,5 @@ target
 .DS_Store
 .odo/odo-file-index.json
 .odo
+bin
 

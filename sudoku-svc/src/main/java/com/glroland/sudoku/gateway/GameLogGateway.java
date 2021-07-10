@@ -48,9 +48,9 @@ public class GameLogGateway {
             throw new RuntimeException(msg);
         }
 
-        for (int y=0; y<SudokuConstants.PUZZLE_WIDTH; y++)
+        for (int y=0; y<SudokuConstants.PUZZLE_HEIGHT; y++)
         {
-            for (int x=0; x<SudokuConstants.PUZZLE_HEIGHT; x++)
+            for (int x=0; x<SudokuConstants.PUZZLE_WIDTH; x++)
             {
                 if (grid[x][y] == 0)
                     builder.append(" ");
