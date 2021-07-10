@@ -28,8 +28,8 @@ class Game extends Component {
     newGame() {
       this.setStatus("");
       this.puzzleGrid = Array(9);
-      for (var y=0; y<9; y++) {
-        this.puzzleGrid[y] = Array(9).fill(0);
+      for (var x=0; x<9; x++) {
+        this.puzzleGrid[x] = Array(9).fill(0);
       }
       this.solutionGrid = JSON.parse(JSON.stringify(this.puzzleGrid));
       this.initialGrid = JSON.parse(JSON.stringify(this.puzzleGrid));
@@ -77,7 +77,7 @@ class Game extends Component {
       var x, y;
       for (y=0; y<9; y++) {
         for (x=0; x<9; x++) {
-          if ((this.puzzleGrid[y][x] !== 0) && (this.puzzleGrid[y][x] !== this.solutionGrid[y][x])) {
+          if ((this.puzzleGrid[x][y] !== 0) && (this.puzzleGrid[x][y] !== this.solutionGrid[x][y])) {
             this.setStatus("Incorrect Value at (" + (x+1) + "," + (y+1) + ")");
             return;
           }
@@ -88,7 +88,7 @@ class Game extends Component {
       var isComplete = true;
       for (y=0; y<9; y++) {
         for (x=0; x<9; x++) {
-          if (this.puzzleGrid[y][x] === 0) {
+          if (this.puzzleGrid[x][y] === 0) {
   //          this.setStatus(this.gameStatusRef.current.value = "Incomplete at (" + (x+1) + "," + (y+1) + ")");
   //          return;
             isComplete = false;
@@ -150,7 +150,7 @@ class Game extends Component {
       var ix;
       for (ix=0; ix<9; ix++) {
         if (x !== ix) {
-          if (this.puzzleGrid[y][ix] === val) {
+          if (this.puzzleGrid[ix][y] === val) {
             isValid = false;
             break;
           }
@@ -161,7 +161,7 @@ class Game extends Component {
       var iy;
       for (iy=0; iy<9; iy++) {
         if (y !== iy) {
-          if (this.puzzleGrid[iy][x] === val) {
+          if (this.puzzleGrid[x][iy] === val) {
             isValid = false;
             break;
           }
@@ -174,7 +174,7 @@ class Game extends Component {
       for (iy=gridStartY; iy<gridStartY+3; iy++) {
         for (ix=gridStartX; ix<gridStartX+3; ix++) {
           if ((x !== ix) && (y !== iy)) {
-            if (this.puzzleGrid[iy][ix] === val) {
+            if (this.puzzleGrid[ix][iy] === val) {
               isValid = false;
               break;
             }
@@ -183,7 +183,7 @@ class Game extends Component {
       }
   
       if(isValid) {
-        this.puzzleGrid[y][x] = val;
+        this.puzzleGrid[x][y] = val;
         this.forceUpdate();
       }
       else {
