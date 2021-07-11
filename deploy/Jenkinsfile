@@ -1,48 +1,91 @@
-node {
+pipeline {
+  agent any
+  options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '3'))
+  }
+
+  tools {
+    jdk 'java-11'
+  }
+
    def mvnHome
    stage('Prepare') { // for display purposes
-      git '$SUDOKU_GIT_URL'
+//      git '$SUDOKU_GIT_URL'
       mvnHome = tool 'Maven'
       if (!isUnix()) {
           error "Builds on Windows are not supported."
       }
    }
-   stage('Build') {
-      withEnv(["MVN_HOME=$mvnHome"]) {
-        sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore --projects sudoku-lib,sudoku-svc clean install'
-      }
-   }
-   stage('Scan') {
-//       dependencyCheck additionalArguments: '', odcInstallation: 'Dependency Check'
-   }
-   stage('Archive') {
-      archiveArtifacts 'sudoku-svc/target/*.jar'
-   }
-   stage('OpenShift Image Build') {
-      echo "Entering OpenShift Image Build"
-      try {
-         withEnv(["PATH=$PATH:${tool 'oc_cli'}"]) {
-            openshift.verbose()
-            echo "OpenShift.withCluster()"
-            openshift.withCluster('$OPENSHIFT_CLUSTER') {
-               echo "OpenShift.withProject()"
-               openshift.withProject('$OPENSHIFT_PROJECT') {
-                  echo "OpenShift.delete()s"
-//                  openshift.selector('buildconfig', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
-//                  openshift.selector('imagestream', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
 
-                  echo "OpenShift.newBuild()"
-                  openshift.newBuild('java:latest', '--name=$OPENSHIFT_BUILD_NAME', '--binary') {
-                     echo "OpenShift.startBuild()"
-                     openshift.startBuild('$OPENSHIFT_BUILD_NAME', '--from-file=sudoku-svc/target/sudoku-svc-1.0.jar', '--wait')
-                  }
-               }
-            }
-         }
+//  stages {
+//    stage('Checkout Scm') {
+//      steps {
+//        git 'https://github.com/glroland/sudoku.git'
+//      }
+//    }
+
+    stage('Build sudoku-svc') {
+      sh 'cd sudoku-svc'
+      withEnv(["MVN_HOME=$mvnHome"]) {
+        sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore clean package'
       }
-      catch (e) {
-        echo "Error encountered: ${e}"
-        error "Error encountered: ${e}"
+      sh 'cd ..'
     }
-   }
+
+//    stage('Scan for OWASP Issues in Dependencies') {
+//      steps {
+//        dependencyCheck additionalArguments: ''' 
+//                    -o "./" 
+//                    -s "./"
+//                    -f "ALL" 
+//                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check'
+//
+//        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+//      }
+//    }
+
+//   stage('Scan') {
+////       dependencyCheck additionalArguments: '', odcInstallation: 'Dependency Check'
+//   }
+//   stage('Archive') {
+//      archiveArtifacts 'sudoku-svc/target/*.jar'
+//   }
+
+//   stage('OpenShift Image Build') {
+//      echo "Entering OpenShift Image Build"
+//      try {
+//         withEnv(["PATH=$PATH:${tool 'oc_cli'}"]) {
+//            openshift.verbose()
+//            echo "OpenShift.withCluster()"
+//            openshift.withCluster('$OPENSHIFT_CLUSTER') {
+//               echo "OpenShift.withProject()"
+//               openshift.withProject('$OPENSHIFT_PROJECT') {
+//                  echo "OpenShift.delete()s"
+////                  openshift.selector('buildconfig', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
+////                  openshift.selector('imagestream', [ name:'$OPENSHIFT_BUILD_NAME' ]).delete()
+//
+//                  echo "OpenShift.newBuild()"
+//                  openshift.newBuild('java:latest', '--name=$OPENSHIFT_BUILD_NAME', '--binary') {
+//                     echo "OpenShift.startBuild()"
+//                     openshift.startBuild('$OPENSHIFT_BUILD_NAME', '--from-file=sudoku-svc/target/sudoku-svc-1.0.jar', '--wait')
+//                  }
+//               }
+//            }
+//         }
+//      }
+//      catch (e) {
+//        echo "Error encountered: ${e}"
+//        error "Error encountered: ${e}"
+//    }
+
+
+  }
+  post {
+    always {
+      step(followSymlinks: false, artifacts: 'sudoku-svc/target/sudoku-svc-1.0.jar,dependency-check-report.xml,dependency-check-report.html', $class: 'ArtifactArchiver')
+    }
+
+  }
 }
+
