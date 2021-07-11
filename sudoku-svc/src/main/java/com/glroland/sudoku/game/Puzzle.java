@@ -1,6 +1,8 @@
 package com.glroland.sudoku.game;
 
 import java.util.ArrayList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.glroland.sudoku.exceptions.IllegalMoveException;
 import com.glroland.sudoku.model.GameGrid;
@@ -9,6 +11,8 @@ import com.glroland.sudoku.model.PlayableGameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
 public class Puzzle {
+
+	private static final Log log = LogFactory.getLog(Puzzle.class);
 
 	private GameGrid initialPuzzle;
 	private GameGrid puzzleSolution;
@@ -19,21 +23,41 @@ public class Puzzle {
 	{
 		// confirm arguments
 		if (initial == null)
-			throw new IllegalArgumentException("Initial game grid provided is null!");
+		{
+			String msg = "Initial game grid provided is null!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		if (solution == null)
-			throw new IllegalArgumentException("Solution to puzzle is null!");
+		{
+			String msg = "Solution to puzzle is null!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		
 		// validate that the solution is complete
 		if (!solution.isSolved())
-			throw new IllegalArgumentException("Provided solution is not actually complete");
+		{
+			String msg = "Provided solution is not actually complete";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		
 		// validate that the solution is accurate
 		if (!solution.isValidBoard())
-			throw new IllegalArgumentException("Provided solution is not a valid game board");
+		{
+			String msg = "Provided solution is not a valid game board";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		
 		// ensure that the initial puzzle is a derivative of the solution
 		if (!solution.isDerivative(initial))
-			throw new IllegalArgumentException("Initial game board is not a derivative of the solution");
+		{
+			String msg = "Initial game board is not a derivative of the solution";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		
 		// store values
 		initialPuzzle = initial;
@@ -64,13 +88,17 @@ public class Puzzle {
 		// is the move allowed per the active grid playboard?
 		if (!activeGrid.isValidMove(x, y, v))
 		{
-			throw new IllegalMoveException("Move attempted against active puzzle", x, y, v);
+			String msg = "Move attempted against active puzzle";
+			log.error(msg);
+			throw new IllegalMoveException(msg, x, y, v);
 		}
 		
 		// is the move part of the initial game board?
 		if (initialPuzzle.getValue(x,  y) != SudokuConstants.VALUE_EMPTY)
 		{
-			throw new IllegalMoveException("Unpermitted attempt to change part of the original game puzzle", x, y, v);			
+			String msg = "Unpermitted attempt to change part of the original game puzzle";
+			log.error(msg);
+			throw new IllegalMoveException(msg, x, y, v);			
 		}
 		
 		activeGrid.setValue(x, y, v);

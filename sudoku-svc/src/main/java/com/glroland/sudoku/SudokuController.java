@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.glroland.sudoku.game.Puzzle;
 import com.glroland.sudoku.game.PuzzleFactory;
@@ -16,6 +18,8 @@ import com.glroland.sudoku.util.SudokuConstants;
 
 @RestController
 public class SudokuController {
+
+	private static final Log log = LogFactory.getLog(SudokuController.class);
 
 	@Autowired
 	private GameLogGateway gameLogGateway;
@@ -66,7 +70,9 @@ public class SudokuController {
     	// validate arguments
     	if ((input == null) || (input.getGrid() == null))
     	{
-    		throw new IllegalArgumentException("Null or empty puzzle board passed to service");
+    		String msg = "Null or empty puzzle board passed to service";
+			log.error(msg);
+    		throw new IllegalArgumentException(msg);
     	}
     	
     	// grab and validate board grid
@@ -74,12 +80,16 @@ public class SudokuController {
     	int width = grid.length;
     	if (width != SudokuConstants.PUZZLE_WIDTH)
     	{
-    		throw new IllegalArgumentException("Puzzle board is expected to be of length " + SudokuConstants.PUZZLE_WIDTH + " but is actually of size " + width);
+    		String msg = "Puzzle board is expected to be of length " + SudokuConstants.PUZZLE_WIDTH + " but is actually of size " + width;
+			log.error(msg);
+    		throw new IllegalArgumentException(msg);
     	}
     	int height = grid[0].length;
     	if (height != SudokuConstants.PUZZLE_HEIGHT)
     	{
-    		throw new IllegalArgumentException("Puzzle board is expected to be of length " + SudokuConstants.PUZZLE_HEIGHT + " but is actually of size " + height);
+    		String msg = "Puzzle board is expected to be of length " + SudokuConstants.PUZZLE_HEIGHT + " but is actually of size " + height;
+			log.error(msg);
+    		throw new IllegalArgumentException(msg);
     	}    	
     			
     	// translate board to game grid
@@ -91,7 +101,9 @@ public class SudokuController {
     			int v = grid[x][y];
     			if ((v != SudokuConstants.VALUE_EMPTY) && (v < 1) && (x > SudokuConstants.PUZZLE_WIDTH))
     			{
-    				throw new IllegalArgumentException("Puzzle board contains an invalid value at square (" + x + "," + y + "): " + v);
+    				String msg = "Puzzle board contains an invalid value at square (" + x + "," + y + "): " + v;
+					log.error(msg);
+    				throw new IllegalArgumentException(msg);
     			}
     			output.setValue(x, y, v);
     		}
@@ -105,13 +117,17 @@ public class SudokuController {
     	// validate arguments
     	if (input == null)
     	{
-    		throw new IllegalArgumentException("Null or empty game grid passed to conversion utility");
+    		String msg = "Null or empty game grid passed to conversion utility";
+			log.error(msg);
+    		throw new IllegalArgumentException(msg);
     	}
     	
     	// grab and validate board grid
     	if ((input.getWidth() != SudokuConstants.PUZZLE_WIDTH) || (input.getHeight() != SudokuConstants.PUZZLE_HEIGHT))
     	{
-    		throw new IllegalArgumentException("Game grid is not of the correct dimensions: " + input.getWidth() + "x" + input.getHeight());
+    		String msg = "Game grid is not of the correct dimensions: " + input.getWidth() + "x" + input.getHeight();
+			log.error(msg);
+    		throw new IllegalArgumentException(msg);
     	}
     	    			
     	// translate board to game grid
@@ -125,7 +141,9 @@ public class SudokuController {
     			int v = input.getValue(x, y);
     			if ((v != SudokuConstants.VALUE_EMPTY) && (v < 1) && (x > SudokuConstants.PUZZLE_WIDTH))
     			{
-    				throw new IllegalArgumentException("Game grid contains an invalid value at square (" + x + "," + y + "): " + v);
+    				String msg = "Game grid contains an invalid value at square (" + x + "," + y + "): " + v;
+					log.error(msg);
+    				throw new IllegalArgumentException(msg);
     			}
     			grid[x][y] = v;
     		}

@@ -2,6 +2,8 @@ package com.glroland.sudoku.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.glroland.sudoku.exceptions.UnsolvablePuzzleException;
 import com.glroland.sudoku.model.GameGrid;
@@ -9,15 +11,25 @@ import com.glroland.sudoku.model.GameMove;
 import com.glroland.sudoku.model.PlayableGameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
-public class Solver {
+public class Solver 
+{
+	private static final Log log = LogFactory.getLog(Solver.class);
 
 	public static GameGrid createSolution(GameGrid grid)
 	{
 		// validate input grid first
 		if (grid == null)
-			throw new IllegalArgumentException("Input grid passed to solver is null!");
+		{
+			String msg = "Input grid passed to solver is null!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		if (!grid.isValidBoard())
-			throw new IllegalArgumentException("Input game board is not valid - hence no solution is possible");
+		{
+			String msg = "Input game board is not valid - hence no solution is possible";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 
 		PlayableGameGrid playGrid = new PlayableGameGrid(grid);
 		while (!playGrid.isSolved())
@@ -56,9 +68,17 @@ public class Solver {
 	{
 		// validate input grid first
 		if (grid == null)
-			throw new IllegalArgumentException("Input grid passed to solver is null!");
+		{
+			String msg = "Input grid passed to solver is null!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		if (!grid.isValidBoard())
-			throw new IllegalArgumentException("Input game board is not valid - hence no solution is possible\n" + grid.toString());
+		{
+			String msg = "Input game board is not valid - hence no solution is possible\n" + grid.toString();
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		
 		ArrayList<GameMove> list = new ArrayList<GameMove>();
 		if (!grid.isSolved())
@@ -189,9 +209,17 @@ public class Solver {
 	{
 		// validate input grid first
 		if (grid == null)
-			throw new IllegalArgumentException("Input grid passed to solver is null!");
+		{
+			String msg = "Input grid passed to solver is null!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 		if (!grid.isValidBoard())
-			throw new IllegalArgumentException("Input game board is not valid - hence no solution is possible");
+		{
+			String msg = "Input game board is not valid - hence no solution is possible";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
 
 		ArrayList<Integer> validValues = new ArrayList<Integer>();
 

@@ -1,9 +1,14 @@
 package com.glroland.sudoku.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.glroland.sudoku.exceptions.InvalidPositionException;
 import com.glroland.sudoku.util.SudokuConstants;
 
 public class GameGrid {
+
+	private static final Log log = LogFactory.getLog(GameGrid.class);
 
 	private final int width = SudokuConstants.PUZZLE_WIDTH;
 	private final int height = SudokuConstants.PUZZLE_HEIGHT;
@@ -25,7 +30,9 @@ public class GameGrid {
 	{
 		if ((gcopy == null) || (gcopy.length != (width * height)))
 		{
-			throw new IllegalArgumentException("Input game grid passed to GameGrid constructor is invalid");
+			String msg = "Input game grid passed to GameGrid constructor is invalid";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
 		}
 		
 		grid = gcopy;
@@ -146,7 +153,11 @@ public class GameGrid {
 	public int getValue(int x, int y)
 	{
 		if (!isValidLocation(x, y))
-			throw new InvalidPositionException(x, y, "Bad location passed to getValue");
+		{
+			String msg = "Bad location passed to getValue";
+			log.error(msg);
+			throw new InvalidPositionException(x, y, msg);
+		}
 		
 		return grid[x + (y*width)];
 	}

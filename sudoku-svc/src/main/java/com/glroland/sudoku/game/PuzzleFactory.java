@@ -3,6 +3,8 @@ package com.glroland.sudoku.game;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.glroland.sudoku.exceptions.PuzzleGenerationException;
 import com.glroland.sudoku.exceptions.UnsolvablePuzzleException;
@@ -12,6 +14,8 @@ import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleFactory 
 {	
+	private static final Log log = LogFactory.getLog(PuzzleFactory.class);
+
 	private Random r = new Random();
 	
 	private final int COMPLEXITY_COUNTER = 100;
@@ -26,12 +30,24 @@ public class PuzzleFactory
 		// generate solved puzzle
 		PuzzleCreationGameGrid outputGrid = recursiveGeneration(0, inputGrid);		
 		if (outputGrid == null)
-			throw new PuzzleGenerationException("Puzzle generation algorithm returned a null solution object!");
+		{
+			String msg = "Puzzle generation algorithm returned a null solution object!";
+			log.error(msg);
+			throw new PuzzleGenerationException(msg);
+		}
 		GameGrid solution = outputGrid.getResultingGrid();
 		if (!solution.isValidBoard())
-			throw new PuzzleGenerationException("Invalid board created by puzzle generator", solution);
+		{
+			String msg = "Invalid board created by puzzle generator";
+			log.error(msg);
+			throw new PuzzleGenerationException(msg, solution);
+		}
 		if (!solution.isSolved())
-			throw new PuzzleGenerationException("Incomplete game solution created by puzzle generator", solution);
+		{
+			String msg = "Incomplete game solution created by puzzle generator";
+			log.error(msg);
+			throw new PuzzleGenerationException(msg, solution);
+		}
 		
 		// create game grid
 		GameGrid gameBoard = (GameGrid)solution.clone();
@@ -49,11 +65,15 @@ public class PuzzleFactory
 		// validate arguments
 		if (snapshot == null)
 		{
-			throw new IllegalArgumentException("Input Snapshot GameGrid object is null!");
+			String msg = "Input Snapshot GameGrid object is null!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
 		}
 		if (solution == null)
 		{
-			throw new IllegalArgumentException("Input Solution GameGrid object is null!");
+			String msg = "Input Solution GameGrid object is null!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
 		}
 		
 		// randomly remove a square
@@ -108,15 +128,21 @@ public class PuzzleFactory
 		// validate arguments
 		if (inputGrid == null)
 		{
-			throw new IllegalArgumentException("Input game grid is null and was passed to the generation algorithm");
+			String msg = "Input game grid is null and was passed to the generation algorithm";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
 		}
 		if (pos < 0)
 		{
-			throw new IllegalArgumentException("Input position counter is negative!");
+			String msg = "Input position counter is negative!";
+			log.error(msg);
+			throw new IllegalArgumentException(msg);
 		}
 		if (pos >= SudokuConstants.PUZZLE_BLOCK_COUNT)
 		{
-			throw new IllegalArgumentException("Input position counter is larger than game board!");			
+			String msg = "Input position counter is larger than game board!";
+			log.error(msg);			
+			throw new IllegalArgumentException(msg);			
 		}
 		
 		// recursion complete

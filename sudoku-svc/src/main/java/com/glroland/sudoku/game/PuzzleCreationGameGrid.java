@@ -1,12 +1,16 @@
 package com.glroland.sudoku.game;
 
 import java.util.LinkedList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.glroland.sudoku.model.GameGrid;
 import com.glroland.sudoku.util.SudokuConstants;
 
 public class PuzzleCreationGameGrid implements Cloneable
 {
+	private static final Log log = LogFactory.getLog(PuzzleCreationGameGrid.class);
+
 	@SuppressWarnings("unchecked")
 	private LinkedList<Integer> [] grid = new LinkedList[SudokuConstants.PUZZLE_BLOCK_COUNT];
 	
@@ -72,7 +76,11 @@ public class PuzzleCreationGameGrid implements Cloneable
 			
 			LinkedList<Integer> pos = grid[i];
 			if (pos.size() > 1)
-				throw new RuntimeException("Unable to translate PuzzleCreationGameGrid to GameGrid because puzzle isn't completed!  Pos=" + i + " Size=" + pos.size());
+			{
+				String msg = "Unable to translate PuzzleCreationGameGrid to GameGrid because puzzle isn't completed!  Pos=" + i + " Size=" + pos.size();
+				log.error(msg);
+				throw new RuntimeException(msg);
+			}
 			else if (pos.size() == 1)
 				values[i] = pos.get(0);
 		}
