@@ -55,6 +55,8 @@ class Game extends Component {
         console.log("Solution = " + this.solutionGrid);
         this.initialGrid = JSON.parse(JSON.stringify(this.puzzleGrid));
         console.log("Initial = " + this.initialGrid);
+        this.gameId = data.gameId;
+        console.log("Game ID = " + this.gameId);
   
         this.forceUpdate();
       }).catch(error => {
@@ -63,6 +65,33 @@ class Game extends Component {
       })
     }
     
+    logMove(x, y, value) {
+      if (this.gameId === 0)
+      {
+          console.log("Skipping log game move due to game ID being zero");
+          return;
+      }
+
+      console.log(process.env);
+      var serviceUrl = window.location.origin.toString();
+      if (typeof window == 'undefined') {
+        console.log("Unable to extract base URL path from window.  Using default");
+        serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000'
+      }
+      serviceUrl = serviceUrl + '/api/game';
+      console.log("Service URL = " + serviceUrl);
+
+      console.log("Disabling TLS Cert validation");
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+      fetch(serviceUrl + '/logMove?gameId=' + this.gameId + '&x=' + x + '&y=' + y + '&value=' + value)
+      .then(results => {
+        return results.json();
+      }).catch(error => {
+        console.log("An error occurred while contacting server to log move: " + error);
+        this.setStatus("Unable to contact server!");
+      })
+    }
+
     resetGame() {
       this.setStatus("");
       this.puzzleGrid = JSON.parse(JSON.stringify(this.initialGrid));
@@ -185,6 +214,8 @@ class Game extends Component {
       if(isValid) {
         this.puzzleGrid[x][y] = val;
         this.forceUpdate();
+
+        this.logMove(x, y, val);
       }
       else {
         console.log("ILLEGAL MOVE: X=" + x + " Y=" + y +" V=" + val);

@@ -43,6 +43,11 @@ public class SudokuController {
     	game.setSolution(gameGridToBoard(solution));
     	
 		gameLogGateway.logGame(game);
+		
+		if (log.isInfoEnabled())
+		{
+			log.info("Game Generated with ID #" + game.getGameId());
+		}
 
     	return game;
     }
@@ -51,6 +56,11 @@ public class SudokuController {
     @RequestMapping("/logMove")
     public long logMove(@RequestParam(value="gameId") long gameId, @RequestParam(value="x") int x, @RequestParam(value="y") int y, @RequestParam(value="value") int value)
     {
+		if (log.isInfoEnabled())
+		{
+			log.info("Logging Move for Game ID# " + gameId + " - (" + x + ", " + y + ") " + value);
+
+		}
 		return gameLogGateway.logGameMove(gameId, x, y, value);
     }
     

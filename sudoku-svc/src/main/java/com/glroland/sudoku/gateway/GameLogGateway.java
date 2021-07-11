@@ -78,11 +78,12 @@ public class GameLogGateway {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<String>(requestJson.toString(), headers);
 
+        long gameId = 0;
         try
         {
             String gameIdStr = restTemplate.postForObject(url, request, String.class);
             log.info("Logged Game ID = " + gameIdStr);
-            return Long.parseLong(gameIdStr);
+            gameId = Long.parseLong(gameIdStr);
         }
         catch (RestClientException e)
         {
@@ -95,7 +96,8 @@ public class GameLogGateway {
             log.warn(msg, e);
         }
 
-        return 0;
+        game.setGameId(gameId);
+        return gameId;
     }
 
     public long logGameMove(long gameId, int x, int y, int value)
@@ -103,9 +105,13 @@ public class GameLogGateway {
         String url = gameLogServiceUrl + "/log/move/" + gameId + "/" + x + "/" + y + "/" + value;
         log.info("Game Log URL for logging Game Move: " + url);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<String>("{}", headers);
+
         try
         {
-            String gameMoveIdStr = restTemplate.postForObject(url, null, String.class);
+            String gameMoveIdStr = restTemplate.postForObject(url, request, String.class);
             log.info("Logged Game Move ID = " + gameMoveIdStr);
             return Long.parseLong(gameMoveIdStr);
         }
