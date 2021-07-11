@@ -20,14 +20,14 @@ class Square extends Component {
   
   //    console.log("X=" + x + " Y=" + y + " GPG=" + this.game.puzzleGrid + " L=" + this.game.puzzleGrid.length + " L2=" + this.game.puzzleGrid[0].length);
   
-      var value = this.game.puzzleGrid[y][x];
+      var value = this.game.puzzleGrid[x][y];
       if (value === 0) {
           value = "";
       }
   
       var isReadOnly = false;
       var cn = this.SQUARE_CLASS_NAME_REG;
-      if (this.game.initialGrid[y][x] !== 0) {
+      if (this.game.initialGrid[x][y] !== 0) {
         isReadOnly = true;
         cn = this.SQUARE_CLASS_NAME_LOCKED;
       }
