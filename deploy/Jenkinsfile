@@ -1,19 +1,24 @@
-pipeline {
-  agent any
-  options {
-    disableConcurrentBuilds()
-    buildDiscarder(logRotator(numToKeepStr: '3'))
-  }
+pipeline 
+{
+   agent any
+   options 
+   {
+      disableConcurrentBuilds()
+      buildDiscarder(logRotator(numToKeepStr: '3'))
+   }
 
-  tools {
-    jdk 'java-11'
-  }
+   tools 
+   {
+      jdk 'java-11'
+   }
 
    def mvnHome
-   stage('Prepare') { // for display purposes
+   stage('Prepare') 
+   {
 //      git '$SUDOKU_GIT_URL'
       mvnHome = tool 'Maven'
-      if (!isUnix()) {
+      if (!isUnix()) 
+      {
           error "Builds on Windows are not supported."
       }
    }
@@ -25,13 +30,15 @@ pipeline {
 //      }
 //    }
 
-    stage('Build sudoku-svc') {
+   stage('Build sudoku-svc') 
+   {
       sh 'cd sudoku-svc'
-      withEnv(["MVN_HOME=$mvnHome"]) {
-        sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore clean package'
+      withEnv(["MVN_HOME=$mvnHome"]) 
+      {
+         sh '"$MVN_HOME/bin/mvn" -Dmaven.test.failure.ignore clean package'
       }
       sh 'cd ..'
-    }
+   }
 
 //    stage('Scan for OWASP Issues in Dependencies') {
 //      steps {
@@ -80,12 +87,11 @@ pipeline {
 //    }
 
 
-  }
-  post {
-    always {
-      step(followSymlinks: false, artifacts: 'sudoku-svc/target/sudoku-svc-1.0.jar,dependency-check-report.xml,dependency-check-report.html', $class: 'ArtifactArchiver')
-    }
-
-  }
+   post 
+   {
+      always 
+      {
+         step(followSymlinks: false, artifacts: 'sudoku-svc/target/sudoku-svc-1.0.jar,dependency-check-report.xml,dependency-check-report.html', $class: 'ArtifactArchiver')
+      }
+   }
 }
-
