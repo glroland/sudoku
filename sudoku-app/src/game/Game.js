@@ -5,6 +5,7 @@ import {
 import "../App.css";
 import Board from "./Board";
 import GameValuesSelection from "./GameValuesSelection";
+import AppConfig from "../AppConfig.js";
 
 class Game extends Component {
     constructor(props) {
@@ -15,7 +16,8 @@ class Game extends Component {
       this.gameValueSelectionRef = React.createRef();
       this.boardRef = React.createRef();
       this.gameStatusRef = React.createRef();
-  
+      this.config = new AppConfig();
+
       this.newGame();
     }
   
@@ -37,14 +39,12 @@ class Game extends Component {
       console.log(process.env);
       var serviceUrl = window.location.origin.toString();
       if (typeof window == 'undefined') {
-        console.log("Unable to extract base URL path from window.  Using default");
-        serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000'
+        console.log("Unable to extract base URL path from window.");
+        serviceUrl = this.config.getSudokuServiceUrl();
       }
       serviceUrl = serviceUrl + '/api/game';
       console.log("Service URL = " + serviceUrl);
 
-      console.log("Disabling TLS Cert validation");
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/generate')
       .then(results => {
         return results.json();
@@ -72,17 +72,14 @@ class Game extends Component {
           return;
       }
 
-      console.log(process.env);
       var serviceUrl = window.location.origin.toString();
       if (typeof window == 'undefined') {
-        console.log("Unable to extract base URL path from window.  Using default");
-        serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000'
+        console.log("Unable to extract base URL path from window");
+        serviceUrl = this.config.getSudokuServiceUrl();
       }
       serviceUrl = serviceUrl + '/api/game';
       console.log("Service URL = " + serviceUrl);
 
-      console.log("Disabling TLS Cert validation");
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/logMove?gameId=' + this.gameId + '&x=' + x + '&y=' + y + '&value=' + value)
       .then(results => {
         return results.json();

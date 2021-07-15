@@ -1,0 +1,6 @@
+{
+  "REACT_APP_SUDOKU_URL_SVC": "http://localhost:8080",
+  "REACT_APP_SUDOKU_URL_OCRSVC": "http://localhost:5000",
+  "NODE_TLS_REJECT_UNAUTHORIZED": "0",
+  "PORT": "8080"
+}

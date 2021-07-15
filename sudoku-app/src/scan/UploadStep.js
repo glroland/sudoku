@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 import "../App.css";
 import Board from "./Board";
+import AppConfig from "../AppConfig.js";
 
 class UploadStep extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class UploadStep extends Component {
       this.imgRef = React.createRef();
       this.boardRef = React.createRef();
       this.solutionRef = React.createRef();
+      this.config = new AppConfig();
     }
 
     render() {
@@ -73,11 +75,9 @@ class UploadStep extends Component {
       
       let pJson = JSON.parse(JSON.stringify(p));
   
-      var serviceUrl = process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080';
+      var serviceUrl = this.config.getSudokuServiceUrl();
       console.log("Service URL = " + serviceUrl);
   
-      console.log("Disabling TLS Cert validation");
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/solve', {
         method: "POST",
         mode: "cors",
@@ -112,8 +112,8 @@ class UploadStep extends Component {
 
       var serviceUrl = window.location.origin.toString();
       if (typeof window == 'undefined') {
-        console.log("Unable to extract base URL path from window.  Using default");
-        serviceUrl = process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000'
+        console.log("Unable to extract base URL path from window");
+        serviceUrl = this.config.getSudokuOcrServiceUrl();
       }
       serviceUrl = serviceUrl + '/api/ocr';
       console.log("OCR Service URL = " + serviceUrl);
@@ -122,8 +122,6 @@ class UploadStep extends Component {
       //var blob = new Blob(imageBytes, { type: "image/png"});
       formData.append("file", imageBytes);
 
-      console.log("Disabling TLS Cert validation");
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
       fetch(serviceUrl + '/extract', {
         method: 'POST',
         body: formData

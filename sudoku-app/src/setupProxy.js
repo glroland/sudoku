@@ -1,11 +1,14 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const AppConfig = require("./AppConfig.js");
 
 module.exports = function(app) {
+
   app.use(
     '/api/game',
     createProxyMiddleware({
-        target: process.env.REACT_APP_SUDOKU_URL_SVC || 'http://localhost:8080',
+        target: (new AppConfig()).getSudokuServiceUrl(),
         changeOrigin: true,
+        logLevel: "debug",
         pathRewrite: {
           '^/api/game': '', // rewrite path
         },
@@ -15,8 +18,9 @@ module.exports = function(app) {
   app.use(
     '/api/ocr',
     createProxyMiddleware({
-        target: process.env.REACT_APP_SUDOKU_URL_OCRSVC || 'http://localhost:5000',
+        target: (new AppConfig()).getSudokuOcrServiceUrl(),
         changeOrigin: true,
+        logLevel: "debug",
         pathRewrite: {
           '^/api/ocr': '', // rewrite path
         },
