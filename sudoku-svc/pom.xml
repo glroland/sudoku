@@ -63,6 +63,7 @@
           <target>${version.java}</target>
         </configuration>
       </plugin>
+
     </plugins>
 
     <pluginManagement>
