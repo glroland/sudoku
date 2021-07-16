@@ -13,6 +13,7 @@ EXPOSE 8080
 # ENV REACT_APP_SUDOKU_URL_OCRSVC http://o:3000
 # ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 # ENV PORT=8080
+RUN yum install -y wget telnet curl
 RUN rm -f config.json
 RUN chmod 777 /opt/app-root/src
 COPY src/config.json.env /opt/app-root/src/
