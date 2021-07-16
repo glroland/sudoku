@@ -14,8 +14,9 @@ EXPOSE 8080
 # ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 # ENV PORT=8080
 RUN rm -f config.json
+RUN chmod 777 /opt/app-root/src
 COPY src/config.json.env /opt/app-root/src/
 COPY --from=build /tmp/build/sudoku/sudoku-app/container_run.sh /
-COPY --from=build /tmp/build/sudoku/sudoku-app/ /opt/app-root/src/
+COPY --from=build /tmp/build/sudoku/sudoku-app/build/ /opt/app-root/src/
 
 CMD /bin/bash -c /container_run.sh
