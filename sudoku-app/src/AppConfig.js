@@ -1,6 +1,3 @@
-const ConfigFile = require("./config.json");
-
-
 function AppConfig() {
     this.DEFAULT_SUDOKU_SERVICE_URL = 'http://localhost:8080';
     this.DEFAULT_SUDOKU_OCR_SERVICE_URL = 'http://localhost:5000';
@@ -15,6 +12,19 @@ AppConfig.prototype.isValid = function(input) {
     return true;
 }
 
+AppConfig.prototype.getConfig = function() {
+    let configFile;
+    try 
+    {
+        configFile = require('/tmp/config.json');
+    } 
+    catch (err) 
+    {
+        configFile = require("./config.json");
+    }
+    return configFile;
+}
+
 // Sudoku Service Endpoint URL
 AppConfig.prototype.getSudokuServiceUrl = function() {
     var result = this.DEFAULT_SUDOKU_SERVICE_URL;
@@ -23,8 +33,8 @@ AppConfig.prototype.getSudokuServiceUrl = function() {
         result = process.env.REACT_APP_SUDOKU_URL_SVC;
         console.log("getSudokuServiceUrl using environment variable - " + result);
     }
-    else if(this.isValid(ConfigFile.REACT_APP_SUDOKU_URL_SVC)) {
-        result = ConfigFile.REACT_APP_SUDOKU_URL_SVC;
+    else if(this.isValid(this.getConfig().REACT_APP_SUDOKU_URL_SVC)) {
+        result = this.getConfig().REACT_APP_SUDOKU_URL_SVC;
         console.log("getSudokuServiceUrl using config file value - " + result);
     }
     else
@@ -42,8 +52,8 @@ AppConfig.prototype.getSudokuOcrServiceUrl = function() {
         result = process.env.REACT_APP_SUDOKU_URL_OCRSVC;
         console.log("getSudokuOcrServiceUrl using environment variable - " + result);
     }
-    else if(this.isValid(ConfigFile.REACT_APP_SUDOKU_URL_OCRSVC)) {
-        result = ConfigFile.REACT_APP_SUDOKU_URL_OCRSVC;
+    else if(this.isValid(this.getConfig().REACT_APP_SUDOKU_URL_OCRSVC)) {
+        result = this.getConfig().REACT_APP_SUDOKU_URL_OCRSVC;
         console.log("getSudokuOcrServiceUrl using config file value - " + result);
     }
     else
