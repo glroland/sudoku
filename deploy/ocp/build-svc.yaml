@@ -85,12 +85,9 @@ spec:
     contextDir: 'sudoku-svc'
     type: Git
   strategy:
-    sourceStrategy:
-      from:
-        kind: ImageStreamTag
-        name: java:11
-        namespace: openshift
-    type: Source
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+    type: Docker
   successfulBuildsHistoryLimit: 5
   triggers:
   - generic:
