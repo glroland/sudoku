@@ -67,6 +67,17 @@ pipeline
          }
       }
 
+      stage('Create Docker Image for sudoku-app') 
+      {
+         steps 
+         {
+            sh 'cd sudoku-app ; docker build . --tag sudoku-app:$BUILD_NUMBER'
+            sh 'cd sudoku-app ; docker save sudoku-app:$BUILD_NUMBER > sudoku-app-dockerimage.tar'
+            step(followSymlinks: false, artifacts: 'sudoku-app/sudoku-app-dockerimage.tar', $class: 'ArtifactArchiver')
+            sh 'cd sudoku-app ; docker rmi sudoku-app:$BUILD_NUMBER'
+         }
+      }
+
       stage('Create Docker Image for sudoku-svc') 
       {
          steps 
@@ -93,6 +104,15 @@ pipeline
       {
          steps 
          {
+            sh 'docker load -i sudoku-app/sudoku-app-dockerimage.tar'
+            sh 'docker tag sudoku-app:$BUILD_NUMBER registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
+            sh 'docker tag sudoku-app:$BUILD_NUMBER registry.home.glroland.com/sudoku/app:latest'
+            sh 'docker rmi sudoku-app:$BUILD_NUMBER'
+            sh 'docker push registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
+            sh 'docker push registry.home.glroland.com/sudoku/app:latest'
+            sh 'docker rmi registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
+            sh 'docker rmi registry.home.glroland.com/sudoku/app:latest'
+            
             sh 'docker load -i sudoku-svc/sudoku-svc-dockerimage.tar'
             sh 'docker tag sudoku-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/svc:$BUILD_NUMBER'
             sh 'docker tag sudoku-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/svc:latest'
