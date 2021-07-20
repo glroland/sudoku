@@ -15,7 +15,6 @@ EXPOSE 8080
 # ENV PORT=8080
 RUN rm -f config.json
 RUN chmod 777 /opt/app-root/src
-RUN ln -s /tmp/nginx.conf /etc/nginx/conf.d/nginx.conf
 COPY src/config.json.env /opt/app-root/src/
 COPY nginx.conf.env /opt/app-root/src/
 COPY --from=build /tmp/build/sudoku/sudoku-app/container_run.sh /
