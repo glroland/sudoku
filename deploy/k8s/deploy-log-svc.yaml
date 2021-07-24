@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: log-svc-config
+data:
+  application.properties: |-
+    # quarkus application configuration
+    quarkus.package.type=uber-jar
+    quarkus.http.port=8080
+    quarkus.swagger-ui.always-include=true
+
+    # datasource configuration
+    quarkus.datasource.db-kind = postgresql
+    quarkus.datasource.username = sudoku
+    quarkus.datasource.password = password1
+    quarkus.datasource.jdbc.url = jdbc:postgresql://postgresql:5432/sudoku_db
+    #quarkus.hibernate-orm.database.generation=drop-and-create
+    quarkus.hibernate-orm.database.generation=update
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: log-svc
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: log-svc
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-svc
+spec:
+  selector:
+    matchLabels:
+      app: log-svc
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: log-svc
+    spec:
+      containers:
+      - name: log-svc
+        image: log-svc:latest
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: JAVA_OPTS_APPEND
+            value: '-Dlogging.level.root=INFO'
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /deployments/config
+          name: application-properties
+          readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /q/health/ready
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /q/health/live
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /q/health/live
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+      volumes:
+      - configMap:
+          defaultMode: 511
+          items:
+          - key: application.properties
+            path: application.properties
+          name: log-svc-config
+        name: application-properties
