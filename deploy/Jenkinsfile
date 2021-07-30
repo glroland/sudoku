@@ -100,6 +100,17 @@ pipeline
          }
       }
 
+      stage('Create Docker Image for sudoku-ocr-svc') 
+      {
+         steps 
+         {
+            sh 'cd sudoku-ocr-svc ; docker build . --tag sudoku-ocr-svc:$BUILD_NUMBER'
+            sh 'cd sudoku-ocr-svc ; docker save sudoku-ocr-svc:$BUILD_NUMBER > sudoku-ocr-svc-dockerimage.tar'
+            step(followSymlinks: false, artifacts: 'sudoku-ocr-svc/sudoku-ocr-svc-dockerimage.tar', $class: 'ArtifactArchiver')
+            sh 'cd sudoku-ocr-svc ; docker rmi sudoku-ocr-svc:$BUILD_NUMBER'
+         }
+      }
+
       stage('Reload then push images to quay') 
       {
          steps 
@@ -130,6 +141,15 @@ pipeline
             sh 'docker push registry.home.glroland.com/sudoku/log-svc:latest'
             sh 'docker rmi registry.home.glroland.com/sudoku/log-svc:$BUILD_NUMBER'
             sh 'docker rmi registry.home.glroland.com/sudoku/log-svc:latest'
+            
+            sh 'docker load -i sudoku-ocr-svc/sudoku-ocr-svc-dockerimage.tar'
+            sh 'docker tag sudoku-ocr-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
+            sh 'docker tag sudoku-ocr-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/ocr-svc:latest'
+            sh 'docker rmi sudoku-ocr-svc:$BUILD_NUMBER'
+            sh 'docker push registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
+            sh 'docker push registry.home.glroland.com/sudoku/ocr-svc:latest'
+            sh 'docker rmi registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
+            sh 'docker rmi registry.home.glroland.com/sudoku/ocr-svc:latest'
          }
       }
 

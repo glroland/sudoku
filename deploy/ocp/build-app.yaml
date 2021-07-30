@@ -87,12 +87,9 @@ spec:
       uri: https://github.com/glroland/sudoku.git
     type: Git
   strategy:
-    sourceStrategy:
-      from:
-        kind: ImageStreamTag
-        name: nodejs:12
-        namespace: openshift
-    type: Source
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+    type: Docker
   successfulBuildsHistoryLimit: 5
   triggers:
   - generic:
