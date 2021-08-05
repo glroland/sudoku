@@ -1,26 +1,16 @@
-FROM registry.access.redhat.com/ubi8/ubi
-LABEL maintainer="glroland@hotmail.com"
-
-RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    curl https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh -o ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -f -b -p /opt/conda && \
-    rm ~/miniconda.sh
-
-ENV PATH /opt/conda/bin:$PATH
+FROM continuumio/miniconda3:latest
 
 # Install dependencies via Anaconda
-RUN mkdir -p /deploy/app
-COPY setup/conda_packages.sh /deploy/app
-RUN /deploy/app/conda_packages.sh
+RUN mkdir -p /opt/sudoku
+COPY setup/conda_packages.sh /opt/sudoku
+RUN /opt/sudoku/conda_packages.sh
 
 # Deploy application
-COPY gunicorn_config.py /deploy/gunicorn_config.py
-COPY app /deploy/app
-WORKDIR /deploy/app
-
-# Set Python path
-ENV PYTHONPATH=/deploy
+COPY gunicorn_config.py /opt/sudoku/gunicorn_config.py
+COPY app /opt/sudoku
+WORKDIR /opt/sudoku
 
 EXPOSE 8080
 
-CMD ["gunicorn", "--config", "/deploy/gunicorn_config.py", "ocrsvc:app"]
+CMD ["gunicorn", "--config", "/opt/sudoku/gunicorn_config.py", "ocrsvc:app"]
+
