@@ -1,6 +1,6 @@
 apiVersion: v2
-name: svc
-description: Core business logic for the Sudoku game
+name: log-svc
+description: Move-history capture service for the Sudoku game
 
 # A chart can be either an 'application' or a 'library' chart.
 #
