@@ -24,18 +24,19 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "sudoku.serviceAccountName" . }}
+      {{ if eq .Values.global.useServiceAccount true }}
+      serviceAccountName: {{ include "sudoku.fullname" . }}
+      {{ end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.global.image.repository }}{{ .Values.image.name }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
           ports:
           - containerPort: {{ .Values.image.port }}
-          imagePullPolicy: IfNotPresent
           env:
             - name: JAVA_OPTS_APPEND
               value: '-Dlogging.level.root=INFO'

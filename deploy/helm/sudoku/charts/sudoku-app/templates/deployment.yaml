@@ -24,27 +24,28 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "sudoku.serviceAccountName" . }}
+      {{ if eq .Values.global.useServiceAccount true }}
+      serviceAccountName: {{ include "sudoku.fullname" . }}
+      {{ end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.global.image.repository }}{{ .Values.image.name }}:{{ .Values.global.image.tag }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
           ports:
           - containerPort: {{ .Values.image.port }}
-          imagePullPolicy: IfNotPresent
           env:
           - name: REACT_APP_SUDOKU_URL_SVC
-            value: http://svc:8080
+            value: http://{{ .Release.Name }}-svc:8080
           - name: REACT_APP_SUDOKU_URL_OCRSVC
-            value: http://ocr-svc:8080
+            value: http://{{ .Release.Name }}-ocr-svc:8080
           - name: NODE_TLS_REJECT_UNAUTHORIZED
             value: "0"
           - name: PORT
-            value: "8080"
+            value: "{{ .Values.image.port }}"
           - name: HOST_HEADER
             value: "abc.home.glroland.com"
           terminationMessagePath: /dev/termination-log

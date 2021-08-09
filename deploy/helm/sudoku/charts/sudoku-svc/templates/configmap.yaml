@@ -6,5 +6,5 @@ metadata:
     {{- include "sudoku.labels" . | nindent 4 }}
 data:
   application.properties: |-
-    gamelog.url=http://log-svc:8080
+    gamelog.url=http://{{ .Release.Name }}-log-svc:8080
     gamelog.failOnError=false
