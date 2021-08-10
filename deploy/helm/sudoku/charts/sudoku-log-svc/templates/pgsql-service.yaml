@@ -9,6 +9,6 @@ spec:
     protocol: TCP
     targetPort: 5432
   selector:
-    name: {{ include "sudoku.fullname" . }}-pgsql
+    app: postgresql
   sessionAffinity: None
   type: ClusterIP
