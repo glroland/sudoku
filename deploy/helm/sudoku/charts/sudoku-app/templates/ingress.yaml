@@ -1,14 +1,7 @@
-{{- if .Values.ingress.enabled -}}
-{{- $fullName := include "sudoku.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ include "sudoku.fullname" . }}
   labels:
     {{- include "sudoku.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -20,22 +13,16 @@ spec:
   tls:
     {{- range .Values.ingress.tls }}
     - hosts:
-        {{- range .hosts }}
-        - {{ $fullName }}{{ . | quote }}
-        {{- end }}
+        - {{ include "sudoku.fullname" . }}{{ .Values.ingress.url }}
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ include "sudoku.fullname" . }}.{{ .Values.ingress.url }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
+          - path: {{ .Values.ingress.path }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-          {{- end }}
-    {{- end }}
-  {{- end }}
+              serviceName: {{ include "sudoku.fullname" . }}
+              servicePort: {{ .Values.service.port }}
+            pathType: Prefix
