@@ -52,7 +52,7 @@ spec:
           terminationMessagePolicy: File
           readinessProbe:
             httpGet:
-              path: /ready
+              path: /
               port: {{ .Values.image.port }}
               scheme: HTTP
             timeoutSeconds: 1
@@ -61,7 +61,7 @@ spec:
             failureThreshold: 3
           livenessProbe:
             httpGet:
-              path: /live
+              path: /
               port: {{ .Values.image.port }}
               scheme: HTTP
             timeoutSeconds: 1
@@ -70,7 +70,7 @@ spec:
             failureThreshold: 3
           startupProbe:
             httpGet:
-              path: /live
+              path: /
               port: {{ .Values.image.port }}
               scheme: HTTP
             timeoutSeconds: 1
