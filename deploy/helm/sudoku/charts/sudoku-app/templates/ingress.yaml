@@ -9,14 +9,10 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tls }}
   tls:
-    {{- range .Values.ingress.tls }}
     - hosts:
         - {{ include "sudoku.fullname" . }}{{ .Values.ingress.url }}
-      secretName: {{ .secretName }}
-    {{- end }}
-  {{- end }}
+      secretName: {{ include "sudoku.fullname" . }}-pgsql
   rules:
     - host: {{ include "sudoku.fullname" . }}.{{ .Values.ingress.url }}
       http:

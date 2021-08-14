@@ -15,7 +15,6 @@ ingress:
   annotations: {}
   url: apps.ocp4.home.glroland.com
   path: /
-  tls: []
 
 #resources: 
 #  limits:
