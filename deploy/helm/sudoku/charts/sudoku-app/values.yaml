@@ -15,6 +15,7 @@ ingress:
   annotations: {}
   url: apps.ocp4.home.glroland.com
   path: /
+  port: 443
 
 #resources: 
 #  limits:
