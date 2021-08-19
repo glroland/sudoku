@@ -17,13 +17,13 @@ ingress:
   path: /
   port: 443
 
-#resources: 
-#  limits:
-#    cpu: 1000m
-#    memory: 256Mi
-#  requests:
-#    cpu: 500m
-#    memory: 256Mi
+resources: 
+  limits:
+    cpu: 2000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 256Mi
 
 autoscaling:
   enabled: true
@@ -31,3 +31,12 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
+
+securityContext:
+  allowPrivilegeEscalation: false
+  privileged: false
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  capabilities:
+    drop:
+      - ALL
