@@ -15,6 +15,6 @@ data:
     quarkus.datasource.db-kind = postgresql
     quarkus.datasource.username = sudoku
     quarkus.datasource.password = password1
-    quarkus.datasource.jdbc.url = jdbc:postgresql://{{ include "sudoku.fullname" . }}-pgsql:5432/sudoku_db
+    quarkus.datasource.jdbc.url = jdbc:postgresql://{{ .Release.Name }}-db:5432/sudoku_db
     #quarkus.hibernate-orm.database.generation=drop-and-create
     quarkus.hibernate-orm.database.generation=update
