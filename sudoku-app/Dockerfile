@@ -1,4 +1,5 @@
-FROM registry.access.redhat.com/ubi8/nodejs-14:latest as build
+#FROM registry.access.redhat.com/ubi8/nodejs-14:latest as build
+FROM node:latest as build
 # ENV REACT_APP_SUDOKU_URL_SVC http://c:8080
 RUN mkdir /tmp/build
 WORKDIR /tmp/build
