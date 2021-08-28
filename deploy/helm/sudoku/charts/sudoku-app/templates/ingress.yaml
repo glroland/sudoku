@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "sudoku.fullname" . }}
@@ -19,6 +19,8 @@ spec:
         paths:
           - path: {{ .Values.ingress.path }}
             backend:
-              serviceName: {{ include "sudoku.fullname" . }}
-              servicePort: {{ .Values.service.port }}
+              service:
+                name: {{ include "sudoku.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
             pathType: Prefix
