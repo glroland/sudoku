@@ -18,11 +18,11 @@
   },
   "main": "server.js",
   "scripts": {
-    "run": "node server.js",
-    "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
-    "test": "react-scripts --openssl-legacy-provider test --env=jsdom",
-    "eject": "react-scripts --openssl-legacy-provider eject"
+    "run": "export NODE_OPTIONS=--openssl-legacy-provider && node server.js",
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
+    "test": "export NODE_OPTIONS=--openssl-legacy-provider && react-scripts test --env=jsdom",
+    "eject": "export NODE_OPTIONS=--openssl-legacy-provider && react-scripts eject"
   },
   "browserslist": [
     ">0.2%",

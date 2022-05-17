@@ -5,6 +5,7 @@ RUN mkdir /tmp/build
 WORKDIR /tmp/build
 RUN git clone https://github.com/glroland/sudoku.git
 WORKDIR /tmp/build/sudoku/sudoku-app
+ENV NODE_OPTIONS --openssl-legacy-provider
 RUN npm install
 RUN npm run build --openssl-legacy-provider
 
@@ -16,6 +17,7 @@ EXPOSE 8080
 # ENV PORT=8080
 RUN rm -f config.json
 RUN chmod 777 /opt/app-root/src
+ENV NODE_OPTIONS --openssl-legacy-provider
 COPY src/config.json.env /opt/app-root/src/
 COPY nginx.conf.env /opt/app-root/src/
 COPY --from=build /tmp/build/sudoku/sudoku-app/container_run.sh /
