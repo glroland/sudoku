@@ -6,7 +6,7 @@ WORKDIR /tmp/build
 RUN git clone https://github.com/glroland/sudoku.git
 WORKDIR /tmp/build/sudoku/sudoku-app
 RUN npm install
-RUN npm run build
+RUN npm run build --openssl-legacy-provider
 
 FROM registry.access.redhat.com/ubi8/nginx-118:latest
 EXPOSE 8080
