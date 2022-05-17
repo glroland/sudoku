@@ -20,9 +20,9 @@
   "scripts": {
     "run": "node server.js",
     "start": "react-scripts start --openssl-legacy-provider",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build": "react-scripts build --openssl-legacy-provider",
+    "test": "react-scripts test --openssl-legacy-provider --env=jsdom",
+    "eject": "react-scripts eject --openssl-legacy-provider"
   },
   "browserslist": [
     ">0.2%",
