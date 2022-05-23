@@ -115,43 +115,45 @@ pipeline
       {
          steps 
          {
-            sh 'docker load -i sudoku-app/sudoku-app-dockerimage.tar'
-            sh 'docker tag sudoku-app:$BUILD_NUMBER registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
-            sh 'docker tag sudoku-app:$BUILD_NUMBER registry.home.glroland.com/sudoku/app:latest'
-            sh 'docker rmi sudoku-app:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/app:latest'
-            sh 'docker rmi registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
-            sh 'docker rmi registry.home.glroland.com/sudoku/app:latest'
-            
-            sh 'docker load -i sudoku-svc/sudoku-svc-dockerimage.tar'
-            sh 'docker tag sudoku-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/svc:$BUILD_NUMBER'
-            sh 'docker tag sudoku-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/svc:latest'
-            sh 'docker rmi sudoku-svc:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/svc:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/svc:latest'
-            sh 'docker rmi registry.home.glroland.com/sudoku/svc:$BUILD_NUMBER'
-            sh 'docker rmi registry.home.glroland.com/sudoku/svc:latest'
-            
-            sh 'docker load -i sudoku-log-svc/sudoku-log-svc-dockerimage.tar'
-            sh 'docker tag sudoku-log-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/log-svc:$BUILD_NUMBER'
-            sh 'docker tag sudoku-log-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/log-svc:latest'
-            sh 'docker rmi sudoku-log-svc:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/log-svc:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/log-svc:latest'
-            sh 'docker rmi registry.home.glroland.com/sudoku/log-svc:$BUILD_NUMBER'
-            sh 'docker rmi registry.home.glroland.com/sudoku/log-svc:latest'
-            
-            sh 'docker load -i sudoku-ocr-svc/sudoku-ocr-svc-dockerimage.tar'
-            sh 'docker tag sudoku-ocr-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
-            sh 'docker tag sudoku-ocr-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/ocr-svc:latest'
-            sh 'docker rmi sudoku-ocr-svc:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
-            sh 'docker push registry.home.glroland.com/sudoku/ocr-svc:latest'
-            sh 'docker rmi registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
-            sh 'docker rmi registry.home.glroland.com/sudoku/ocr-svc:latest'
+            docker.withRegistry('registry.home.glroland.com', 'quay') 
+            {
+               sh 'docker load -i sudoku-app/sudoku-app-dockerimage.tar'
+//               sh 'docker tag sudoku-app:$BUILD_NUMBER registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
+               sh 'docker tag sudoku-app:$BUILD_NUMBER sudoku/app:latest'
+               sh 'docker rmi sudoku-app:$BUILD_NUMBER'
+               sh 'docker push sudoku/app:$BUILD_NUMBER'
+               sh 'docker push sudoku/app:latest'
+               sh 'docker rmi sudoku/app:$BUILD_NUMBER'
+               sh 'docker rmi sudoku/app:latest'
+               
+//               sh 'docker load -i sudoku-svc/sudoku-svc-dockerimage.tar'
+//               sh 'docker tag sudoku-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/svc:$BUILD_NUMBER'
+//               sh 'docker tag sudoku-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/svc:latest'
+//               sh 'docker rmi sudoku-svc:$BUILD_NUMBER'
+//               sh 'docker push registry.home.glroland.com/sudoku/svc:$BUILD_NUMBER'
+//               sh 'docker push registry.home.glroland.com/sudoku/svc:latest'
+//               sh 'docker rmi registry.home.glroland.com/sudoku/svc:$BUILD_NUMBER'
+//               sh 'docker rmi registry.home.glroland.com/sudoku/svc:latest'
+               
+//               sh 'docker load -i sudoku-log-svc/sudoku-log-svc-dockerimage.tar'
+//               sh 'docker tag sudoku-log-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/log-svc:$BUILD_NUMBER'
+//               sh 'docker tag sudoku-log-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/log-svc:latest'
+//               sh 'docker rmi sudoku-log-svc:$BUILD_NUMBER'
+//               sh 'docker push registry.home.glroland.com/sudoku/log-svc:$BUILD_NUMBER'
+//               sh 'docker push registry.home.glroland.com/sudoku/log-svc:latest'
+//               sh 'docker rmi registry.home.glroland.com/sudoku/log-svc:$BUILD_NUMBER'
+//               sh 'docker rmi registry.home.glroland.com/sudoku/log-svc:latest'
+               
+//               sh 'docker load -i sudoku-ocr-svc/sudoku-ocr-svc-dockerimage.tar'
+//               sh 'docker tag sudoku-ocr-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
+//               sh 'docker tag sudoku-ocr-svc:$BUILD_NUMBER registry.home.glroland.com/sudoku/ocr-svc:latest'
+//               sh 'docker rmi sudoku-ocr-svc:$BUILD_NUMBER'
+//               sh 'docker push registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
+//               sh 'docker push registry.home.glroland.com/sudoku/ocr-svc:latest'
+//               sh 'docker rmi registry.home.glroland.com/sudoku/ocr-svc:$BUILD_NUMBER'
+//               sh 'docker rmi registry.home.glroland.com/sudoku/ocr-svc:latest'
+            }
          }
       }
-
    }
 }
