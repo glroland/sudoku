@@ -1,6 +1,7 @@
 pipeline 
 {
    agent any
+   
    options 
    {
       disableConcurrentBuilds()
@@ -27,13 +28,6 @@ pipeline
             git 'https://github.com/glroland/sudoku.git'
          }
       }
-
-   //  stages {
-   //    stage('Checkout Scm') {
-   //      steps {
-   //        git 'https://github.com/glroland/sudoku.git'
-   //      }
-   //    }
 
       stage('Build sudoku-svc') 
       {
@@ -111,11 +105,11 @@ pipeline
          }
       }
 
-      stage('Reload then push images to quay') 
+      docker.withRegistry('https://registry.home.glroland.com/', 'quay') 
       {
-         steps 
+         stage('Reload then push images to quay') 
          {
-            docker.withRegistry('registry.home.glroland.com', 'quay') 
+            steps 
             {
                sh 'docker load -i sudoku-app/sudoku-app-dockerimage.tar'
 //               sh 'docker tag sudoku-app:$BUILD_NUMBER registry.home.glroland.com/sudoku/app:$BUILD_NUMBER'
