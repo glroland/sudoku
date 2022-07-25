@@ -17,10 +17,12 @@ AppConfig.prototype.getConfig = function() {
     try 
     {
         configFile = require('/tmp/config.json');
+        console.log("Config.json loaded from /tmp/config.json")
     } 
     catch (err) 
     {
         configFile = require("./config.json");
+        console.log("Config.json loaded from ./config.json")
     }
     return configFile;
 }
