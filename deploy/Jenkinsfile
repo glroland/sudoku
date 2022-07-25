@@ -43,7 +43,7 @@ pipeline
          steps 
          {
             sh 'cd sudoku-log-svc ; mvn --batch-mode clean package'
-            sh 'zip -r sudoku-log-svc/target/sudoku-log-svc-fastjar.zip sudoku-log-svc/target/quarkus-app/'
+            sh 'cd sudoku-log-svc/target/quarkus-app ; zip -r ../sudoku-log-svc-fastjar.zip .'
             step(followSymlinks: false, artifacts: 'sudoku-log-svc/target/sudoku-log-svc-fastjar.zip', $class: 'ArtifactArchiver')
          }
       }
