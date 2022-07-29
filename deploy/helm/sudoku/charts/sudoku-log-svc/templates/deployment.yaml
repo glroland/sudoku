@@ -20,9 +20,9 @@ spec:
       labels:
         {{- include "sudoku.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- if .Values.global.image.pullSecret }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+      - name: {{ .Values.global.image.pullSecret }}
       {{- end }}
       {{ if eq .Values.global.useServiceAccount true }}
       serviceAccountName: {{ include "sudoku.fullname" . }}
