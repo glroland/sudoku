@@ -2,7 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "sudoku.fullname" . }}
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"{{ .Release.Name }}-log-svc"}]'
   labels:
+    app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
     {{- include "sudoku.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}

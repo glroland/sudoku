@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "sudoku.fullname" . }}
   labels:
+    app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
     {{- include "sudoku.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
