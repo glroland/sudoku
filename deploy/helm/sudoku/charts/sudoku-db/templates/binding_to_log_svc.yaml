@@ -1,0 +1,15 @@
+apiVersion: binding.operators.coreos.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: binding-log-svc-to-db
+spec:
+  services: 
+    - group: postgres-operator.crunchydata.com
+      version: v1beta1
+      kind: PostgresCluster 
+      name: s2-db
+  application: 
+    name: s2-log-svc
+    group: apps
+    version: v1
+    resource: deployments
