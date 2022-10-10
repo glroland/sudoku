@@ -9,8 +9,8 @@
     <dependency-check-format>HTML</dependency-check-format>
     <dependency-check-failscore>8</dependency-check-failscore>
     <version.java>11</version.java>
-    <version.spring>2.7.2</version.spring>
-    <version.maven>3.8.1</version.maven>
+    <version.spring>2.7.4</version.spring>
+    <version.maven.compiler>3.10.1</version.maven.compiler>
     <version.junit>4.13.2</version.junit>
   </properties>
 
@@ -57,7 +57,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${version.maven}</version>
+        <version>${version.maven.compiler}</version>
         <configuration>
           <source>${version.java}</source>
           <target>${version.java}</target>
@@ -71,7 +71,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>${version.maven}</version>
+          <version>${version.maven.compiler}</version>
           <configuration>
             <source>${version.java}</source>
             <target>${version.java}</target>
