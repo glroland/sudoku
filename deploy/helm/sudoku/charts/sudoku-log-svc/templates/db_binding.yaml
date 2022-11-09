@@ -1,15 +1,15 @@
 apiVersion: binding.operators.coreos.com/v1alpha1
 kind: ServiceBinding
 metadata:
-  name: binding-log-svc-to-db
+  name: {{ include "sudoku.fullname" . }}-db-binding
 spec:
   services: 
     - group: postgres-operator.crunchydata.com
       version: v1beta1
       kind: PostgresCluster 
-      name: s2-db
+      name: {{ .Release.Name }}-db
   application: 
-    name: s2-log-svc
+    name: {{ include "sudoku.fullname" . }}
     group: apps
     version: v1
     resource: deployments

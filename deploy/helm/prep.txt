@@ -1,3 +1,5 @@
+1.) Install Crunch DB Operator (community is fine within a single namespace)
+2.) Install Service Binding Operator
 
 
 
