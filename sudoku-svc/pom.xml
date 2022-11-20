@@ -9,7 +9,7 @@
     <dependency-check-format>HTML</dependency-check-format>
     <dependency-check-failscore>8</dependency-check-failscore>
     <version.java>11</version.java>
-    <version.spring>2.7.4</version.spring>
+    <version.spring>2.7.5</version.spring>
     <version.maven.compiler>3.10.1</version.maven.compiler>
     <version.junit>4.13.2</version.junit>
   </properties>
