@@ -2,9 +2,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   annotations:
-    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"ocr-svc"}]'
-    openshift.io/host.generated: "true"
-  creationTimestamp: "2020-10-25T22:42:23Z"
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"app"}]'
   labels:
     app: app
     app.kubernetes.io/component: app
@@ -13,53 +11,10 @@ metadata:
     app.kubernetes.io/part-of: sudoku
     app.openshift.io/runtime: nodejs
     app.openshift.io/runtime-version: "12"
-  managedFields:
-  - apiVersion: route.openshift.io/v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:status:
-        f:ingress: {}
-    manager: openshift-router
-    operation: Update
-    time: "2020-10-25T22:42:23Z"
-  - apiVersion: route.openshift.io/v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          f:app.openshift.io/connects-to: {}
-        f:labels:
-          .: {}
-          f:app: {}
-          f:app.kubernetes.io/component: {}
-          f:app.kubernetes.io/instance: {}
-          f:app.kubernetes.io/name: {}
-          f:app.kubernetes.io/part-of: {}
-          f:app.openshift.io/runtime: {}
-          f:app.openshift.io/runtime-version: {}
-      f:spec:
-        f:port:
-          .: {}
-          f:targetPort: {}
-        f:tls:
-          .: {}
-          f:caCertificate: {}
-          f:certificate: {}
-          f:insecureEdgeTerminationPolicy: {}
-          f:key: {}
-          f:termination: {}
-        f:to:
-          f:kind: {}
-          f:name: {}
-          f:weight: {}
-        f:wildcardPolicy: {}
-    manager: Mozilla
-    operation: Update
-    time: "2020-10-26T00:11:23Z"
-  name: app
+  name: {{ include "sudoku.fullname" . }}
 spec:
   port:
-    targetPort: 8080-tcp
+    targetPort: {{ .Values.service.port }}
   tls:
     caCertificate: |-
       -----BEGIN CERTIFICATE-----
@@ -145,7 +100,7 @@ spec:
     termination: edge
   to:
     kind: Service
-    name: app
+    name: {{ include "sudoku.fullname" . }}
     weight: 100
   wildcardPolicy: None
 
