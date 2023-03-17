@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3:4.12.0
+FROM continuumio/miniconda3:latest
 
 # Install dependencies via Anaconda
 RUN mkdir -p /opt/sudoku
