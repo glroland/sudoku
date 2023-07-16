@@ -30,6 +30,28 @@ public class SudokuController {
     }
 
     @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/generateBulkCsv", produces = "text/plain" /* "text/csv" */)
+    public String generateBulkCsv(@RequestParam(defaultValue = "1000") long quantity)
+    {
+		PuzzleFactory factory = new PuzzleFactory();
+
+		StringBuilder sb = new StringBuilder();
+		for (long i=0; i<quantity; i++)
+		{
+			Puzzle puzzle = factory.createPuzzle();
+			GameGrid initial = puzzle.getInitialPuzzle();
+			GameGrid solution = puzzle.getPuzzleSolution();
+
+			initial.appendBoardString(sb);
+			sb.append(",");
+			solution.appendBoardString(sb);
+			sb.append("\n");
+		}
+
+		return sb.toString();
+	}
+
+    @CrossOrigin(origins = "*")
     @RequestMapping("/generate")
     public Game generate()
     {

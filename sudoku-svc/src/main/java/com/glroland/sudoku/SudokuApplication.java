@@ -27,7 +27,6 @@ public class SudokuApplication {
 	            for (String beanName : beanNames) {
 	                System.out.println(beanName);
 	            }
-
 	        };
 	    }
 

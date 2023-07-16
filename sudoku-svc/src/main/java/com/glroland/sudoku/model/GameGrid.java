@@ -3,6 +3,7 @@ package com.glroland.sudoku.model;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.glroland.sudoku.Board;
 import com.glroland.sudoku.exceptions.InvalidPositionException;
 import com.glroland.sudoku.util.SudokuConstants;
 
@@ -201,6 +202,37 @@ public class GameGrid {
 		return true;
 	}
 	
+	public void appendBoardString(StringBuilder builder)
+    {
+        // validate parameters
+        if (builder == null)
+        {
+            String msg = "Input parameter builder is null";
+            log.error(msg);
+            throw new RuntimeException(msg);
+        }
+        if (grid == null)
+        {
+            String msg = "Grid is null";
+            log.error(msg);
+            throw new RuntimeException(msg);
+        }
+        if (grid.length != (SudokuConstants.PUZZLE_WIDTH * SudokuConstants.PUZZLE_HEIGHT))
+        {
+            String msg = "Grid is the wrong size!  Length=" + grid.length;
+            log.error(msg);
+            throw new RuntimeException(msg);
+        }
+
+		for (int i=0; i<grid.length; i++)
+        {
+			if (grid[i] == 0)
+				builder.append(" ");
+			else
+				builder.append(grid[i]);
+        }
+    }
+
 	public String toString()
 	{
 		StringBuilder s = new StringBuilder();
