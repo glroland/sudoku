@@ -10,8 +10,8 @@ pipeline
 
    tools 
    {
-      jdk 'java-17'
-      maven 'Maven-3.8.1'
+      jdk 'java-21'
+      maven 'Maven-3.9.6'
    }
 
    stages
