@@ -1,5 +1,6 @@
 #FROM registry.access.redhat.com/ubi8/nodejs-14:latest as build
-FROM node:latest as build
+FROM registry.access.redhat.com/ubi9/nodejs-20:latest as build
+#FROM node:latest as build
 # ENV REACT_APP_SUDOKU_URL_SVC http://c:8080
 RUN mkdir /tmp/build
 WORKDIR /tmp/build
@@ -9,7 +10,7 @@ ENV NODE_OPTIONS --openssl-legacy-provider
 RUN npm install
 RUN npm run build --openssl-legacy-provider
 
-FROM registry.access.redhat.com/ubi8/nginx-118:latest
+FROM registry.access.redhat.com/ubi9/nginx-122:latest
 EXPOSE 8080
 # ENV REACT_APP_SUDOKU_URL_SVC http://a:8080
 # ENV REACT_APP_SUDOKU_URL_OCRSVC http://o:3000
