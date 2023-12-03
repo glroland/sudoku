@@ -1,6 +1,6 @@
 #!/bin/sh
 
-conda install -y -c anaconda python=3.7
+conda install -y -c anaconda python
 conda install -y -c anaconda flask
 conda install -y -c anaconda tensorflow
 conda install -y -c anaconda keras
