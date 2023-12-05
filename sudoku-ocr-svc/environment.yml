@@ -1,0 +1,13 @@
+name: sudoku
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - flask
+  - tensorflow
+  - keras
+  - pillow
+  - gunicorn
+  - flask-cors
+  - numpy
+  - flask-restful
