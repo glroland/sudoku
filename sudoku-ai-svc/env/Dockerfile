@@ -12,7 +12,7 @@ WORKDIR /opt/app-root/bin
 
 COPY environment.yml start-notebook.sh ./
 
-RUN echo "export CONDA_ENV_NAME=$(head -1 /opt/sudoku/environment.yml | cut -d' ' -f2)" >> ~/.bashrc
+RUN echo "export CONDA_ENV_NAME=$(head -1 environment.yml | cut -d' ' -f2)" >> ~/.bashrc
 
 # - Create a Python virtual environment for use by any application to avoid
 #   potential conflicts with Python packages preinstalled in the main Python
@@ -29,16 +29,17 @@ ENV BASH_ENV="source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai" \
     ENV="source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai" \
     PROMPT_COMMAND=". /opt/conda/bin/activate /opt/conda/envs/sudoku-ai"
 
-USER 1001
-
 # Disable announcement plugin of jupyterlab
 RUN /opt/conda/envs/sudoku-ai/bin/jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
 
 # Fix permissions to support pip in Openshift environments
-RUN chmod -R g+w /opt/conda/envs/sudoku-ai
+#RUN chmod -R g+w /opt/conda/envs/sudoku-ai
+RUN chmod -R g+w /opt/app-root/bin
 
 # Replace Notebook's launcher, "(ipykernel)" with Python's version 3.x.y
 RUN sed -i -e "s/Python.*/$(python --version | cut -d '.' -f-2)\",/" /opt/conda/envs/sudoku-ai/share/jupyter/kernels/python3/kernel.json
+
+USER 1001
 
 CMD ["/bin/bash", "-c", "source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai && ./start-notebook.sh"]
 
