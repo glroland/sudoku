@@ -41,5 +41,5 @@ RUN sed -i -e "s/Python.*/$(python --version | cut -d '.' -f-2)\",/" /opt/conda/
 
 USER 1001
 
-CMD ["/bin/bash", "-c", "source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai && ./start-notebook.sh"]
+CMD ["/bin/bash", "-c", "source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai && /opt/app-root/bin/start-notebook.sh"]
 
