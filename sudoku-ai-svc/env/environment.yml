@@ -1,0 +1,11 @@
+name: sudoku-ai
+channels:
+  - fastai
+dependencies:
+  - python ==3.10
+  - jupyter
+  - pytorch
+  - ray-default
+  - fastai
+  - fastbook
+  - sentencepiece
