@@ -1,45 +1,34 @@
 FROM continuumio/miniconda3:23.10.0-1
 
-LABEL name="odh-notebook-jupyter-minimal-ubi9-python-3.9" \
-    summary="Minimal Jupyter notebook image for ODH notebooks" \
-    description="Minimal Jupyter notebook image with base Python 3.9 builder image based on UBI9 for ODH notebooks" \
-    io.k8s.display-name="Minimal Jupyter notebook image for ODH notebooks" \
-    io.k8s.description="Minimal Jupyter notebook image with base Python 3.9 builder image based on UBI9 for ODH notebooks" \
-    authoritative-source-url="https://github.com/opendatahub-io/notebooks" 
+LABEL name="sudoku-ai-miniconda3" \
+    summary="Sudoku AI Python Environment" \
+    description="Sudoku AI Python Environment for development and servicing" \
+    io.k8s.display-name="Sudoku AI Python Environment" \
+    io.k8s.description="Sudoku AI Python Environment for development and servicing" \
+    authoritative-source-url="https://github.com/glroland/sudoku" 
 
-RUN mkdir -p /opt/app-root/bin
+RUN mkdir -p /opt/app-root/src /opt/app-root/bin
 WORKDIR /opt/app-root/bin
 
-COPY environment.yml start-notebook.sh ./
-
-RUN echo "export CONDA_ENV_NAME=$(head -1 environment.yml | cut -d' ' -f2)" >> ~/.bashrc
-
-# - Create a Python virtual environment for use by any application to avoid
-#   potential conflicts with Python packages preinstalled in the main Python
-#   installation.
-# - In order to drop the root user, we have to make some directories world
-#   writable as OpenShift default security model is to run the container
-#   under random UID.
-RUN /opt/conda/bin/conda env create --file environment.yml && \
-    rm environment.yml
-
-# For RHEL/Centos 8+ scl_enable isn't sourced automatically in s2i-core
-# so virtualenv needs to be activated this way
-ENV BASH_ENV="source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai" \
-    ENV="source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai" \
-    PROMPT_COMMAND=". /opt/conda/bin/activate /opt/conda/envs/sudoku-ai"
+COPY environment.yml /opt/app-root/bin
+RUN /opt/conda/bin/conda env create --file /opt/app-root/bin/environment.yml
 
 # Disable announcement plugin of jupyterlab
 RUN /opt/conda/envs/sudoku-ai/bin/jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
 
-# Fix permissions to support pip in Openshift environments
-#RUN chmod -R g+w /opt/conda/envs/sudoku-ai
-RUN chmod -R g+w /opt/app-root/bin
-
 # Replace Notebook's launcher, "(ipykernel)" with Python's version 3.x.y
-RUN sed -i -e "s/Python.*/$(python --version | cut -d '.' -f-2)\",/" /opt/conda/envs/sudoku-ai/share/jupyter/kernels/python3/kernel.json
+RUN sed -i -e "s/Python.*/$(/opt/conda/envs/sudoku-ai/bin/python --version | cut -d '.' -f-2)\",/" /opt/conda/envs/sudoku-ai/share/jupyter/kernels/python3/kernel.json
+
+COPY start-notebook.sh /opt/app-root/bin
+
+RUN chown -R 1001:0 /opt/app-root && \
+    chmod -R g=u /opt/app-root && \
+    mkdir -p /.local /.cache && \
+    chown -R 1001:0 /.local && \
+    chmod -R g=u /.local && \ 
+    chown -R 1001:0 /.cache && \
+    chmod -R g=u /.cache
 
 USER 1001
 
-CMD ["/bin/bash", "-c", "source /opt/conda/bin/activate /opt/conda/envs/sudoku-ai && /opt/app-root/bin/start-notebook.sh"]
-
+CMD ["/bin/bash", "-c", "/opt/app-root/bin/start-notebook.sh"]

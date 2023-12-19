@@ -43,6 +43,11 @@ if [ -n "${NOTEBOOK_ARGS}" ]; then
     NOTEBOOK_PROGRAM_ARGS+=${NOTEBOOK_ARGS}
 fi
 
+CONDA_ENV_NAME=$(head -1 /opt/app-root/bin/environment.yml | cut -d' ' -f2)
+echo Conda Environment Name: $CONDA_ENV_NAME 
+echo Current Working Directory: $(pwd)
+source /opt/conda/bin/activate /opt/conda/envs/${CONDA_ENV_NAME}
+
 # Start the JupyterLab notebook
 start_process jupyter lab ${NOTEBOOK_PROGRAM_ARGS} \
     --ServerApp.ip=0.0.0.0 \
