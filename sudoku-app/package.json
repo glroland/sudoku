@@ -4,14 +4,15 @@
   "private": true,
   "dependencies": {
     "@cloudnative/health-connect": "^2.1.0",
-    "acorn": "^8.8.2",
-    "ajv": "^8.12.0",
-    "http-proxy-middleware": "^2.0.6",
-    "npm": "^9.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "acorn": "^8.11.3",
+    "ajv": "^8.14.0",
+    "http-proxy-middleware": "^3.0.0",
+    "npm": "^9.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "@babel/plugin-transform-private-property-in-object": "7.24.6"
   },
   "main": "server.js",
   "scripts": {
