@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sudoku
+spec:
+  destination:
+    name: ''
+    namespace: sandbox
+    server: 'https://api.ocpprod.home.glroland.com:6443'
+  source:
+    path: deploy/helm/sudoku
+    repoURL: 'https://github.com/glroland/sudoku.git'
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+  sources: []
+  project: default
+
