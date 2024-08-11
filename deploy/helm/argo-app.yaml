@@ -1,0 +1,14 @@
+project: default
+source:
+  repoURL: 'https://github.com/glroland/sudoku.git'
+  path: deploy/helm/sudoku
+  targetRevision: HEAD
+  helm:
+    valueFiles:
+      - values.yaml
+destination:
+  server: 'https://api.ocpbm.home.glroland.com:6443'
+  namespace: sudoku-prod
+syncPolicy:
+  automated:
+    prune: true
