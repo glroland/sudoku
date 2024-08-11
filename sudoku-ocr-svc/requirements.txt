@@ -1,0 +1,9 @@
+ipykernel
+pylint
+fastapi
+uvicorn
+requests
+tensorflow
+keras
+pillow
+numpy

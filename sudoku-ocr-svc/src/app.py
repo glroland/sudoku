@@ -1,17 +1,17 @@
-from flask import Flask, render_template, request
-from flask_cors import CORS
+"""${{values.artifact_id}}
+
+${{values.description}}
+"""
+import requests
+
+import uvicorn
+from fastapi import FastAPI
 from json import dumps
 import json
 import numpy as np
 from ocrlib import core
 
-# from flask_restful import Resource, Api
-# from werkzeug.utils import secure_filename
-# import logging
-
-app = Flask(__name__)
-# api = Api(app)
-CORS(app)
+app = FastAPI()
 
 
 class NumpyArrayJSONEncoder(json.JSONEncoder):
@@ -22,17 +22,14 @@ class NumpyArrayJSONEncoder(json.JSONEncoder):
           return json.JSONEncoder.default(self, obj)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def getRoot():
-     print("HTTP GET request received for root path")
-     return 'Hello, thanks for invoking the Sudoku OCR Microservice!!!  Enjoy your game.'
+@app.get("/")
+def default_response():
+    """Provide a simple textual response to the root url to verify the application is working.
+    """
+    return {"message": "Hello, thanks for invoking the Sudoku OCR Microservice!!!  Enjoy your game."}
 
-@app.route('/hello/', methods=['GET', 'POST'])
-def getHello():
-     print("HTTP GET request received for root path")
-     return 'Hello from sudoku-ocr-svc!'
 
-@app.route('/upload', methods=['POST'])
+@app.post("/upload")
 def op_upload(self, obj):
      f = request.files['file']
      imbytes = f.read()
@@ -42,7 +39,8 @@ def op_upload(self, obj):
      digit = ocrcore.eval_what_digit(im)
      return 'file uploaded successfully - Length = ' + str(len(imbytes)) + " Digit = " + str(digit) + "\n"
 
-@app.route('/extract', methods=['POST'])
+
+@app.post("/extract")
 def op_extract():
      f = request.files['file']
      imbytes = f.read()          
@@ -55,5 +53,5 @@ def op_extract():
      return json.dumps({'puzzle': {'grid': puzzle} }, cls=NumpyArrayJSONEncoder)
 
 
-if __name__ == '__main__':
-     app.run()
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080)

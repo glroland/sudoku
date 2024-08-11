@@ -1,19 +1,27 @@
-FROM continuumio/miniconda3:23.10.0-1
+FROM registry.access.redhat.com/ubi9/python-311:1-72.1722518949
 
-# Install dependencies via Anaconda
-RUN mkdir -p /opt/sudoku
-COPY environment.yml /opt/sudoku
-RUN conda env create -f /opt/sudoku/environment.yml
+# Swithc to root user for build process
+#USER root
 
-# Pull the environment name out of the environment.yml
-RUN echo "export CONDA_ENV_NAME=$(head -1 /opt/sudoku/environment.yml | cut -d' ' -f2)" >> ~/.bashrc
-RUN echo "conda activate \$CONDA_ENV_NAME" >> ~/.bashrc
+# Install Dependencies
 
-# Deploy application
-COPY gunicorn_config.py /opt/sudoku/gunicorn_config.py
-COPY app /opt/sudoku
-WORKDIR /opt/sudoku
+# Set the working directory in the container
+WORKDIR /opt/app-root
 
-EXPOSE 8080
+# Copy the dependencies file to the working directory
+COPY requirements.txt .
 
-CMD /bin/bash -c "source ~/.bashrc && gunicorn --config /opt/sudoku/gunicorn_config.py ocrsvc:app"
+# Install any dependencies
+RUN pip install -r requirements.txt
+
+# Copy the content of the local src directory to the working directory
+COPY ./src/ .
+
+# By default, listen on port 8080
+EXPOSE 8080/tcp
+
+# Switch back to normal run as user
+USER 1001
+
+# Specify the command to run on container start
+CMD [ "python", "app.py" ]
