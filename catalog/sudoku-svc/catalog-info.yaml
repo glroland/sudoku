@@ -6,17 +6,17 @@ metadata:
     app.kubernetes.io/name: sudoku-svc-component
     app.kubernetes.io/part-of: sudoku-app
   annotations:
-    argocd/app-name: sudoku
     app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"sudoku-svc-deploy"}]'
+    backstage.io/techdocs-ref: dir:.
+    jenkins.io/job-full-name: 'sudoku'
+    argocd/app-name: sudoku
     argocd/instance-name: 'argoInstance'
     quay.io/repository-slug: 'sudoku/svc'
-    backstage.io/techdocs-ref: dir:.
-    jenkins.io/job-full-name: 'sudoku'	#'folder-name/project-name'
   tags:
     - java
     - maven
   links:
-    - url: https://ai-product-catalog-svc-ai-product-catalog-prod.apps.ocpbm.home.glroland.com/
+    - url: https://sudoku-app-sudoku-prod.apps.ocpprod.home.glroland.com/
       title: Prod
       icon: web
     - url: https://console-openshift-console.apps.ocpbm.home.glroland.com/k8s/ns/sudoku-prod/deployments/svc
