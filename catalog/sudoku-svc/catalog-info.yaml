@@ -19,10 +19,10 @@ metadata:
     - url: https://sudoku-app-sudoku-prod.apps.ocpprod.home.glroland.com/
       title: Prod
       icon: web
-    - url: https://console-openshift-console.apps.ocpbm.home.glroland.com/k8s/ns/sudoku-prod/deployments/svc
+    - url: https://console-openshift-console.apps.ocpprod.home.glroland.com/k8s/ns/sudoku-prod/deployments/svc
       title: Deployment
       icon: web
-    - url: 'https://devspaces.apps.ocpbm.home.glroland.com/dashboard/#/load-factory?url=https://github.com/glroland/sudoku.git'
+    - url: 'https://devspaces.apps.ocpprod.home.glroland.com/dashboard/#/load-factory?url=https://github.com/glroland/sudoku.git'
       title: 'Code in DevSpaces'
       icon: catalog
       type: ide

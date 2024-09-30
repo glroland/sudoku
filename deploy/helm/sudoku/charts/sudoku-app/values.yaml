@@ -13,7 +13,7 @@ service:
 
 ingress:
   annotations: {}
-  url: apps.ocp4.home.glroland.com
+  url: apps.ocpprod.home.glroland.com
   path: /
   port: 443
 
@@ -43,3 +43,6 @@ securityContext:
   capabilities:
     drop:
       - ALL
+
+podAnnotations:
+  sidecar.istio.io/inject: 'true'
