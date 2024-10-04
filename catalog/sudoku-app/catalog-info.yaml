@@ -6,23 +6,23 @@ metadata:
     app.kubernetes.io/name: sudoku-app-component
     app.kubernetes.io/part-of: sudoku-app
   annotations:
-    argocd/app-name: sudoku
     app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"sudoku-app-deploy"}]'
+    backstage.io/techdocs-ref: dir:.
+    jenkins.io/job-full-name: 'sudoku'
+    argocd/app-name: sudoku
     argocd/instance-name: 'argoInstance'
     quay.io/repository-slug: 'sudoku/app'
-    backstage.io/techdocs-ref: dir:.
-    jenkins.io/job-full-name: "default:sudoku/sudoku"
   tags:
     - java
     - maven
   links:
-    - url: https://ai-product-catalog-svc-ai-product-catalog-prod.apps.ocpbm.home.glroland.com/
+    - url: https://sudoku-app-sudoku-prod.apps.ocpprod.home.glroland.com/
       title: Prod
       icon: web
-    - url: https://console-openshift-console.apps.ocpbm.home.glroland.com/k8s/ns/sudoku-prod/deployments/app
+    - url: https://console-openshift-console.apps.ocpprod.home.glroland.com/k8s/ns/sudoku-prod/deployments/app
       title: Deployment
       icon: web
-    - url: 'https://devspaces.apps.ocpbm.home.glroland.com/dashboard/#/load-factory?url=https://github.com/glroland/sudoku.git'
+    - url: 'https://devspaces.apps.ocpprod.home.glroland.com/dashboard/#/load-factory?url=https://github.com/glroland/sudoku.git'
       title: 'Code in DevSpaces'
       icon: catalog
       type: ide

@@ -40,3 +40,6 @@ securityContext:
   capabilities:
     drop:
       - ALL
+
+podAnnotations:
+  sidecar.istio.io/inject: 'true'
