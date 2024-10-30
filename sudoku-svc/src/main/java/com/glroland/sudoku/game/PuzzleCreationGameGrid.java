@@ -32,7 +32,7 @@ public class PuzzleCreationGameGrid implements Cloneable
 
 	public void cleanseValue(int val, int pivot)
 	{
-		Integer value = new Integer(val);
+		Integer value = Integer.valueOf(val);
 		
 		// remove it from every cell in the row
 		int endI = ((pivot / SudokuConstants.PUZZLE_WIDTH) * SudokuConstants.PUZZLE_WIDTH) + SudokuConstants.PUZZLE_WIDTH - 1;

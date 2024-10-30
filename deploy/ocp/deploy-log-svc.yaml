@@ -16,7 +16,7 @@ metadata:
 data:
   application.properties: |-
     # quarkus application configuration
-    quarkus.package.type=uber-jar
+    quarkus.package.jar.type=fast-jar
     quarkus.http.port=8080
     quarkus.swagger-ui.always-include=true
 
