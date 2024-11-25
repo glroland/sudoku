@@ -1,5 +1,5 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: {{ include "sudoku.fullname" . }}
   labels:
@@ -17,4 +17,5 @@ spec:
   ipFamilyPolicy: SingleStack
   sessionAffinity: None
   selector:
-    {{- include "sudoku.selectorLabels" . | nindent 4 }}
+    app: "{{ include "sudoku.fullname" . }}"
+    deployment: "{{ include "sudoku.fullname" . }}"

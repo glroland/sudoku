@@ -8,13 +8,14 @@ metadata:
 spec:
   ipFamilies:
     - IPv4
-  type: {{ .Values.service.type }}
-  internalTrafficPolicy: Cluster
   ports:
-    - port: {{ .Values.service.port }}
+    - protocol: TCP
+      port: {{ .Values.service.port }}
       targetPort: {{ .Values.image.port }}
-      protocol: TCP
-  sessionAffinity: None
+  internalTrafficPolicy: Cluster
+  type: {{ .Values.service.type }}
   ipFamilyPolicy: SingleStack
+  sessionAffinity: None
   selector:
-    {{- include "sudoku.selectorLabels" . | nindent 4 }}
+    app: "{{ include "sudoku.fullname" . }}"
+    deployment: "{{ include "sudoku.fullname" . }}"
