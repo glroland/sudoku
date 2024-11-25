@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        app: " {{ include "sudoku.fullname" . }}"
+        app: "{{ include "sudoku.fullname" . }}"
         deployment: {{ include "sudoku.fullname" . }}
         app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
         {{- include "sudoku.labels" . | nindent 4 }}
