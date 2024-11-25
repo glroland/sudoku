@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ include "sudoku.fullname" . }}-db
+  name: {{ include "sudoku.fullname" . }}
   labels:
     app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
     {{- include "sudoku.labels" . | nindent 4 }}
@@ -18,5 +18,5 @@ spec:
   ipFamilyPolicy: SingleStack
   sessionAffinity: None
   selector:
-    app: "{{ include "sudoku.fullname" . }}-db"
-    deployment: "{{ include "sudoku.fullname" . }}-db"
+    app: "{{ include "sudoku.fullname" . }}"
+    deployment: "{{ include "sudoku.fullname" . }}"
