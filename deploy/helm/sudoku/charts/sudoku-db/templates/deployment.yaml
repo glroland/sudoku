@@ -12,11 +12,12 @@ spec:
       app: "{{ include "sudoku.fullname" . }}"
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        app: "{{ include "sudoku.fullname" . }}"
-        deployment: {{ include "sudoku.fullname" . }}
-        app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
-        {{- include "sudoku.labels" . | nindent 4 }}
+        {{- include "sudoku.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: postgresql
