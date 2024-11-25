@@ -11,7 +11,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "sudoku-ocr-svc.selectorLabels" . | nindent 6 }}
+      app: "{{ include "sudoku.fullname" . }}"
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,7 +19,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "sudoku-ocr-svc.selectorLabels" . | nindent 8 }}
+        app: "{{ include "sudoku.fullname" . }}"
+        deployment: {{ include "sudoku.fullname" . }}
+        app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
+        {{- include "sudoku.labels" . | nindent 8 }}
+        {{- include "sudoku.selectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.global.image.pullSecret }}
       imagePullSecrets:
