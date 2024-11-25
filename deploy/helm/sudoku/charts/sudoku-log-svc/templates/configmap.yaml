@@ -12,10 +12,10 @@ data:
     quarkus.swagger-ui.always-include=true
 
     # datasource configuration
-    quarkus.kubernetes-service-binding.services.my-db.api-version=postgres-operator.crunchydata.com/v1beta1
-    quarkus.kubernetes-service-binding.services.my-db.kind=PostgresCluster
-    quarkus.kubernetes-service-binding.services.my-db.name={{ .Release.Name }}-db
-    quarkus.datasource.db-kind=postgresql
+    quarkus.datasource.db-kind = postgresql
+    quarkus.datasource.username = sudoku
+    quarkus.datasource.password = sudoku123
+    quarkus.datasource.jdbc.url = jdbc:postgresql://{{ .Release.Name }}-db:5432/sudoku_db
     #quarkus.hibernate-orm.database.generation=drop-and-create
     quarkus.hibernate-orm.database.generation=update
 

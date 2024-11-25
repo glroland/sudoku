@@ -1,0 +1,22 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ include "sudoku.fullname" . }}-db
+  labels:
+    app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
+    {{- include "sudoku.labels" . | nindent 4 }}
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: 5432-tcp
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: "{{ include "sudoku.fullname" . }}-db"
+    deployment: "{{ include "sudoku.fullname" . }}-db"
