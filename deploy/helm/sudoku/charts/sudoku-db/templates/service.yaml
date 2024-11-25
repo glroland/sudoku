@@ -9,14 +9,12 @@ spec:
   ipFamilies:
     - IPv4
   ports:
-    - name: 5432-tcp
-      protocol: TCP
-      port: 5432
-      targetPort: 5432
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.image.port }}
   internalTrafficPolicy: Cluster
-  type: ClusterIP
+  type: {{ .Values.service.type }}
   ipFamilyPolicy: SingleStack
   sessionAffinity: None
   selector:
-    app: "{{ include "sudoku.fullname" . }}"
-    deployment: "{{ include "sudoku.fullname" . }}"
+    {{- include "sudoku.selectorLabels" . | nindent 4 }}

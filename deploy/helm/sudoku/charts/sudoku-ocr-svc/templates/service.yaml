@@ -3,14 +3,18 @@ kind: Service
 metadata:
   name: {{ include "sudoku.fullname" . }}
   labels:
+    app.kubernetes.io/part-of: "{{ .Release.Name }}-sudoku"
     {{- include "sudoku.labels" . | nindent 4 }}
 spec:
+  ipFamilies:
+    - IPv4
   type: {{ .Values.service.type }}
-  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.image.port }}
       protocol: TCP
   sessionAffinity: None
+  ipFamilyPolicy: SingleStack
   selector:
     {{- include "sudoku.selectorLabels" . | nindent 4 }}
