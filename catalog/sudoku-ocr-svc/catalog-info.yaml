@@ -16,13 +16,13 @@ metadata:
     - java
     - maven
   links:
-    - url: https://sudoku-app-sudoku-prod.apps.ocpprod.home.glroland.com/
+    - url: https://sudoku-app-sudoku.apps.ocp.home.glroland.com/
       title: Prod
       icon: web
-    - url: https://console-openshift-console.apps.ocpprod.home.glroland.com/k8s/ns/sudoku-prod/deployments/ocr-svc
+    - url: https://console-openshift-console.apps.ocp.home.glroland.com/k8s/ns/sudoku/deployments/ocr-svc
       title: Deployment
       icon: web
-    - url: 'https://devspaces.apps.ocpprod.home.glroland.com/dashboard/#/load-factory?url=https://github.com/glroland/sudoku.git'
+    - url: 'https://devspaces.apps.ocp.home.glroland.com/dashboard/#/load-factory?url=https://github.com/glroland/sudoku.git'
       title: 'Code in DevSpaces'
       icon: catalog
       type: ide
