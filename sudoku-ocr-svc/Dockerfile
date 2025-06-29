@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/python-311:1-77.1729767833
+FROM registry.access.redhat.com/ubi9/python-312:1-1749631862
 
 # Swithc to root user for build process
 #USER root
