@@ -50,14 +50,19 @@ pipeline
 
       stage('Scan for OWASP Issues in Dependencies') 
       {
-         steps 
+         steps
          {
-            dependencyCheck additionalArguments: ''' 
-                       -o "./" 
+            dependencyCheck additionalArguments: '''
+                       -o "./"
                        -s "./"
-                       -f "ALL" 
-                       --prettyPrint''', odcInstallation: 'OWASP Dependency-Check'
-   
+                       -f "ALL"
+                       --prettyPrint
+                       --disableOssIndex
+                       --data "${HOME}/.owasp/dependency-check-data"
+                       --nvdValidForHours 24''',
+                       odcInstallation: 'OWASP Dependency-Check',
+                       nvdCredentialsId: 'nvd-api-key'
+
             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
             step(followSymlinks: false, artifacts: '**/dependency-check-report.*', $class: 'ArtifactArchiver')
          }
