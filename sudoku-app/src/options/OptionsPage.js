@@ -1,7 +1,5 @@
 import React, {Component} from "react";
-import {
-  withRouter
-} from 'react-router-dom';
+import { withRouter } from '../withRouter';
 import "../App.css";
 
 class OptionsPage extends Component {
@@ -26,7 +24,7 @@ class OptionsPage extends Component {
     }
   
     mainmenu() {
-      this.props.history.push('/');
+      this.props.router.navigate('/');
     }
   }
   

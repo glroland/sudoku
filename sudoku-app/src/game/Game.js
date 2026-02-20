@@ -1,7 +1,5 @@
 import React, {Component} from "react";
-import {
-  withRouter
-} from 'react-router-dom';
+import { withRouter } from '../withRouter';
 import "../App.css";
 import Board from "./Board";
 import GameValuesSelection from "./GameValuesSelection";
@@ -156,7 +154,7 @@ class Game extends Component {
     }
   
     leaveGame() {
-      this.props.history.push("/");
+      this.props.router.navigate("/");
     }
     getMove() {
       return this.gameValueSelectionRef.current.getMove();

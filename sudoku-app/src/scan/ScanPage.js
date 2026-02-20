@@ -1,7 +1,5 @@
 import React, {Component} from "react";
-import {
-  withRouter
-} from 'react-router-dom';
+import { withRouter } from '../withRouter';
 import "../App.css";
 import CameraStep from "./CameraStep";
 import MarkStep from "./MarkStep";
@@ -106,7 +104,7 @@ class ScanPage extends Component {
     }
 
     mainmenu() {
-      this.props.history.push('/');
+      this.props.router.navigate('/');
     }
 
   }

@@ -10,7 +10,7 @@
     "npm": "^9.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^6.0.0",
     "react-scripts": "^5.0.1",
     "@babel/plugin-transform-private-property-in-object": "7.24.6"
   },

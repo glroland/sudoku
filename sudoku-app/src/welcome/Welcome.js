@@ -1,7 +1,5 @@
 import React, {Component} from "react";
-import {
-  withRouter
-} from 'react-router-dom';
+import { withRouter } from '../withRouter';
 import "../App.css";
 
 class Welcome extends Component {
@@ -30,15 +28,15 @@ class Welcome extends Component {
     }
   
     newGame() {
-      this.props.history.push('/game');
+      this.props.router.navigate('/game');
     }
 
     scanGame() {
-      this.props.history.push('/scan');
+      this.props.router.navigate('/scan');
     }
 
     options() {
-      this.props.history.push('/options');
+      this.props.router.navigate('/options');
     }
   }
   
