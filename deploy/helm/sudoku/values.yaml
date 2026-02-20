@@ -8,7 +8,7 @@ global:
 
   image:
     repository: registry.home.glroland.com/sudoku/
-    tag: 69
+    tag: 70
     pullPolicy: IfNotPresent
     pullSecret: sudoku-ocp4-pull-secret
 
